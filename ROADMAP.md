@@ -15,14 +15,14 @@
 
 ### Docker
 
-- Créer un `Dockerfile` basé sur l'image `node:18` pour définir l'image de l'app.
+- Créer un `Dockerfile` basé sur l'image `node:23-slim` pour définir l'image de l'app. :ballot_box_with_check: - **10.04.2025**
 - Créer un `docker-compose.yml` avec les services suivants :
-  - web (app Node.js)
+  - web (app Node.js) :ballot_box_with_check: - **10.04.2025**
   - db (PostgreSQL)
   - redis (cache)
   - volume optionnel pour coffre-fort numérique.
 
-### Typescript-Eslint
+### Typescript-Eslint :ballot_box_with_check: - **10.04.2025**
 
 - Installer TypeScript, ESLint, Prettier et leur configuration. :ballot_box_with_check: - **10.04.2025**
 - Ajouter `.editorconfig` et `.prettierrc` pour homogéniser le code. :ballot_box_with_check: - **10.04.2025**
