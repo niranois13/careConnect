@@ -1,0 +1,12 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    volumes:
+      - ./apps/server:/careConnect/apps/server
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: ["nodemon", "--legacy-watch", "--watch", "./apps/server/src", "--ext", "ts,tsx", "--exec", "pnpm", "ts-node", "./apps/server/src/index.ts"]

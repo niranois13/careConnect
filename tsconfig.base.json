@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    /* Targeting and compatibility */
+    "target": "ES2022", // Output modern JS (Node.js 22 supports this)
+    "module": "NodeNext", // Use ES modules (import/export)
+    "moduleResolution": "NodeNext", // Resolve modules like Node.js does
+    "lib": ["ES2022"], // Include modern JS features
+    /* Type safety */
+    "strict": true, // Enable all strict type-checking options
+    "forceConsistentCasingInFileNames": true, // Avoid issues with filename casing
+    "isolatedModules": true, // Required for tools like Vite or ts-node
+    /* Interoperability */
+    "esModuleInterop": true, // Allow `import x from 'cjs-module'`
+    "resolveJsonModule": true, // Allow importing .json files
+    "skipLibCheck": true, // Skip type checks on external libraries
+    /* Output settings */
+    "noEmit": false // Let each subproject decide whether to emit JS
+  }
+}
