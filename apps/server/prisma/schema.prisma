@@ -1,0 +1,49 @@
+datasource db {
+  provider = "postgresql"
+  url = env("DB_URL")
+}
+
+generator users {
+  provider = "prisma-client-js"
+  output = "./generated/prisma-users"
+  generatedFileExtension = "ts"
+  importFileExtension = "ts"
+}
+
+enum Role {
+  CLIENT
+  PROFESSIONAL
+  ADMIN
+}
+
+model User {
+  id                String          @id @default(uuid())
+  email             String          @unique
+  password          String
+  firstName         String
+  lastName          String
+  phoneNumber       String?
+  role              Role            
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  emailVerified     Boolean         @default(false)
+  careSeekers       CareSeeker[]    @relation("UserCareseeker")
+  professionals     Professional[]  @relation("UserProfessional")
+}
+
+model CareSeeker {
+  userId            String          @id
+  user              User            @relation("UserCareseeker", fields: [userId], references: [id])
+  isHelper          Boolean         @default(false)
+}
+
+model Professional {
+  userId                       String           @id
+  user                         User             @relation("UserProfessional",fields: [userId], references: [id])
+  // profession                String?  
+  // customProfession          String?          @unique
+  // customProfessionApproved  Boolean          @default(false)
+  isMobile                     Boolean          @default(false)
+  interventionRadius           Int              @default(0)
+  //services                   ProfessionalService[]
+}
