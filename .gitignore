@@ -1,4 +1,12 @@
-.env
+# Ignorer les fichiers et répertoires générés par l'environnement de développement
 node_modules/
-pnpm-lock.yaml
 dist/
+*.log
+*.env
+
+
+# Ignorer les caches et fichiers temporaires
+.vscode/
+
+# Ignorer les fichiers spécifiques à Docker
+.docker/

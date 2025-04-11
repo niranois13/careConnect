@@ -5,6 +5,7 @@
     "module": "NodeNext", // Use ES modules (import/export)
     "moduleResolution": "NodeNext", // Resolve modules like Node.js does
     "lib": ["ES2022"], // Include modern JS features
+    "allowImportingTsExtensions": true,
     /* Type safety */
     "strict": true, // Enable all strict type-checking options
     "forceConsistentCasingInFileNames": true, // Avoid issues with filename casing
@@ -13,7 +14,9 @@
     "esModuleInterop": true, // Allow `import x from 'cjs-module'`
     "resolveJsonModule": true, // Allow importing .json files
     "skipLibCheck": true, // Skip type checks on external libraries
+    "allowJs": true,
     /* Output settings */
-    "noEmit": false // Let each subproject decide whether to emit JS
+    "noEmit": true, // Let each subproject decide whether to emit JS
+    "rootDir": "."
   }
 }

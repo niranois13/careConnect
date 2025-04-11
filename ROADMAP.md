@@ -8,17 +8,23 @@
 - Ajouter `.gitignore` pour ignorer les fichiers sensibles ou inutiles (node_modules/, .env, etc). :ballot_box_with_check: - **10.04.2025** (à MAJ régulièrement)
 - Créer un `README.md` avec une description claire du projet.
 
-### NodeJS
+### NodeJS / tRPC
 
 - Installer NodeJS en version stable recommandée : `echo "v22.14.0" > .nvmrc`. :ballot_box_with_check: - **10.04.2025**
 - Utiliser `pnpm` comme gestionnaire de paquets : `npm install -g pnpm`. :ballot_box_with_check: - **10.04.2025**
+-
+
+## PostgreSQL
+
+- Installation et initialisation d'une DB Postgre :ballot_box_with_check: - **11.04.2025**
 
 ### Docker
 
 - Créer un `Dockerfile` basé sur l'image `node:23-slim` pour définir l'image de l'app. :ballot_box_with_check: - **10.04.2025**
 - Créer un `docker-compose.yml` avec les services suivants :
-  - web (app Node.js) :ballot_box_with_check: - **10.04.2025**
-  - db (PostgreSQL)
+  - server (app Node.js) :ballot_box_with_check: - **10.04.2025**
+  - db (PostgreSQL) :ballot_box_with_check: - **11.04.2025**
+  - web (front React)
   - redis (cache)
   - volume optionnel pour coffre-fort numérique.
 
@@ -31,41 +37,44 @@
 
 ### Prisma
 
-#### model User de base:
+Quelques difficultés avec la prise en main de Prisma, cet ORM change drastiquement de ce que j'avais pu voir ! Je n'ai pas pu la tester encore, mais tout semble okay avec ce que j'ai vu de la doc.
+J'ai eu l'obligation d'accepter du .js (et donc de modif tsconfig), la manière pour Prisma de rester en full TS est expérimentale et ne voulait pas fonctionné sur le projet. __A check régulièrement__
 
-```prisma
-model User {
-  id                String      @id @default(uuid())
-  email             String      @unique
-  password          String
-  firstName         String
-  lastName          String
-  phoneNumber       String?
-  role              String      // CLIENT, PROFESSIONAL, ADMIN
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  emailVerified     Boolean     @default(false)
-  clients           Client[]    @relation("UserClients")
-  professionals     Professional[] @relation("UserProfessionals")
-}
-```
+#### model User de base: :ballot_box_with_check: **11.04.2025**
 
-#### model Client (User) — renommage souhaité :
 
-```prisma
-model Client {
-  userId    String @id
-  user      User   @relation(fields: [userId], references: [id])
-  isHelper  Boolean
-}
-```
+#### model Client (User) — renommage souhaité : :ballot_box_with_check: **11.04.2025**
 
-#### model Professional (User)
+A été rename en CareSeeker, les personnes en situation de handicap ne sont pas des clients dans le sens où je l'entends. Ce sont des personnes en situation de fragilité qui cherche un accompagnement difficile à trouver.
 
-### tRPC (routers CRUD User)
+#### model Professional (User) :ballot_box_with_check: **11.04.2025**
+
+### Zod
+- installer Zod :ballot_box_with_check: **11.04.2025**
+- déclarer des schémas en lien avec l'ORM :ballot_box_with_check: **11.04.2025**
+
+### tRPC (routers CRUD User) :heavy_multiplication_x: **12.04.2025**
 
 - Créer les routers avec `query`/`mutation` : create, list, update, delete.
-- Utiliser Zod pour valider les schémas d'entrée.
+
+=> Après 1/2 semaine à lire régulièrement de la docs, à rearder des tutos, j'ai compris l'intérêt de tRPC et l'outil a l'air __puissant__. Le sentiment de rajouter une très grosse couche d'abstraction me dérangeait et des difficultés en chaîne dans le setup m'ont ait abandonné l'idée. Enfin, c'est encore un package niche, j'y reviendrais!
+
+En remplacement:
+### Express pour designer l'API REST (CRUD)
+- Changement de l'entry point du server : `apps/server/src/index.ts` devient `apps/server/src/server.ts`.
+- Création d'un dossier `/apps/server/routes` et de `routes/index.ts` qui indexera toutes les _routes_.
+- Créer un premier endpoint `GET:/health` pour obtenir l'état de la DB (enlever connectToDB() de server.ts) et donc tester Prisma.
+- Créer les endpoints utilisateurs suivants:
+1. POST:/careseeker
+2. POST:/professionals
+3. GET:/careseeker:id
+4. GET:/professionals:id
+5. PUT:/careseeker:id
+6. PUT/professionals:id
+7. DELETE:/careseeker:id
+8. DELETE:/professionals:id
+Et le endpoints admin only:
+9. GET/users
 
 ### Validators
 
