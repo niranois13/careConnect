@@ -6,12 +6,13 @@ datasource db {
 generator users {
   provider = "prisma-client-js"
   output = "./generated/prisma-users"
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
   generatedFileExtension = "ts"
   importFileExtension = "ts"
 }
 
 enum Role {
-  CLIENT
+  CARESEEKER
   PROFESSIONAL
   ADMIN
 }
@@ -22,7 +23,7 @@ model User {
   password          String
   firstName         String
   lastName          String
-  phoneNumber       String?
+  phoneNumber       String?         @unique
   role              Role            
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt

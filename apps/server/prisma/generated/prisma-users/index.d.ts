@@ -34,7 +34,7 @@ export type Professional = $Result.DefaultSelection<Prisma.$ProfessionalPayload>
  */
 export namespace $Enums {
   export const Role: {
-  CLIENT: 'CLIENT',
+  CARESEEKER: 'CARESEEKER',
   PROFESSIONAL: 'PROFESSIONAL',
   ADMIN: 'ADMIN'
 };

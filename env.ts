@@ -19,4 +19,6 @@ export const env = {
   DB_PASSWORD: getEnvVar('DB_PASSWORD'),
   DB_PORT: getEnvVar('DB_PORT'),
   DB_URL: getEnvVar('DB_URL'),
+  JWT_SECRET: getEnvVar('JWT_SECRET'),
+  JWT_EXP: Number(getEnvVar('JWT_EXP')),
 };

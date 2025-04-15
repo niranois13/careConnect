@@ -3,6 +3,7 @@
 ![careConnect](https://i.imgur.com/fyMEF6H.png)
 
 ---
+
 - [🧩 careConnect](#-careconnect)
   - [📖 Project Overview](#-project-overview)
   - [⚙️ Tech Stack](#️-tech-stack)
@@ -22,11 +23,13 @@ This is a **full-stack TypeScript** application currently under active developme
 This project is built with a modern but pragmatic stack:
 
 - **Back-end**
-  - [Express](https://expressjs.com/) – REST API for flexibility and control
-  - [Prisma](https://www.prisma.io/) – Elegant ORM for PostgreSQL
-  - [Zod](https://zod.dev/) – Type-safe schema validation
-  - [PostgreSQL](https://www.postgresql.org/) – Reliable and powerful relational database
-  - [TypeScript](https://www.typescriptlang.org/) – For type safety across the board
+
+  - [NodeJS](https://nodejs.org/) - To run the environment
+  - [TypeScript](https://www.typescriptlang.org/) - For type safety across the board
+  - [Express](https://expressjs.com/) - REST API for flexibility and control
+  - [Prisma](https://www.prisma.io/) - Elegant ORM for PostgreSQL
+  - [PostgreSQL](https://www.postgresql.org/) - Reliable and powerful relational database
+  - [Zod](https://zod.dev/) - Type-safe schema validation
 
 - **Dev Tools**
   - [pnpm](https://pnpm.io/) – Fast package manager with monorepo support
@@ -89,6 +92,7 @@ ROADMAP.md            # Dev plan & features
 ## 👨‍💻 Author
 
 Made with focus and too much coffee by [@your-username](https://github.com/niranois13) ☕
+
 > Private repo for now — polishing before open-sourcing.
 
 ---

@@ -13,7 +13,7 @@ export default [
   ...tseslint.configs.strictTypeChecked,
 
   {
-    ignores: ['**/node_modules/**', '**/dist/**', '**/*.js', '**/*.mjs', "**/prisma/generated/**"],
+    ignores: ['**/node_modules/**', '**/dist/**', '**/*.js', '**/*.mjs', '**/prisma/generated/**'],
   },
 
   {

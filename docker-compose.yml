@@ -19,7 +19,7 @@ services:
         'nodemon',
         '--legacy-watch',
         '--watch',
-        './apps/server/src',
+        './apps/server/',
         '--ext',
         'ts,tsx',
         '--exec',

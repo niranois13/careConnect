@@ -38,10 +38,9 @@
 ### Prisma
 
 Quelques difficultés avec la prise en main de Prisma, cet ORM change drastiquement de ce que j'avais pu voir ! Je n'ai pas pu la tester encore, mais tout semble okay avec ce que j'ai vu de la doc.
-J'ai eu l'obligation d'accepter du .js (et donc de modif tsconfig), la manière pour Prisma de rester en full TS est expérimentale et ne voulait pas fonctionné sur le projet. __A check régulièrement__
+J'ai eu l'obligation d'accepter du .js (et donc de modif tsconfig), la manière pour Prisma de rester en full TS est expérimentale et ne voulait pas fonctionné sur le projet. **A check régulièrement**
 
 #### model User de base: :ballot_box_with_check: **11.04.2025**
-
 
 #### model Client (User) — renommage souhaité : :ballot_box_with_check: **11.04.2025**
 
@@ -50,6 +49,7 @@ A été rename en CareSeeker, les personnes en situation de handicap ne sont pas
 #### model Professional (User) :ballot_box_with_check: **11.04.2025**
 
 ### Zod
+
 - installer Zod :ballot_box_with_check: **11.04.2025**
 - déclarer des schémas en lien avec l'ORM :ballot_box_with_check: **11.04.2025**
 
@@ -57,24 +57,30 @@ A été rename en CareSeeker, les personnes en situation de handicap ne sont pas
 
 - Créer les routers avec `query`/`mutation` : create, list, update, delete.
 
-=> Après 1/2 semaine à lire régulièrement de la docs, à rearder des tutos, j'ai compris l'intérêt de tRPC et l'outil a l'air __puissant__. Le sentiment de rajouter une très grosse couche d'abstraction me dérangeait et des difficultés en chaîne dans le setup m'ont ait abandonné l'idée. Enfin, c'est encore un package niche, j'y reviendrais!
+=> Après 1/2 semaine à lire régulièrement de la docs, à rearder des tutos, j'ai compris l'intérêt de tRPC et l'outil a l'air **puissant**. Le sentiment de rajouter une très grosse couche d'abstraction me dérangeait et des difficultés en chaîne dans le setup m'ont ait abandonné l'idée. Enfin, c'est encore un package niche, j'y reviendrais!
 
 En remplacement:
+
 ### Express pour designer l'API REST (CRUD)
-- Changement de l'entry point du server : `apps/server/src/index.ts` devient `apps/server/src/server.ts`.
+
+- Changement de l'entry point du server : `apps/server/src/index.ts` devient `apps/server/src/server.ts`. :ballot_box_with_check: **11.04.2025**
 - Création d'un dossier `/apps/server/routes` et de `routes/index.ts` qui indexera toutes les _routes_.
-- Créer un premier endpoint `GET:/health` pour obtenir l'état de la DB (enlever connectToDB() de server.ts) et donc tester Prisma.
+- Créer un premier endpoint `GET:/health` pour obtenir l'état de la DB (enlever connectToDB() de server.ts) et donc tester Prisma. :ballot_box_with_check: **12.04.2025**
 - Créer les endpoints utilisateurs suivants:
-1. POST:/careseeker
-2. POST:/professionals
+
+1. POST:/careseeker :ballot_box_with_check: **12.04.2025**
+2. POST:/professionals :ballot_box_with_check: **12.04.2025**
 3. GET:/careseeker:id
 4. GET:/professionals:id
 5. PUT:/careseeker:id
 6. PUT/professionals:id
 7. DELETE:/careseeker:id
 8. DELETE:/professionals:id
-Et le endpoints admin only:
-9. GET/users
+   Les login/logout:
+9. post:/Login
+10. post:/logout
+    Et les endpoints admin only:
+11. GET/users :ballot_box_with_check: **12.04.2025**
 
 ### Validators
 
@@ -83,7 +89,7 @@ Et le endpoints admin only:
 ### Authentication
 
 - OAuth 2.0 (Google + 2 autres à définir) + login via email/password.
-- JWT avec stockage dans cookies `HttpOnly`, `Secure`, `SameSite`.
+- JWT avec stockage dans cookies `HttpOnly`, `Secure` (en prod), `SameSite`. -> installer cookie-parser & jsonwebtoken & create /server/jwtHandler :ballot_box_with_check: **14.04.2025**
 
 ### Roles
 
@@ -104,6 +110,14 @@ Et le endpoints admin only:
 - Zod pour validation des inputs.
 - tRPC + TanStack Query pour requêtes vers le back (mutation, query).
 - Modals pour inscription (client / pro) et connexion.
+
+## Redis
+
+Une fois que j'ai un site 'fonctionnel' avec un back et un front, je vais rajoute Redis ppur de la mise en cache.
+
+### LogOut avancé
+
+- Gérer une blacklist des JWToken expirés/déconnectés grâce à Redis
 
 ## Availability:
 
@@ -219,3 +233,11 @@ model Service {
 - Coffre-fort numérique (stockage de docs sensibles).
 - Paiement sécurisé (Stripe / MangoPay / autre).
 - RGPD / Vie privée / CGU / Accessibilité approfondie.
+
+## Fil rouge:
+
+- Testing /Logging !
+
+### Test unitaires avec Mocha/Chai
+
+### Logging avec Winston
