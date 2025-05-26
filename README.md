@@ -1,98 +1,179 @@
+Voici un **README.md** synthétisé et structuré à partir de ton contenu initial et du ROADMAP. J’ai regroupé les idées pour refléter l’ambition du projet tout en gardant clarté et hiérarchie :
+
+---
+
+````md
 # 🧩 careConnect
 
 ![careConnect](https://i.imgur.com/fyMEF6H.png)
 
+> **careConnect** is a platform connecting individuals in vulnerable situations with qualified health and well-being professionals — all in a secure, intuitive and inclusive environment.
+
 ---
 
-- [🧩 careConnect](#-careconnect)
-  - [📖 Project Overview](#-project-overview)
-  - [⚙️ Tech Stack](#️-tech-stack)
-  - [🚧 Development Status](#-development-status)
-  - [🚀 Getting Started](#-getting-started)
-  - [🛠️ Project Structure (WIP)](#️-project-structure-wip)
-  - [👨‍💻 Author](#-author)
+## 📖 Overview
 
-## 📖 Project Overview
+**careConnect** aims to simplify the access to personal assistance services, while empowering professionals to manage their services and availability transparently. Inspired by [Nois](https://github.com/niranois13/Nois), this project is a **full-stack TypeScript monorepo**, actively being refactored and improved.
 
-**careConnect** is a platform built to connect care seekers with qualified health and well-being professionals. The idea stems from a need to simplify access to personal assistance, while also offering professionals a streamlined space to manage their services.
-
-This is a **full-stack TypeScript** application currently under active development.
+---
 
 ## ⚙️ Tech Stack
 
-This project is built with a modern but pragmatic stack:
+### Back-End
 
-- **Back-end**
+- **Node.js** (v22+) with **Express.js** – REST API
+- **TypeScript** – Strong typing
+- **Prisma ORM** – Elegant DB layer for PostgreSQL
+- **PostgreSQL** – Relational DB
+- **Zod** – Schema validation
+- **JWT & OAuth 2.0** – Authentication
+- **cookie-parser**, **jsonwebtoken**
 
-  - [NodeJS](https://nodejs.org/) - To run the environment
-  - [TypeScript](https://www.typescriptlang.org/) - For type safety across the board
-  - [Express](https://expressjs.com/) - REST API for flexibility and control
-  - [Prisma](https://www.prisma.io/) - Elegant ORM for PostgreSQL
-  - [PostgreSQL](https://www.postgresql.org/) - Reliable and powerful relational database
-  - [Zod](https://zod.dev/) - Type-safe schema validation
+### Front-End *(in progress)*
 
-- **Dev Tools**
-  - [pnpm](https://pnpm.io/) – Fast package manager with monorepo support
-  - [dotenv](https://github.com/motdotla/dotenv) – Environment variable management
-  - ESLint + Prettier – Code quality and formatting
-  - Turborepo – Monorepo tooling (optional depending on setup)
+- **React**
+- **Zod + React Hook Form**
+- **TanStack Query**
+- **React Big Calendar**
 
-## 🚧 Development Status
+### Infrastructure & Dev Tools
 
-The project is currently under **active development**.
-Core database models and schema validation layers are being implemented.
-For an overview of planned features, architecture decisions, and ongoing tasks, **please check [`ROADMAP.md`](./ROADMAP.md)**.
+- **Docker** / **Docker Compose**
+- **pnpm** – Package manager
+- **dotenv** – Env vars management
+- **ESLint** + **Prettier** + `.editorconfig`
+- **Turborepo** (planned)
+- **Redis** (planned)
+- **Mocha/Chai** – Unit Testing
+- **Winston** – Logging
+
+---
 
 ## 🚀 Getting Started
-
-Clone the project:
 
 ```
 git clone git@github.com:your-username/careConnect.git
 cd careConnect
-```
-
-Install dependencies:
-
-```
 pnpm install
-```
-
-Setup environment variables:
-
-```
 cp .env.example .env
-# Then fill in the required values (DB credentials, ports, etc.)
-```
-
-Push Prisma schema to your database (PostgreSQL must be running):
-
-```
+# Fill in required values: DB credentials, admin keys, ports...
 pnpm prisma db push
-```
-
-Start the development server:
-
-```
 pnpm dev
+````
+
+To test the API connection:
+
+```
+curl http://localhost:3000/health
 ```
 
-## 🛠️ Project Structure (WIP)
+---
+
+## 🛠️ Project Structure
 
 ```
 apps/
-  └── server/         # Backend API (Express + Prisma)
-  └── client/         # (Future) Frontend app
-prisma/               # Prisma schema + migrations
-.env                  # Environment variables
+  └── server/         # Node.js API (Express + Prisma)
+  └── client/         # React front-end (WIP)
+prisma/               # Prisma schemas & migrations
+nginx/                # Nginx reverse proxy config
+.env                  # Environment config
+ROADMAP.md            # Feature planning & backlog
 README.md             # You are here
-ROADMAP.md            # Dev plan & features
 ```
+
+---
+
+## 👥 Features (Not fully implemented!)
+
+### 🔐 Auth & User Management
+
+* Login via Email/Password
+* OAuth 2.0 (Google + others planned)
+* JWT-based sessions in cookies (`HttpOnly`, `Secure`, `SameSite`)
+* User Roles: `CareSeeker`, `Professional`, `Admin`
+* Admin panel & endpoints
+
+### 📅 Availability & Appointments
+
+* Professionals define availability slots (start/end, min/max durations)
+* CareSeekers can book appointments
+* Statuses: Pending, Accepted, Cancelled
+* Address support (client/pro location)
+* Integration with React Big Calendar
+
+### 🎓 Professional Qualifications & Services
+
+* Verified degrees, documents, institutions
+* List of offered services
+* Categories (customizable)
+
+### 🔎 Search Engine
+
+* Search by service type, locality, availability
+* Inspired by existing Python logic — reimplemented in TypeScript
+
+### 💬 Messaging (Planned)
+
+* Messaging between CareSeeker and Professional (if appointment exists)
+* Email verification for signup
+
+### 🧰 Admin Tools
+
+* JWT-based admin authentication
+* Admin-only endpoints: user listing, role assignment, moderation
+
+### 🔒 Security & Privacy (Planned)
+
+* GDPR-ready: opt-in consent, data export, deletion
+* Secure document storage ("coffre-fort numérique")
+* Future integration with Stripe/MangoPay for payments
+
+---
+
+## 🧪 Testing & Logging
+
+* Mocha + Chai for unit testing
+* Winston for log tracing
+* Health check endpoint (`/health`)
+* Validators (email, phone, passwords, etc.)
+
+---
+
+## 📦 Docker Setup
+
+`docker-compose.yml` supports:
+
+* `db` – PostgreSQL with PostGIS
+* `server` – Node.js API
+* `frontend` – React app *(planned)*
+* `nginx` – Static + proxy routing *(planned)*
+* `redis` – Session & token management *(planned)*
+
+To run:
+
+```
+docker-compose up --build
+```
+
+---
+
+## 📅 Roadmap Highlights
+
+* ✅ Database & Prisma models (User, Availability, Appointment, etc.)
+* ✅ Zod validation
+* ✅ REST API with Express (full CRUD)
+* 🛠️ React frontend in progress
+* 🛠️ Redis integration (token blacklist, cache)
+* 🛠️ Advanced search & filters
+* 🛠️ Messaging system
+* 🛠️ File/document vault
+* 🛠️ Admin panel UI
+
+Full roadmap available in [`ROADMAP.md`](./ROADMAP.md)
+
+---
 
 ## 👨‍💻 Author
 
-Made with focus and too much coffee by [@your-username](https://github.com/niranois13) ☕
-
-> Private repo for now — polishing before open-sourcing.
-
----
+Made with focus and too much coffee by [@niranois13](https://github.com/niranois13) ☕

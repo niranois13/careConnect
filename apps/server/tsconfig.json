@@ -4,5 +4,8 @@
     "outDir": "dist",
     "types": ["node"]
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+  ]
 }

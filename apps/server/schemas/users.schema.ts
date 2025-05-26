@@ -1,5 +1,8 @@
 import { z } from 'zod';
 
+import { env } from '../../../env.ts';
+
+const ADMIN_KEY =  env.ADMIN_KEY;
 const alphaRegex: RegExp = /^[A-Za-zÀ-ÿ\s'-]+$/;
 const nameField = z
   .string()
@@ -20,7 +23,7 @@ export const baseUserSchemaRegistration = baseUserSchema.extend({
   passwordConfirm: z.string().min(14),
 });
 
-export const CareSeekerSchema = z.object({
+export const CareSeekerSchema = baseUserSchema.extend({
   role: z.literal('CARESEEKER'),
   isHelper: z.boolean().default(false),
 });
@@ -30,3 +33,16 @@ export const ProfessionalSchema = baseUserSchema.extend({
   isMobile: z.boolean().default(false),
   interventionRadius: z.number().default(0),
 });
+
+export const AdminSchema = baseUserSchema.extend({
+  role: z.literal('ADMIN'),
+  adminKey: z.string().refine(
+    (val) => val === ADMIN_KEY,
+    (val) => ({ message: `Invalid admin key: ${val}`}),
+  ),
+});
+
+export const roleQuerySchema = z
+  .object({
+    role: z.enum(['CARESEEKER', 'PROFESSIONAL', 'ADMIN']).optional(),
+  });

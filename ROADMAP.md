@@ -48,6 +48,10 @@ A été rename en CareSeeker, les personnes en situation de handicap ne sont pas
 
 #### model Professional (User) :ballot_box_with_check: **11.04.2025**
 
+### Gestion Admin
+- stocker une ADMIN_KEY dans le .env
+- ajouter une logique de comparaison avec dans la route
+
 ### Zod
 
 - installer Zod :ballot_box_with_check: **11.04.2025**
@@ -80,7 +84,8 @@ En remplacement:
 9. post:/Login
 10. post:/logout
     Et les endpoints admin only:
-11. GET/users :ballot_box_with_check: **12.04.2025**
+11. post /admin
+12. GET/users :ballot_box_with_check: **12.04.2025**
 
 ### Validators
 

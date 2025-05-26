@@ -3,14 +3,23 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 import { Prisma, PrismaClient } from '../prisma/generated/prisma-users/index.js';
-import { baseUserSchema, CareSeekerSchema, ProfessionalSchema } from '../schemas/users.schema.ts';
+import { CareSeekerSchema, ProfessionalSchema, roleQuerySchema } from '../schemas/users.schema.ts';
 
 const prisma: PrismaClient = new PrismaClient();
 
+const selectFields = {
+  id: true,
+  email: true,
+  firstName: true,
+  lastName: true,
+  phoneNumber: true,
+  role: true,
+};
+
+
 export async function createCareSeeker(req: Request, res: Response) {
   try {
-    const userData = baseUserSchema.parse(req.body);
-    const careSeekerData = CareSeekerSchema.parse(req.body);
+    const userData = CareSeekerSchema.parse(req.body);
     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     const newUser = await prisma.user.create({
@@ -23,7 +32,7 @@ export async function createCareSeeker(req: Request, res: Response) {
         role: 'CARESEEKER',
         careSeekers: {
           create: {
-            isHelper: careSeekerData.isHelper,
+            isHelper: userData.isHelper,
           },
         },
       },
@@ -43,7 +52,7 @@ export async function createCareSeeker(req: Request, res: Response) {
     return res.status(201).json({ 'User added': newUserResp });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      console.error('Error in creatCareSeeker:', error.issues);
+      console.error('Error in createCareSeeker:', error.issues);
       return res.status(400).json({ error: error.issues });
     }
 
@@ -67,17 +76,16 @@ export async function createCareSeeker(req: Request, res: Response) {
 
 export async function createProfessional(req: Request, res: Response) {
   try {
-    const userData = baseUserSchema.parse(req.body);
     const ProfessionalData = ProfessionalSchema.parse(req.body);
-    const hashedPassword = await bcrypt.hash(userData.password, 10);
+    const hashedPassword = await bcrypt.hash(ProfessionalData.password, 10);
 
     const newUser = await prisma.user.create({
       data: {
-        email: userData.email,
+        email: ProfessionalData.email,
         password: hashedPassword,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        phoneNumber: userData.phoneNumber,
+        firstName: ProfessionalData.firstName,
+        lastName: ProfessionalData.lastName,
+        phoneNumber: ProfessionalData.phoneNumber,
         role: 'PROFESSIONAL',
         professionals: {
           create: {
@@ -102,7 +110,7 @@ export async function createProfessional(req: Request, res: Response) {
     return res.status(201).json({ 'User added': newUserResp });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      console.error('Error in creatCareSeeker:', error.issues);
+      console.error('Error in createProfessional:', error.issues);
       return res.status(400).json({ error: error.issues });
     }
 
@@ -118,7 +126,7 @@ export async function createProfessional(req: Request, res: Response) {
           return res.status(404).json({ error: 'Resource not found.' });
       }
 
-      console.error('Error in createCareSeeker:', error);
+      console.error('Error in createProfessional:', error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
@@ -126,53 +134,21 @@ export async function createProfessional(req: Request, res: Response) {
 
 export async function getUsers(req: Request, res: Response) {
   try {
-    switch (req.body) {
-      case 'CARESEEKER': {
-        const Users = await prisma.user.findMany({
-          where: {
-            role: 'CARESEEKER',
-          },
-          select: {
-            id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
-            phoneNumber: true,
-            role: true,
-          },
-        });
-        return res.status(200).json({ Users: Users });
-      }
-      case 'PROFESSIONAL': {
-        const Users = await prisma.user.findMany({
-          where: {
-            role: 'PROFESSIONAL',
-          },
-          select: {
-            id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
-            phoneNumber: true,
-            role: true,
-          },
-        });
-        return res.status(200).json({ Users: Users });
-      }
-      default: {
-        const Users = await prisma.user.findMany({
-          select: {
-            id: true,
-            email: true,
-            firstName: true,
-            lastName: true,
-            phoneNumber: true,
-            role: true,
-          },
-        });
-        return res.status(200).json({ Users: Users });
-      }
+    const parseResult = roleQuerySchema.safeParse(req.query);
+
+    if (!parseResult.success) {
+      return res.status(400).json({ error: 'Invalid role filter' });
     }
+
+    const role = parseResult.data.role;
+
+    const Users = await prisma.user.findMany({
+      where: {
+        role: role,
+      },
+      select: selectFields,
+    });
+    return res.status(200).json({ Users: Users });
   } catch (error: unknown) {
     console.error('Error in getUsers:', error);
     return res.status(500).json({ error: 'Internal Server Error' });

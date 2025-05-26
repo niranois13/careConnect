@@ -1,5 +1,6 @@
 import type { Express, Request, Response } from 'express';
 
+import { createAdmin } from '../controllers/adminController.ts'
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
 import { createCareSeeker, createProfessional, getUsers } from '../controllers/userController.ts';
@@ -58,4 +59,14 @@ export default function registerRoutes(app: Express) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
+
+  /* ADMIN */
+  app.post('/admin', async (req: Request, res: Response) => {
+    try {
+      await createAdmin(req, res);
+    } catch (error: unknown) {
+      console.error('Error processing the request to createAdmin:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  })
 }

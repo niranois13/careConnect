@@ -6,17 +6,21 @@ import { env } from '../../../env.ts';
 const JWT_SECRET: string = env.JWT_SECRET;
 const JWT_EXP: number = env.JWT_EXP;
 
-type JwtPayload = {
+export type jwtPayload = {
   id: string;
   role: string;
 };
 
-export function generateToken(payload: JwtPayload) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXP });
+export type token =  string;
+
+export function generateToken(payload: jwtPayload): token {
+  const token = jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXP });
+  return token;
 }
 
-export function verifyToken(token: string) {
-  return jwt.verify(token, JWT_SECRET);
+export function verifyToken(token: string): jwtPayload {
+  const payload = jwt.verify(token, JWT_SECRET) as jwtPayload;
+  return payload;
 }
 
 export function generateCookie(res: Response, token: string) {

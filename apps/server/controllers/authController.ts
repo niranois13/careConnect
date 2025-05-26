@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import type { Request, Response } from 'express';
+import type {Request, Response } from 'express';
 import { z } from 'zod';
 
 import { PrismaClient } from '../prisma/generated/prisma-users/index.js';
