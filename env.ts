@@ -21,5 +21,5 @@ export const env = {
   DB_URL: getEnvVar('DB_URL'),
   JWT_SECRET: getEnvVar('JWT_SECRET'),
   JWT_EXP: Number(getEnvVar('JWT_EXP')),
-  ADMIN_KEY: getEnvVar('ADMIN_KEY')
+  ADMIN_KEY: getEnvVar('ADMIN_KEY'),
 };

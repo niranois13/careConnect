@@ -21,7 +21,11 @@ export default [
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: [path.resolve('./tsconfig.base.json')],
+        project: [
+          path.resolve('./tsconfig.base.json'),
+          path.resolve('./apps/server/tsconfig.json'),
+          path.resolve('./apps/web/tsconfig.json')
+        ],
         tsconfigRootDir: path.resolve(),
       },
     },

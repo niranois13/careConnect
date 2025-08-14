@@ -11,12 +11,6 @@ generator users {
   importFileExtension = "ts"
 }
 
-enum Role {
-  CARESEEKER
-  PROFESSIONAL
-  ADMIN
-}
-
 model User {
   id                String          @id @default(uuid())
   email             String          @unique
@@ -24,7 +18,7 @@ model User {
   firstName         String
   lastName          String
   phoneNumber       String?         @unique
-  role              Role            
+  role              String          @default("GUEST")            
   createdAt         DateTime        @default(now())
   updatedAt         DateTime        @updatedAt
   emailVerified     Boolean         @default(false)

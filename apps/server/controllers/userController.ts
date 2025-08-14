@@ -2,8 +2,8 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 
+import { CareSeekerSchema, ProfessionalSchema, roleQuerySchema } from '../../../packages/schemas/src/users.schemas.ts'
 import { Prisma, PrismaClient } from '../prisma/generated/prisma-users/index.js';
-import { CareSeekerSchema, ProfessionalSchema, roleQuerySchema } from '../schemas/users.schema.ts';
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -15,7 +15,6 @@ const selectFields = {
   phoneNumber: true,
   role: true,
 };
-
 
 export async function createCareSeeker(req: Request, res: Response) {
   try {

@@ -49,6 +49,7 @@ A été rename en CareSeeker, les personnes en situation de handicap ne sont pas
 #### model Professional (User) :ballot_box_with_check: **11.04.2025**
 
 ### Gestion Admin
+
 - stocker une ADMIN_KEY dans le .env
 - ajouter une logique de comparaison avec dans la route
 
@@ -61,7 +62,7 @@ A été rename en CareSeeker, les personnes en situation de handicap ne sont pas
 
 - Créer les routers avec `query`/`mutation` : create, list, update, delete.
 
-=> Après 1/2 semaine à lire régulièrement de la docs, à rearder des tutos, j'ai compris l'intérêt de tRPC et l'outil a l'air **puissant**. Le sentiment de rajouter une très grosse couche d'abstraction me dérangeait et des difficultés en chaîne dans le setup m'ont ait abandonné l'idée. Enfin, c'est encore un package niche, j'y reviendrais!
+=> Après 1/2 semaine à lire régulièrement de la docs, à regarder des tutos, j'ai compris l'intérêt de tRPC et l'outil a l'air **puissant**. Le sentiment de rajouter une très grosse couche d'abstraction me dérangeait et des difficultés en chaîne dans le setup m'ont fait abandonner l'idée. Enfin, c'est encore un package niche, j'y reviendrais!
 
 En remplacement:
 

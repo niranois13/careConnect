@@ -1,20 +1,21 @@
 import type { Express, Request, Response } from 'express';
 
-import { createAdmin } from '../controllers/adminController.ts'
+import { createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
 import { createCareSeeker, createProfessional, getUsers } from '../controllers/userController.ts';
+import { authenticate } from '../middlewares/authMiddleware.ts';
 
 export default function registerRoutes(app: Express) {
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/api', (req: Request, res: Response) => {
     res.send('/ called successfully');
   });
 
   /* UTILS */
-  app.get('/health', getHealth);
+  app.get('/api/health', getHealth);
 
   /* AUTH */
-  app.post('/login', async (req: Request, res: Response) => {
+  app.post('/api/login', async (req: Request, res: Response) => {
     try {
       await loginUser(req, res);
     } catch (error: unknown) {
@@ -23,7 +24,7 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.post('/logout', (req: Request, res: Response) => {
+  app.post('/api/logout', (req: Request, res: Response) => {
     try {
       logout(req, res);
     } catch (error: unknown) {
@@ -32,8 +33,12 @@ export default function registerRoutes(app: Express) {
     }
   });
 
+  app.get('/api/me', authenticate, (req: Request, res: Response) => {
+    res.json(req.user);
+  });
+
   /* USERS */
-  app.post('/careseeker', async (req: Request, res: Response) => {
+  app.post('/api/careseeker', async (req: Request, res: Response) => {
     try {
       await createCareSeeker(req, res);
     } catch (error: unknown) {
@@ -42,7 +47,7 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.post('/professional', async (req: Request, res: Response) => {
+  app.post('/api/professional', async (req: Request, res: Response) => {
     try {
       await createProfessional(req, res);
     } catch (error: unknown) {
@@ -51,7 +56,7 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.get('/users', async (req: Request, res: Response) => {
+  app.get('/api/users', async (req: Request, res: Response) => {
     try {
       await getUsers(req, res);
     } catch (error: unknown) {
@@ -61,12 +66,12 @@ export default function registerRoutes(app: Express) {
   });
 
   /* ADMIN */
-  app.post('/admin', async (req: Request, res: Response) => {
+  app.post('/api/admin', async (req: Request, res: Response) => {
     try {
       await createAdmin(req, res);
     } catch (error: unknown) {
       console.error('Error processing the request to createAdmin:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
-  })
+  });
 }

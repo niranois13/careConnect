@@ -5,7 +5,6 @@ import { env } from '../../../env.ts';
 
 const { Client } = pkg;
 
-
 export async function getHealth(req: Request, res: Response) {
   const DB_NAME: string = env.DB_NAME;
   const DB_USER: string = env.DB_USER;

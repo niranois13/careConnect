@@ -1,21 +1,14 @@
-import { NextFunction,Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
-import { type jwtPayload, verifyToken } from '../src/jwtHandler.ts';
+import { verifyToken } from '../src/jwtHandler.ts';
 
-declare module 'express' {
-  interface Request {
-    user?: jwtPayload;
-    cookies?: {
-      [key: string]: string | undefined
-    };
-  }
-}
-
-export function authenticate(req: Request, res: Response, next: NextFunction) {
-  const token = req.cookies?.token;
+export function authenticate(req: Request, res: Response, next: NextFunction): void {
+  const cookies = req.cookies as { [key: string]: string | undefined } | undefined;
+  const token = cookies?.token;
 
   if (!token) {
-    return res.status(401).json({ error: 'No token found, authentication required' });
+    res.status(401).json({ error: 'No token found, authentication required' });
+    return;
   }
 
   try {
@@ -24,8 +17,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction) {
     next();
   } catch (error: unknown) {
     console.error('Error in authenticate():', error);
-    return res.status(403).json({ error: 'Invalid or expired token' });
+    res.status(403).json({ error: 'Invalid or expired token' });
+    return;
   }
 }
-
-

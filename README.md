@@ -19,7 +19,7 @@ Voici un **README.md** synthétisé et structuré à partir de ton contenu initi
 
 ## ⚙️ Tech Stack
 
-### Back-End
+### Back-End _(in progress)_
 
 - **Node.js** (v22+) with **Express.js** – REST API
 - **TypeScript** – Strong typing
@@ -29,14 +29,14 @@ Voici un **README.md** synthétisé et structuré à partir de ton contenu initi
 - **JWT & OAuth 2.0** – Authentication
 - **cookie-parser**, **jsonwebtoken**
 
-### Front-End *(in progress)*
+### Front-End _(in progress)_
 
 - **React**
 - **Zod + React Hook Form**
 - **TanStack Query**
 - **React Big Calendar**
 
-### Infrastructure & Dev Tools
+### Infrastructure & Dev Tools _(in progress)_
 
 - **Docker** / **Docker Compose**
 - **pnpm** – Package manager
@@ -59,6 +59,7 @@ cp .env.example .env
 # Fill in required values: DB credentials, admin keys, ports...
 pnpm prisma db push
 pnpm dev
+```
 ````
 
 To test the API connection:
@@ -88,55 +89,55 @@ README.md             # You are here
 
 ### 🔐 Auth & User Management
 
-* Login via Email/Password
-* OAuth 2.0 (Google + others planned)
-* JWT-based sessions in cookies (`HttpOnly`, `Secure`, `SameSite`)
-* User Roles: `CareSeeker`, `Professional`, `Admin`
-* Admin panel & endpoints
+- Login via Email/Password
+- OAuth 2.0 (Google + others planned)
+- JWT-based sessions in cookies (`HttpOnly`, `Secure`, `SameSite`)
+- User Roles: `CareSeeker`, `Professional`, `Admin`
+- Admin panel & endpoints
 
 ### 📅 Availability & Appointments
 
-* Professionals define availability slots (start/end, min/max durations)
-* CareSeekers can book appointments
-* Statuses: Pending, Accepted, Cancelled
-* Address support (client/pro location)
-* Integration with React Big Calendar
+- Professionals define availability slots (start/end, min/max durations)
+- CareSeekers can book appointments
+- Statuses: Pending, Accepted, Cancelled
+- Address support (client/pro location)
+- Integration with React Big Calendar
 
 ### 🎓 Professional Qualifications & Services
 
-* Verified degrees, documents, institutions
-* List of offered services
-* Categories (customizable)
+- Verified degrees, documents, institutions
+- List of offered services
+- Categories (customizable)
 
 ### 🔎 Search Engine
 
-* Search by service type, locality, availability
-* Inspired by existing Python logic — reimplemented in TypeScript
+- Search by service type, locality, availability
+- Inspired by existing Python logic — reimplemented in TypeScript
 
 ### 💬 Messaging (Planned)
 
-* Messaging between CareSeeker and Professional (if appointment exists)
-* Email verification for signup
+- Messaging between CareSeeker and Professional (if appointment exists)
+- Email verification for signup
 
 ### 🧰 Admin Tools
 
-* JWT-based admin authentication
-* Admin-only endpoints: user listing, role assignment, moderation
+- JWT-based admin authentication
+- Admin-only endpoints: user listing, role assignment, moderation
 
 ### 🔒 Security & Privacy (Planned)
 
-* GDPR-ready: opt-in consent, data export, deletion
-* Secure document storage ("coffre-fort numérique")
-* Future integration with Stripe/MangoPay for payments
+- GDPR-ready: opt-in consent, data export, deletion
+- Secure document storage ("coffre-fort numérique")
+- Future integration with Stripe/MangoPay for payments
 
 ---
 
 ## 🧪 Testing & Logging
 
-* Mocha + Chai for unit testing
-* Winston for log tracing
-* Health check endpoint (`/health`)
-* Validators (email, phone, passwords, etc.)
+- Mocha + Chai for unit testing
+- Winston for log tracing
+- Health check endpoint (`/health`)
+- Validators (email, phone, passwords, etc.)
 
 ---
 
@@ -144,11 +145,11 @@ README.md             # You are here
 
 `docker-compose.yml` supports:
 
-* `db` – PostgreSQL with PostGIS
-* `server` – Node.js API
-* `frontend` – React app *(planned)*
-* `nginx` – Static + proxy routing *(planned)*
-* `redis` – Session & token management *(planned)*
+- `db` – PostgreSQL with PostGIS
+- `server` – Node.js API
+- `frontend` – React app _(planned)_
+- `nginx` – Static + proxy routing _(planned)_
+- `redis` – Session & token management _(planned)_
 
 To run:
 
@@ -160,15 +161,15 @@ docker-compose up --build
 
 ## 📅 Roadmap Highlights
 
-* ✅ Database & Prisma models (User, Availability, Appointment, etc.)
-* ✅ Zod validation
-* ✅ REST API with Express (full CRUD)
-* 🛠️ React frontend in progress
-* 🛠️ Redis integration (token blacklist, cache)
-* 🛠️ Advanced search & filters
-* 🛠️ Messaging system
-* 🛠️ File/document vault
-* 🛠️ Admin panel UI
+- ✅ Database & Prisma models (User, Availability, Appointment, etc.)
+- ✅ Zod validation
+- ✅ REST API with Express (full CRUD)
+- 🛠️ React frontend in progress
+- 🛠️ Redis integration (token blacklist, cache)
+- 🛠️ Advanced search & filters
+- 🛠️ Messaging system
+- 🛠️ File/document vault
+- 🛠️ Admin panel UI
 
 Full roadmap available in [`ROADMAP.md`](./ROADMAP.md)
 

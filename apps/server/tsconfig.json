@@ -2,10 +2,15 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "types": ["node"]
+    "types": ["node"],
+    "composite": true
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
+    "src",                                  // Code source principal
+    "../../packages/schemas",               // Types Zod
+    "../../packages/types",                 // Types partagés
+    "../../packages/types/src/**/*.d.ts",   // Typings explicites
+    "../../env.ts",                         // Config partagée
+    "./",
   ]
 }

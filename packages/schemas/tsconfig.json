@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,        // Requis pour les project references
+    "declaration": true,      // Génère les .d.ts
+    "outDir": "../../dist/schemas", // Chemin de sortie
+    "noEmit": true
+  },
+  "include": [
+    "src",
+    "../../env.ts"
+  ]          // Inclut uniquement le code source
+}

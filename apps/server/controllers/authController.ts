@@ -1,9 +1,9 @@
 import bcrypt from 'bcryptjs';
-import type {Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 
+import { loginSchema } from '../../../packages/schemas/src/auth.schemas.ts';
 import { PrismaClient } from '../prisma/generated/prisma-users/index.js';
-import { loginSchema } from '../schemas/auth.schemas.ts';
 import { generateCookie, generateToken } from '../src/jwtHandler.ts';
 
 const prisma = new PrismaClient();
@@ -27,7 +27,7 @@ export async function loginUser(req: Request, res: Response) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    const token = generateToken({ id: User.id, role: User.role });
+    const token = generateToken({ id: User.id, email: User.email, role: User.role });
     generateCookie(res, token);
 
     return res.status(200).json({

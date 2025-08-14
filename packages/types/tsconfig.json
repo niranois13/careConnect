@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,        // Requis pour les references
+    "declaration": true,      // Export des types
+    "declarationMap": true,   // Sourcemaps de déclaration utiles au débogage
+    "skipLibCheck": true,     // Optionnelle, désactive vérif des libs externes
+    "outDir": "../../dist/types"
+  },
+  "include": [
+    "src",
+    "../../env.ts",
+    "../../packages/schemas/src/*.ts"
+  ]
+}
