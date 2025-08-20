@@ -90,6 +90,10 @@ export async function createProfessional(req: Request, res: Response) {
           create: {
             isMobile: ProfessionalData.isMobile,
             interventionRadius: ProfessionalData.interventionRadius,
+            siret: ProfessionalData.siret,
+            profession: ProfessionalData.profession,
+            customProfession: ProfessionalData.customProfession,
+            isCustomProfessionApproved: ProfessionalData.isCustomProfessionApproved,
           },
         },
       },

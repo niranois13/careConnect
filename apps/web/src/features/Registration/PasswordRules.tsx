@@ -12,7 +12,7 @@ export default function PasswordRules({ password, confirmPassword }: PasswordRul
     lowercase: /[a-z]/.test(password),
     uppercase: /[A-Z]/.test(password),
     digit: /\d/.test(password),
-    specialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    specialChar: /[!@#$%^&*()_+\-=[\]{}|;:'",.<>/?`~]/.test(password),
   };
 
   return (

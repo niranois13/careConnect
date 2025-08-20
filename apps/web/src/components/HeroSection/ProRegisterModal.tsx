@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 
+import RegisterPro from "../../features/Registration/ProRegister.tsx";
+
 interface proModalProps {
   onClose: () => void;
 }
@@ -24,7 +26,7 @@ export default function ProRegisterModal({ onClose }: proModalProps) {
       onClick={onClose}
     >
       <div
-        className="bg-purple-50 shadow-xl rounded p-6 w-100 relative border-2 border-b-purple-800"
+        className="bg-purple-50 shadow-xl rounded p-6 relative border-2 border-b-purple-800"
         onClick={(e) => { e.stopPropagation(); }}
       >
         <button
@@ -34,6 +36,7 @@ export default function ProRegisterModal({ onClose }: proModalProps) {
         >
           ✕
         </button>
+        <RegisterPro onSuccess={onClose}/>
       </div>
     </div>
   );

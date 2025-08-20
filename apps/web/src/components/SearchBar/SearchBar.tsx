@@ -53,11 +53,11 @@ export default function SearchBar({
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder={placeholder}
-            className="flex-1 px-4 py-1 bg-purple-100 text-sm leading-6 focus:outline-none placeholder:text-center"
+            className="flex-1 px-4 py-1 bg-purple-50 text-sm leading-6 focus:outline-none placeholder:text-center"
           />
           <button
             type="submit"
-            className="bg-purple-200 hover:bg-purple-500 transition-colors border-l-2 px-4 py-1 border-purple-700"
+            className="bg-purple-100 hover:bg-purple-500 transition-colors border-l-2 px-4 py-1 border-purple-700"
           >
             {buttonText}
           </button>

@@ -34,11 +34,12 @@ model CareSeeker {
 
 model Professional {
   userId                       String           @id
-  user                         User             @relation("UserProfessional",fields: [userId], references: [id])
-  // profession                String?  
-  // customProfession          String?          @unique
-  // customProfessionApproved  Boolean          @default(false)
+  user                         User             @relation("UserProfessional", fields: [userId], references: [id])
+  profession                   String?  
+  customProfession             String?
+  isCustomProfessionApproved   Boolean          @default(false)
   isMobile                     Boolean          @default(false)
   interventionRadius           Int              @default(0)
+  siret                        String?          @unique
   //services                   ProfessionalService[]
 }

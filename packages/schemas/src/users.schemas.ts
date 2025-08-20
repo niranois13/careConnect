@@ -34,6 +34,10 @@ export const ProfessionalSchema = baseUserSchema.extend({
   role: z.literal('PROFESSIONAL'),
   isMobile: z.boolean().default(false),
   interventionRadius: z.number().default(0),
+  siret: z.string(),
+  profession: z.string(),
+  customProfession: z.string().nullable(),
+  isCustomProfessionApproved: z.boolean().default(false),
 });
 
 export const roleQuerySchema = z.object({

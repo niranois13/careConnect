@@ -28,7 +28,7 @@ function App() {
             <SearchBar size="lg" label="Je recherche un professionnel" labelPosition="top" labelStyle='landing'/>
           </div>
 
-          <div className='flex flex-wrap bg-purple-100 rounded-lg w-full max-w-5/6 mx-auto mt-2 py-3'>
+          <div className='flex flex-wrap bg-purple-50 rounded-lg w-full max-w-5/6 mx-auto mt-2 py-3'>
             <p className='text-3xl w-full text-center font-bold mb-5'>
               Pourquoi choisir <strong>careConnect</strong> ?
             </p>
