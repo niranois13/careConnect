@@ -3,9 +3,11 @@ import { z } from 'zod';
 const alphaRegex: RegExp = /^[A-Za-zÀ-ÿ\s'-]+$/;
 const nameField = z
   .string()
+  .trim()
+  .min(2)
   .max(25)
   .regex(alphaRegex,
-    'Prénom / Nom ne peuvent être composés que de lettres et caracères spéciaux'
+    'Prénom / Nom ne peuvent être composés que de lettres, tirets et apostrophes.'
   );
 
 const passRegex: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{14,}$/;
@@ -21,8 +23,12 @@ export const baseUserSchema = z.object({
   password: passField,
   lastName: nameField,
   firstName: nameField,
-  phoneNumber: z.string().nullable(),
+  phoneNumber: z.string().trim().min(10).max(12).nullable(),
   role: z.enum(['CARESEEKER', 'PROFESSIONAL', 'ADMIN']),
+});
+
+export const updateUserSchema = baseUserSchema.extend({
+  id: z.string().uuid(),
 });
 
 export const CareSeekerSchema = baseUserSchema.extend({
@@ -30,15 +36,26 @@ export const CareSeekerSchema = baseUserSchema.extend({
   isHelper: z.boolean().default(false).optional(),
 });
 
+export const updateCareSeekerSchema = updateUserSchema.extend({
+  isHelper: z.boolean().default(false).optional(),
+});
+
 export const ProfessionalSchema = baseUserSchema.extend({
   role: z.literal('PROFESSIONAL'),
   isMobile: z.boolean().default(false),
   interventionRadius: z.number().default(0),
-  siret: z.string(),
-  profession: z.string(),
-  customProfession: z.string().nullable(),
-  isCustomProfessionApproved: z.boolean().default(false),
+  siret: z.string().trim().min(14).max(14),
+  isSiretValid: z.boolean().default(false),
+  professionId: z.string().uuid().optional(),
 });
+
+export const updateProfessionalSchema = updateUserSchema.extend({
+  isMobile: z.boolean().default(false),
+  interventionRadius: z.number().default(0),
+  siret: z.string().trim().min(14).max(14),
+  isSiretValid: z.boolean().default(false),
+  professionId: z.string().uuid().optional(),
+})
 
 export const roleQuerySchema = z.object({
   role: z.enum(['CARESEEKER', 'PROFESSIONAL', 'ADMIN']).optional(),

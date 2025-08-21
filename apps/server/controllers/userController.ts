@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 import { CareSeekerSchema, ProfessionalSchema, roleQuerySchema } from '../../../packages/schemas/src/users.schemas.ts'
-import { Prisma, PrismaClient } from '../prisma/generated/prisma-users/index.js';
+import { Prisma, PrismaClient } from '../prisma/generated/index.js';
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -91,9 +91,8 @@ export async function createProfessional(req: Request, res: Response) {
             isMobile: ProfessionalData.isMobile,
             interventionRadius: ProfessionalData.interventionRadius,
             siret: ProfessionalData.siret,
-            profession: ProfessionalData.profession,
-            customProfession: ProfessionalData.customProfession,
-            isCustomProfessionApproved: ProfessionalData.isCustomProfessionApproved,
+            isSiretValid: ProfessionalData.isSiretValid,
+            professionId: ProfessionalData.professionId,
           },
         },
       },

@@ -140,12 +140,20 @@ exports.Prisma.CareSeekerScalarFieldEnum = {
 
 exports.Prisma.ProfessionalScalarFieldEnum = {
   userId: 'userId',
-  profession: 'profession',
-  customProfession: 'customProfession',
-  isCustomProfessionApproved: 'isCustomProfessionApproved',
+  professionId: 'professionId',
   isMobile: 'isMobile',
   interventionRadius: 'interventionRadius',
-  siret: 'siret'
+  siret: 'siret',
+  isSiretValid: 'isSiretValid'
+};
+
+exports.Prisma.ProfessionScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  customProfession: 'customProfession',
+  isCustomProfessionApproved: 'isCustomProfessionApproved',
+  professionName: 'professionName'
 };
 
 exports.Prisma.SortOrder = {
@@ -167,7 +175,8 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   User: 'User',
   CareSeeker: 'CareSeeker',
-  Professional: 'Professional'
+  Professional: 'Professional',
+  Profession: 'Profession'
 };
 
 /**

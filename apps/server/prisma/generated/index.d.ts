@@ -28,6 +28,11 @@ export type CareSeeker = $Result.DefaultSelection<Prisma.$CareSeekerPayload>
  * 
  */
 export type Professional = $Result.DefaultSelection<Prisma.$ProfessionalPayload>
+/**
+ * Model Profession
+ * 
+ */
+export type Profession = $Result.DefaultSelection<Prisma.$ProfessionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -176,6 +181,16 @@ export class PrismaClient<
     * ```
     */
   get professional(): Prisma.ProfessionalDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.profession`: Exposes CRUD operations for the **Profession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Professions
+    * const professions = await prisma.profession.findMany()
+    * ```
+    */
+  get profession(): Prisma.ProfessionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -618,7 +633,8 @@ export namespace Prisma {
   export const ModelName: {
     User: 'User',
     CareSeeker: 'CareSeeker',
-    Professional: 'Professional'
+    Professional: 'Professional',
+    Profession: 'Profession'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -637,7 +653,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "careSeeker" | "professional"
+      modelProps: "user" | "careSeeker" | "professional" | "profession"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -863,6 +879,80 @@ export namespace Prisma {
           }
         }
       }
+      Profession: {
+        payload: Prisma.$ProfessionPayload<ExtArgs>
+        fields: Prisma.ProfessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ProfessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ProfessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>
+          }
+          findFirst: {
+            args: Prisma.ProfessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ProfessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>
+          }
+          findMany: {
+            args: Prisma.ProfessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>[]
+          }
+          create: {
+            args: Prisma.ProfessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>
+          }
+          createMany: {
+            args: Prisma.ProfessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ProfessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>[]
+          }
+          delete: {
+            args: Prisma.ProfessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>
+          }
+          update: {
+            args: Prisma.ProfessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.ProfessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ProfessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ProfessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.ProfessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ProfessionPayload>
+          }
+          aggregate: {
+            args: Prisma.ProfessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateProfession>
+          }
+          groupBy: {
+            args: Prisma.ProfessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ProfessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ProfessionCountArgs<ExtArgs>
+            result: $Utils.Optional<ProfessionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -958,6 +1048,7 @@ export namespace Prisma {
     user?: UserOmit
     careSeeker?: CareSeekerOmit
     professional?: ProfessionalOmit
+    profession?: ProfessionOmit
   }
 
   /* Types for Logging */
@@ -1069,6 +1160,37 @@ export namespace Prisma {
    * UserCountOutputType without action
    */
   export type UserCountOutputTypeCountProfessionalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProfessionalWhereInput
+  }
+
+
+  /**
+   * Count Type ProfessionCountOutputType
+   */
+
+  export type ProfessionCountOutputType = {
+    professionals: number
+  }
+
+  export type ProfessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    professionals?: boolean | ProfessionCountOutputTypeCountProfessionalsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ProfessionCountOutputType without action
+   */
+  export type ProfessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ProfessionCountOutputType
+     */
+    select?: ProfessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProfessionCountOutputType without action
+   */
+  export type ProfessionCountOutputTypeCountProfessionalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: ProfessionalWhereInput
   }
 
@@ -3281,32 +3403,29 @@ export namespace Prisma {
 
   export type ProfessionalMinAggregateOutputType = {
     userId: string | null
-    profession: string | null
-    customProfession: string | null
-    isCustomProfessionApproved: boolean | null
+    professionId: string | null
     isMobile: boolean | null
     interventionRadius: number | null
     siret: string | null
+    isSiretValid: boolean | null
   }
 
   export type ProfessionalMaxAggregateOutputType = {
     userId: string | null
-    profession: string | null
-    customProfession: string | null
-    isCustomProfessionApproved: boolean | null
+    professionId: string | null
     isMobile: boolean | null
     interventionRadius: number | null
     siret: string | null
+    isSiretValid: boolean | null
   }
 
   export type ProfessionalCountAggregateOutputType = {
     userId: number
-    profession: number
-    customProfession: number
-    isCustomProfessionApproved: number
+    professionId: number
     isMobile: number
     interventionRadius: number
     siret: number
+    isSiretValid: number
     _all: number
   }
 
@@ -3321,32 +3440,29 @@ export namespace Prisma {
 
   export type ProfessionalMinAggregateInputType = {
     userId?: true
-    profession?: true
-    customProfession?: true
-    isCustomProfessionApproved?: true
+    professionId?: true
     isMobile?: true
     interventionRadius?: true
     siret?: true
+    isSiretValid?: true
   }
 
   export type ProfessionalMaxAggregateInputType = {
     userId?: true
-    profession?: true
-    customProfession?: true
-    isCustomProfessionApproved?: true
+    professionId?: true
     isMobile?: true
     interventionRadius?: true
     siret?: true
+    isSiretValid?: true
   }
 
   export type ProfessionalCountAggregateInputType = {
     userId?: true
-    profession?: true
-    customProfession?: true
-    isCustomProfessionApproved?: true
+    professionId?: true
     isMobile?: true
     interventionRadius?: true
     siret?: true
+    isSiretValid?: true
     _all?: true
   }
 
@@ -3438,12 +3554,11 @@ export namespace Prisma {
 
   export type ProfessionalGroupByOutputType = {
     userId: string
-    profession: string | null
-    customProfession: string | null
-    isCustomProfessionApproved: boolean
+    professionId: string | null
     isMobile: boolean
     interventionRadius: number
     siret: string | null
+    isSiretValid: boolean
     _count: ProfessionalCountAggregateOutputType | null
     _avg: ProfessionalAvgAggregateOutputType | null
     _sum: ProfessionalSumAggregateOutputType | null
@@ -3467,71 +3582,73 @@ export namespace Prisma {
 
   export type ProfessionalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
-    profession?: boolean
-    customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    professionId?: boolean
     isMobile?: boolean
     interventionRadius?: boolean
     siret?: boolean
+    isSiretValid?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    profession?: boolean | Professional$professionArgs<ExtArgs>
   }, ExtArgs["result"]["professional"]>
 
   export type ProfessionalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
-    profession?: boolean
-    customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    professionId?: boolean
     isMobile?: boolean
     interventionRadius?: boolean
     siret?: boolean
+    isSiretValid?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    profession?: boolean | Professional$professionArgs<ExtArgs>
   }, ExtArgs["result"]["professional"]>
 
   export type ProfessionalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     userId?: boolean
-    profession?: boolean
-    customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    professionId?: boolean
     isMobile?: boolean
     interventionRadius?: boolean
     siret?: boolean
+    isSiretValid?: boolean
     user?: boolean | UserDefaultArgs<ExtArgs>
+    profession?: boolean | Professional$professionArgs<ExtArgs>
   }, ExtArgs["result"]["professional"]>
 
   export type ProfessionalSelectScalar = {
     userId?: boolean
-    profession?: boolean
-    customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    professionId?: boolean
     isMobile?: boolean
     interventionRadius?: boolean
     siret?: boolean
+    isSiretValid?: boolean
   }
 
-  export type ProfessionalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "profession" | "customProfession" | "isCustomProfessionApproved" | "isMobile" | "interventionRadius" | "siret", ExtArgs["result"]["professional"]>
+  export type ProfessionalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"userId" | "professionId" | "isMobile" | "interventionRadius" | "siret" | "isSiretValid", ExtArgs["result"]["professional"]>
   export type ProfessionalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    profession?: boolean | Professional$professionArgs<ExtArgs>
   }
   export type ProfessionalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    profession?: boolean | Professional$professionArgs<ExtArgs>
   }
   export type ProfessionalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
+    profession?: boolean | Professional$professionArgs<ExtArgs>
   }
 
   export type $ProfessionalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Professional"
     objects: {
       user: Prisma.$UserPayload<ExtArgs>
+      profession: Prisma.$ProfessionPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       userId: string
-      profession: string | null
-      customProfession: string | null
-      isCustomProfessionApproved: boolean
+      professionId: string | null
       isMobile: boolean
       interventionRadius: number
       siret: string | null
+      isSiretValid: boolean
     }, ExtArgs["result"]["professional"]>
     composites: {}
   }
@@ -3927,6 +4044,7 @@ export namespace Prisma {
   export interface Prisma__ProfessionalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    profession<T extends Professional$professionArgs<ExtArgs> = {}>(args?: Subset<T, Professional$professionArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3957,12 +4075,11 @@ export namespace Prisma {
    */
   interface ProfessionalFieldRefs {
     readonly userId: FieldRef<"Professional", 'String'>
-    readonly profession: FieldRef<"Professional", 'String'>
-    readonly customProfession: FieldRef<"Professional", 'String'>
-    readonly isCustomProfessionApproved: FieldRef<"Professional", 'Boolean'>
+    readonly professionId: FieldRef<"Professional", 'String'>
     readonly isMobile: FieldRef<"Professional", 'Boolean'>
     readonly interventionRadius: FieldRef<"Professional", 'Int'>
     readonly siret: FieldRef<"Professional", 'String'>
+    readonly isSiretValid: FieldRef<"Professional", 'Boolean'>
   }
     
 
@@ -4359,6 +4476,25 @@ export namespace Prisma {
   }
 
   /**
+   * Professional.profession
+   */
+  export type Professional$professionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    where?: ProfessionWhereInput
+  }
+
+  /**
    * Professional without action
    */
   export type ProfessionalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4374,6 +4510,1089 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ProfessionalInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Profession
+   */
+
+  export type AggregateProfession = {
+    _count: ProfessionCountAggregateOutputType | null
+    _min: ProfessionMinAggregateOutputType | null
+    _max: ProfessionMaxAggregateOutputType | null
+  }
+
+  export type ProfessionMinAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customProfession: string | null
+    isCustomProfessionApproved: boolean | null
+    professionName: string | null
+  }
+
+  export type ProfessionMaxAggregateOutputType = {
+    id: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    customProfession: string | null
+    isCustomProfessionApproved: boolean | null
+    professionName: string | null
+  }
+
+  export type ProfessionCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    customProfession: number
+    isCustomProfessionApproved: number
+    professionName: number
+    _all: number
+  }
+
+
+  export type ProfessionMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customProfession?: true
+    isCustomProfessionApproved?: true
+    professionName?: true
+  }
+
+  export type ProfessionMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customProfession?: true
+    isCustomProfessionApproved?: true
+    professionName?: true
+  }
+
+  export type ProfessionCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    customProfession?: true
+    isCustomProfessionApproved?: true
+    professionName?: true
+    _all?: true
+  }
+
+  export type ProfessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Profession to aggregate.
+     */
+    where?: ProfessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Professions to fetch.
+     */
+    orderBy?: ProfessionOrderByWithRelationInput | ProfessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ProfessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Professions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Professions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Professions
+    **/
+    _count?: true | ProfessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProfessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProfessionMaxAggregateInputType
+  }
+
+  export type GetProfessionAggregateType<T extends ProfessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateProfession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProfession[P]>
+      : GetScalarType<T[P], AggregateProfession[P]>
+  }
+
+
+
+
+  export type ProfessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ProfessionWhereInput
+    orderBy?: ProfessionOrderByWithAggregationInput | ProfessionOrderByWithAggregationInput[]
+    by: ProfessionScalarFieldEnum[] | ProfessionScalarFieldEnum
+    having?: ProfessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProfessionCountAggregateInputType | true
+    _min?: ProfessionMinAggregateInputType
+    _max?: ProfessionMaxAggregateInputType
+  }
+
+  export type ProfessionGroupByOutputType = {
+    id: string
+    createdAt: Date
+    updatedAt: Date
+    customProfession: string | null
+    isCustomProfessionApproved: boolean
+    professionName: string
+    _count: ProfessionCountAggregateOutputType | null
+    _min: ProfessionMinAggregateOutputType | null
+    _max: ProfessionMaxAggregateOutputType | null
+  }
+
+  type GetProfessionGroupByPayload<T extends ProfessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ProfessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProfessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProfessionGroupByOutputType[P]>
+            : GetScalarType<T[P], ProfessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProfessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customProfession?: boolean
+    isCustomProfessionApproved?: boolean
+    professionName?: boolean
+    professionals?: boolean | Profession$professionalsArgs<ExtArgs>
+    _count?: boolean | ProfessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["profession"]>
+
+  export type ProfessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customProfession?: boolean
+    isCustomProfessionApproved?: boolean
+    professionName?: boolean
+  }, ExtArgs["result"]["profession"]>
+
+  export type ProfessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customProfession?: boolean
+    isCustomProfessionApproved?: boolean
+    professionName?: boolean
+  }, ExtArgs["result"]["profession"]>
+
+  export type ProfessionSelectScalar = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    customProfession?: boolean
+    isCustomProfessionApproved?: boolean
+    professionName?: boolean
+  }
+
+  export type ProfessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customProfession" | "isCustomProfessionApproved" | "professionName", ExtArgs["result"]["profession"]>
+  export type ProfessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    professionals?: boolean | Profession$professionalsArgs<ExtArgs>
+    _count?: boolean | ProfessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ProfessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ProfessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ProfessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Profession"
+    objects: {
+      professionals: Prisma.$ProfessionalPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      createdAt: Date
+      updatedAt: Date
+      customProfession: string | null
+      isCustomProfessionApproved: boolean
+      professionName: string
+    }, ExtArgs["result"]["profession"]>
+    composites: {}
+  }
+
+  type ProfessionGetPayload<S extends boolean | null | undefined | ProfessionDefaultArgs> = $Result.GetResult<Prisma.$ProfessionPayload, S>
+
+  type ProfessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ProfessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ProfessionCountAggregateInputType | true
+    }
+
+  export interface ProfessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Profession'], meta: { name: 'Profession' } }
+    /**
+     * Find zero or one Profession that matches the filter.
+     * @param {ProfessionFindUniqueArgs} args - Arguments to find a Profession
+     * @example
+     * // Get one Profession
+     * const profession = await prisma.profession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ProfessionFindUniqueArgs>(args: SelectSubset<T, ProfessionFindUniqueArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Profession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ProfessionFindUniqueOrThrowArgs} args - Arguments to find a Profession
+     * @example
+     * // Get one Profession
+     * const profession = await prisma.profession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ProfessionFindUniqueOrThrowArgs>(args: SelectSubset<T, ProfessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Profession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionFindFirstArgs} args - Arguments to find a Profession
+     * @example
+     * // Get one Profession
+     * const profession = await prisma.profession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ProfessionFindFirstArgs>(args?: SelectSubset<T, ProfessionFindFirstArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Profession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionFindFirstOrThrowArgs} args - Arguments to find a Profession
+     * @example
+     * // Get one Profession
+     * const profession = await prisma.profession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ProfessionFindFirstOrThrowArgs>(args?: SelectSubset<T, ProfessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Professions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Professions
+     * const professions = await prisma.profession.findMany()
+     * 
+     * // Get first 10 Professions
+     * const professions = await prisma.profession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const professionWithIdOnly = await prisma.profession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ProfessionFindManyArgs>(args?: SelectSubset<T, ProfessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Profession.
+     * @param {ProfessionCreateArgs} args - Arguments to create a Profession.
+     * @example
+     * // Create one Profession
+     * const Profession = await prisma.profession.create({
+     *   data: {
+     *     // ... data to create a Profession
+     *   }
+     * })
+     * 
+     */
+    create<T extends ProfessionCreateArgs>(args: SelectSubset<T, ProfessionCreateArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Professions.
+     * @param {ProfessionCreateManyArgs} args - Arguments to create many Professions.
+     * @example
+     * // Create many Professions
+     * const profession = await prisma.profession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ProfessionCreateManyArgs>(args?: SelectSubset<T, ProfessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Professions and returns the data saved in the database.
+     * @param {ProfessionCreateManyAndReturnArgs} args - Arguments to create many Professions.
+     * @example
+     * // Create many Professions
+     * const profession = await prisma.profession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Professions and only return the `id`
+     * const professionWithIdOnly = await prisma.profession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ProfessionCreateManyAndReturnArgs>(args?: SelectSubset<T, ProfessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Profession.
+     * @param {ProfessionDeleteArgs} args - Arguments to delete one Profession.
+     * @example
+     * // Delete one Profession
+     * const Profession = await prisma.profession.delete({
+     *   where: {
+     *     // ... filter to delete one Profession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ProfessionDeleteArgs>(args: SelectSubset<T, ProfessionDeleteArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Profession.
+     * @param {ProfessionUpdateArgs} args - Arguments to update one Profession.
+     * @example
+     * // Update one Profession
+     * const profession = await prisma.profession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ProfessionUpdateArgs>(args: SelectSubset<T, ProfessionUpdateArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Professions.
+     * @param {ProfessionDeleteManyArgs} args - Arguments to filter Professions to delete.
+     * @example
+     * // Delete a few Professions
+     * const { count } = await prisma.profession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ProfessionDeleteManyArgs>(args?: SelectSubset<T, ProfessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Professions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Professions
+     * const profession = await prisma.profession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ProfessionUpdateManyArgs>(args: SelectSubset<T, ProfessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Professions and returns the data updated in the database.
+     * @param {ProfessionUpdateManyAndReturnArgs} args - Arguments to update many Professions.
+     * @example
+     * // Update many Professions
+     * const profession = await prisma.profession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Professions and only return the `id`
+     * const professionWithIdOnly = await prisma.profession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ProfessionUpdateManyAndReturnArgs>(args: SelectSubset<T, ProfessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Profession.
+     * @param {ProfessionUpsertArgs} args - Arguments to update or create a Profession.
+     * @example
+     * // Update or create a Profession
+     * const profession = await prisma.profession.upsert({
+     *   create: {
+     *     // ... data to create a Profession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Profession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ProfessionUpsertArgs>(args: SelectSubset<T, ProfessionUpsertArgs<ExtArgs>>): Prisma__ProfessionClient<$Result.GetResult<Prisma.$ProfessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Professions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionCountArgs} args - Arguments to filter Professions to count.
+     * @example
+     * // Count the number of Professions
+     * const count = await prisma.profession.count({
+     *   where: {
+     *     // ... the filter for the Professions we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProfessionCountArgs>(
+      args?: Subset<T, ProfessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProfessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Profession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProfessionAggregateArgs>(args: Subset<T, ProfessionAggregateArgs>): Prisma.PrismaPromise<GetProfessionAggregateType<T>>
+
+    /**
+     * Group by Profession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProfessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProfessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProfessionGroupByArgs['orderBy'] }
+        : { orderBy?: ProfessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProfessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProfessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Profession model
+   */
+  readonly fields: ProfessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Profession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ProfessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    professionals<T extends Profession$professionalsArgs<ExtArgs> = {}>(args?: Subset<T, Profession$professionalsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProfessionalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Profession model
+   */
+  interface ProfessionFieldRefs {
+    readonly id: FieldRef<"Profession", 'String'>
+    readonly createdAt: FieldRef<"Profession", 'DateTime'>
+    readonly updatedAt: FieldRef<"Profession", 'DateTime'>
+    readonly customProfession: FieldRef<"Profession", 'String'>
+    readonly isCustomProfessionApproved: FieldRef<"Profession", 'Boolean'>
+    readonly professionName: FieldRef<"Profession", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Profession findUnique
+   */
+  export type ProfessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Profession to fetch.
+     */
+    where: ProfessionWhereUniqueInput
+  }
+
+  /**
+   * Profession findUniqueOrThrow
+   */
+  export type ProfessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Profession to fetch.
+     */
+    where: ProfessionWhereUniqueInput
+  }
+
+  /**
+   * Profession findFirst
+   */
+  export type ProfessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Profession to fetch.
+     */
+    where?: ProfessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Professions to fetch.
+     */
+    orderBy?: ProfessionOrderByWithRelationInput | ProfessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Professions.
+     */
+    cursor?: ProfessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Professions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Professions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Professions.
+     */
+    distinct?: ProfessionScalarFieldEnum | ProfessionScalarFieldEnum[]
+  }
+
+  /**
+   * Profession findFirstOrThrow
+   */
+  export type ProfessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Profession to fetch.
+     */
+    where?: ProfessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Professions to fetch.
+     */
+    orderBy?: ProfessionOrderByWithRelationInput | ProfessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Professions.
+     */
+    cursor?: ProfessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Professions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Professions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Professions.
+     */
+    distinct?: ProfessionScalarFieldEnum | ProfessionScalarFieldEnum[]
+  }
+
+  /**
+   * Profession findMany
+   */
+  export type ProfessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * Filter, which Professions to fetch.
+     */
+    where?: ProfessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Professions to fetch.
+     */
+    orderBy?: ProfessionOrderByWithRelationInput | ProfessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Professions.
+     */
+    cursor?: ProfessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Professions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Professions.
+     */
+    skip?: number
+    distinct?: ProfessionScalarFieldEnum | ProfessionScalarFieldEnum[]
+  }
+
+  /**
+   * Profession create
+   */
+  export type ProfessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Profession.
+     */
+    data: XOR<ProfessionCreateInput, ProfessionUncheckedCreateInput>
+  }
+
+  /**
+   * Profession createMany
+   */
+  export type ProfessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Professions.
+     */
+    data: ProfessionCreateManyInput | ProfessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Profession createManyAndReturn
+   */
+  export type ProfessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Professions.
+     */
+    data: ProfessionCreateManyInput | ProfessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Profession update
+   */
+  export type ProfessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Profession.
+     */
+    data: XOR<ProfessionUpdateInput, ProfessionUncheckedUpdateInput>
+    /**
+     * Choose, which Profession to update.
+     */
+    where: ProfessionWhereUniqueInput
+  }
+
+  /**
+   * Profession updateMany
+   */
+  export type ProfessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Professions.
+     */
+    data: XOR<ProfessionUpdateManyMutationInput, ProfessionUncheckedUpdateManyInput>
+    /**
+     * Filter which Professions to update
+     */
+    where?: ProfessionWhereInput
+    /**
+     * Limit how many Professions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Profession updateManyAndReturn
+   */
+  export type ProfessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * The data used to update Professions.
+     */
+    data: XOR<ProfessionUpdateManyMutationInput, ProfessionUncheckedUpdateManyInput>
+    /**
+     * Filter which Professions to update
+     */
+    where?: ProfessionWhereInput
+    /**
+     * Limit how many Professions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Profession upsert
+   */
+  export type ProfessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Profession to update in case it exists.
+     */
+    where: ProfessionWhereUniqueInput
+    /**
+     * In case the Profession found by the `where` argument doesn't exist, create a new Profession with this data.
+     */
+    create: XOR<ProfessionCreateInput, ProfessionUncheckedCreateInput>
+    /**
+     * In case the Profession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ProfessionUpdateInput, ProfessionUncheckedUpdateInput>
+  }
+
+  /**
+   * Profession delete
+   */
+  export type ProfessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
+    /**
+     * Filter which Profession to delete.
+     */
+    where: ProfessionWhereUniqueInput
+  }
+
+  /**
+   * Profession deleteMany
+   */
+  export type ProfessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Professions to delete
+     */
+    where?: ProfessionWhereInput
+    /**
+     * Limit how many Professions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Profession.professionals
+   */
+  export type Profession$professionalsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Professional
+     */
+    select?: ProfessionalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Professional
+     */
+    omit?: ProfessionalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionalInclude<ExtArgs> | null
+    where?: ProfessionalWhereInput
+    orderBy?: ProfessionalOrderByWithRelationInput | ProfessionalOrderByWithRelationInput[]
+    cursor?: ProfessionalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ProfessionalScalarFieldEnum | ProfessionalScalarFieldEnum[]
+  }
+
+  /**
+   * Profession without action
+   */
+  export type ProfessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Profession
+     */
+    select?: ProfessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Profession
+     */
+    omit?: ProfessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProfessionInclude<ExtArgs> | null
   }
 
 
@@ -4417,15 +5636,26 @@ export namespace Prisma {
 
   export const ProfessionalScalarFieldEnum: {
     userId: 'userId',
-    profession: 'profession',
-    customProfession: 'customProfession',
-    isCustomProfessionApproved: 'isCustomProfessionApproved',
+    professionId: 'professionId',
     isMobile: 'isMobile',
     interventionRadius: 'interventionRadius',
-    siret: 'siret'
+    siret: 'siret',
+    isSiretValid: 'isSiretValid'
   };
 
   export type ProfessionalScalarFieldEnum = (typeof ProfessionalScalarFieldEnum)[keyof typeof ProfessionalScalarFieldEnum]
+
+
+  export const ProfessionScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    customProfession: 'customProfession',
+    isCustomProfessionApproved: 'isCustomProfessionApproved',
+    professionName: 'professionName'
+  };
+
+  export type ProfessionScalarFieldEnum = (typeof ProfessionScalarFieldEnum)[keyof typeof ProfessionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -4651,24 +5881,24 @@ export namespace Prisma {
     OR?: ProfessionalWhereInput[]
     NOT?: ProfessionalWhereInput | ProfessionalWhereInput[]
     userId?: StringFilter<"Professional"> | string
-    profession?: StringNullableFilter<"Professional"> | string | null
-    customProfession?: StringNullableFilter<"Professional"> | string | null
-    isCustomProfessionApproved?: BoolFilter<"Professional"> | boolean
+    professionId?: StringNullableFilter<"Professional"> | string | null
     isMobile?: BoolFilter<"Professional"> | boolean
     interventionRadius?: IntFilter<"Professional"> | number
     siret?: StringNullableFilter<"Professional"> | string | null
+    isSiretValid?: BoolFilter<"Professional"> | boolean
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    profession?: XOR<ProfessionNullableScalarRelationFilter, ProfessionWhereInput> | null
   }
 
   export type ProfessionalOrderByWithRelationInput = {
     userId?: SortOrder
-    profession?: SortOrderInput | SortOrder
-    customProfession?: SortOrderInput | SortOrder
-    isCustomProfessionApproved?: SortOrder
+    professionId?: SortOrderInput | SortOrder
     isMobile?: SortOrder
     interventionRadius?: SortOrder
     siret?: SortOrderInput | SortOrder
+    isSiretValid?: SortOrder
     user?: UserOrderByWithRelationInput
+    profession?: ProfessionOrderByWithRelationInput
   }
 
   export type ProfessionalWhereUniqueInput = Prisma.AtLeast<{
@@ -4677,22 +5907,21 @@ export namespace Prisma {
     AND?: ProfessionalWhereInput | ProfessionalWhereInput[]
     OR?: ProfessionalWhereInput[]
     NOT?: ProfessionalWhereInput | ProfessionalWhereInput[]
-    profession?: StringNullableFilter<"Professional"> | string | null
-    customProfession?: StringNullableFilter<"Professional"> | string | null
-    isCustomProfessionApproved?: BoolFilter<"Professional"> | boolean
+    professionId?: StringNullableFilter<"Professional"> | string | null
     isMobile?: BoolFilter<"Professional"> | boolean
     interventionRadius?: IntFilter<"Professional"> | number
+    isSiretValid?: BoolFilter<"Professional"> | boolean
     user?: XOR<UserScalarRelationFilter, UserWhereInput>
+    profession?: XOR<ProfessionNullableScalarRelationFilter, ProfessionWhereInput> | null
   }, "userId" | "siret">
 
   export type ProfessionalOrderByWithAggregationInput = {
     userId?: SortOrder
-    profession?: SortOrderInput | SortOrder
-    customProfession?: SortOrderInput | SortOrder
-    isCustomProfessionApproved?: SortOrder
+    professionId?: SortOrderInput | SortOrder
     isMobile?: SortOrder
     interventionRadius?: SortOrder
     siret?: SortOrderInput | SortOrder
+    isSiretValid?: SortOrder
     _count?: ProfessionalCountOrderByAggregateInput
     _avg?: ProfessionalAvgOrderByAggregateInput
     _max?: ProfessionalMaxOrderByAggregateInput
@@ -4705,12 +5934,71 @@ export namespace Prisma {
     OR?: ProfessionalScalarWhereWithAggregatesInput[]
     NOT?: ProfessionalScalarWhereWithAggregatesInput | ProfessionalScalarWhereWithAggregatesInput[]
     userId?: StringWithAggregatesFilter<"Professional"> | string
-    profession?: StringNullableWithAggregatesFilter<"Professional"> | string | null
-    customProfession?: StringNullableWithAggregatesFilter<"Professional"> | string | null
-    isCustomProfessionApproved?: BoolWithAggregatesFilter<"Professional"> | boolean
+    professionId?: StringNullableWithAggregatesFilter<"Professional"> | string | null
     isMobile?: BoolWithAggregatesFilter<"Professional"> | boolean
     interventionRadius?: IntWithAggregatesFilter<"Professional"> | number
     siret?: StringNullableWithAggregatesFilter<"Professional"> | string | null
+    isSiretValid?: BoolWithAggregatesFilter<"Professional"> | boolean
+  }
+
+  export type ProfessionWhereInput = {
+    AND?: ProfessionWhereInput | ProfessionWhereInput[]
+    OR?: ProfessionWhereInput[]
+    NOT?: ProfessionWhereInput | ProfessionWhereInput[]
+    id?: StringFilter<"Profession"> | string
+    createdAt?: DateTimeFilter<"Profession"> | Date | string
+    updatedAt?: DateTimeFilter<"Profession"> | Date | string
+    customProfession?: StringNullableFilter<"Profession"> | string | null
+    isCustomProfessionApproved?: BoolFilter<"Profession"> | boolean
+    professionName?: StringFilter<"Profession"> | string
+    professionals?: ProfessionalListRelationFilter
+  }
+
+  export type ProfessionOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customProfession?: SortOrderInput | SortOrder
+    isCustomProfessionApproved?: SortOrder
+    professionName?: SortOrder
+    professionals?: ProfessionalOrderByRelationAggregateInput
+  }
+
+  export type ProfessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ProfessionWhereInput | ProfessionWhereInput[]
+    OR?: ProfessionWhereInput[]
+    NOT?: ProfessionWhereInput | ProfessionWhereInput[]
+    createdAt?: DateTimeFilter<"Profession"> | Date | string
+    updatedAt?: DateTimeFilter<"Profession"> | Date | string
+    customProfession?: StringNullableFilter<"Profession"> | string | null
+    isCustomProfessionApproved?: BoolFilter<"Profession"> | boolean
+    professionName?: StringFilter<"Profession"> | string
+    professionals?: ProfessionalListRelationFilter
+  }, "id">
+
+  export type ProfessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customProfession?: SortOrderInput | SortOrder
+    isCustomProfessionApproved?: SortOrder
+    professionName?: SortOrder
+    _count?: ProfessionCountOrderByAggregateInput
+    _max?: ProfessionMaxOrderByAggregateInput
+    _min?: ProfessionMinOrderByAggregateInput
+  }
+
+  export type ProfessionScalarWhereWithAggregatesInput = {
+    AND?: ProfessionScalarWhereWithAggregatesInput | ProfessionScalarWhereWithAggregatesInput[]
+    OR?: ProfessionScalarWhereWithAggregatesInput[]
+    NOT?: ProfessionScalarWhereWithAggregatesInput | ProfessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Profession"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Profession"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Profession"> | Date | string
+    customProfession?: StringNullableWithAggregatesFilter<"Profession"> | string | null
+    isCustomProfessionApproved?: BoolWithAggregatesFilter<"Profession"> | boolean
+    professionName?: StringWithAggregatesFilter<"Profession"> | string
   }
 
   export type UserCreateInput = {
@@ -4847,72 +6135,131 @@ export namespace Prisma {
   }
 
   export type ProfessionalCreateInput = {
-    profession?: string | null
-    customProfession?: string | null
-    isCustomProfessionApproved?: boolean
     isMobile?: boolean
     interventionRadius?: number
     siret?: string | null
+    isSiretValid?: boolean
     user: UserCreateNestedOneWithoutProfessionalsInput
+    profession?: ProfessionCreateNestedOneWithoutProfessionalsInput
   }
 
   export type ProfessionalUncheckedCreateInput = {
     userId: string
-    profession?: string | null
-    customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    professionId?: string | null
     isMobile?: boolean
     interventionRadius?: number
     siret?: string | null
+    isSiretValid?: boolean
   }
 
   export type ProfessionalUpdateInput = {
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
     user?: UserUpdateOneRequiredWithoutProfessionalsNestedInput
+    profession?: ProfessionUpdateOneWithoutProfessionalsNestedInput
   }
 
   export type ProfessionalUncheckedUpdateInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionId?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProfessionalCreateManyInput = {
     userId: string
-    profession?: string | null
-    customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    professionId?: string | null
     isMobile?: boolean
     interventionRadius?: number
     siret?: string | null
+    isSiretValid?: boolean
   }
 
   export type ProfessionalUpdateManyMutationInput = {
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProfessionalUncheckedUpdateManyInput = {
     userId?: StringFieldUpdateOperationsInput | string
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionId?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProfessionCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customProfession?: string | null
+    isCustomProfessionApproved?: boolean
+    professionName: string
+    professionals?: ProfessionalCreateNestedManyWithoutProfessionInput
+  }
+
+  export type ProfessionUncheckedCreateInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customProfession?: string | null
+    isCustomProfessionApproved?: boolean
+    professionName: string
+    professionals?: ProfessionalUncheckedCreateNestedManyWithoutProfessionInput
+  }
+
+  export type ProfessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionName?: StringFieldUpdateOperationsInput | string
+    professionals?: ProfessionalUpdateManyWithoutProfessionNestedInput
+  }
+
+  export type ProfessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionName?: StringFieldUpdateOperationsInput | string
+    professionals?: ProfessionalUncheckedUpdateManyWithoutProfessionNestedInput
+  }
+
+  export type ProfessionCreateManyInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customProfession?: string | null
+    isCustomProfessionApproved?: boolean
+    professionName: string
+  }
+
+  export type ProfessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionName?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProfessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionName?: StringFieldUpdateOperationsInput | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -5114,14 +6461,18 @@ export namespace Prisma {
     not?: NestedIntFilter<$PrismaModel> | number
   }
 
+  export type ProfessionNullableScalarRelationFilter = {
+    is?: ProfessionWhereInput | null
+    isNot?: ProfessionWhereInput | null
+  }
+
   export type ProfessionalCountOrderByAggregateInput = {
     userId?: SortOrder
-    profession?: SortOrder
-    customProfession?: SortOrder
-    isCustomProfessionApproved?: SortOrder
+    professionId?: SortOrder
     isMobile?: SortOrder
     interventionRadius?: SortOrder
     siret?: SortOrder
+    isSiretValid?: SortOrder
   }
 
   export type ProfessionalAvgOrderByAggregateInput = {
@@ -5130,22 +6481,20 @@ export namespace Prisma {
 
   export type ProfessionalMaxOrderByAggregateInput = {
     userId?: SortOrder
-    profession?: SortOrder
-    customProfession?: SortOrder
-    isCustomProfessionApproved?: SortOrder
+    professionId?: SortOrder
     isMobile?: SortOrder
     interventionRadius?: SortOrder
     siret?: SortOrder
+    isSiretValid?: SortOrder
   }
 
   export type ProfessionalMinOrderByAggregateInput = {
     userId?: SortOrder
-    profession?: SortOrder
-    customProfession?: SortOrder
-    isCustomProfessionApproved?: SortOrder
+    professionId?: SortOrder
     isMobile?: SortOrder
     interventionRadius?: SortOrder
     siret?: SortOrder
+    isSiretValid?: SortOrder
   }
 
   export type ProfessionalSumOrderByAggregateInput = {
@@ -5166,6 +6515,33 @@ export namespace Prisma {
     _sum?: NestedIntFilter<$PrismaModel>
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type ProfessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customProfession?: SortOrder
+    isCustomProfessionApproved?: SortOrder
+    professionName?: SortOrder
+  }
+
+  export type ProfessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customProfession?: SortOrder
+    isCustomProfessionApproved?: SortOrder
+    professionName?: SortOrder
+  }
+
+  export type ProfessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    customProfession?: SortOrder
+    isCustomProfessionApproved?: SortOrder
+    professionName?: SortOrder
   }
 
   export type CareSeekerCreateNestedManyWithoutUserInput = {
@@ -5288,6 +6664,12 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type ProfessionCreateNestedOneWithoutProfessionalsInput = {
+    create?: XOR<ProfessionCreateWithoutProfessionalsInput, ProfessionUncheckedCreateWithoutProfessionalsInput>
+    connectOrCreate?: ProfessionCreateOrConnectWithoutProfessionalsInput
+    connect?: ProfessionWhereUniqueInput
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -5302,6 +6684,58 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutProfessionalsInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProfessionalsInput, UserUpdateWithoutProfessionalsInput>, UserUncheckedUpdateWithoutProfessionalsInput>
+  }
+
+  export type ProfessionUpdateOneWithoutProfessionalsNestedInput = {
+    create?: XOR<ProfessionCreateWithoutProfessionalsInput, ProfessionUncheckedCreateWithoutProfessionalsInput>
+    connectOrCreate?: ProfessionCreateOrConnectWithoutProfessionalsInput
+    upsert?: ProfessionUpsertWithoutProfessionalsInput
+    disconnect?: ProfessionWhereInput | boolean
+    delete?: ProfessionWhereInput | boolean
+    connect?: ProfessionWhereUniqueInput
+    update?: XOR<XOR<ProfessionUpdateToOneWithWhereWithoutProfessionalsInput, ProfessionUpdateWithoutProfessionalsInput>, ProfessionUncheckedUpdateWithoutProfessionalsInput>
+  }
+
+  export type ProfessionalCreateNestedManyWithoutProfessionInput = {
+    create?: XOR<ProfessionalCreateWithoutProfessionInput, ProfessionalUncheckedCreateWithoutProfessionInput> | ProfessionalCreateWithoutProfessionInput[] | ProfessionalUncheckedCreateWithoutProfessionInput[]
+    connectOrCreate?: ProfessionalCreateOrConnectWithoutProfessionInput | ProfessionalCreateOrConnectWithoutProfessionInput[]
+    createMany?: ProfessionalCreateManyProfessionInputEnvelope
+    connect?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+  }
+
+  export type ProfessionalUncheckedCreateNestedManyWithoutProfessionInput = {
+    create?: XOR<ProfessionalCreateWithoutProfessionInput, ProfessionalUncheckedCreateWithoutProfessionInput> | ProfessionalCreateWithoutProfessionInput[] | ProfessionalUncheckedCreateWithoutProfessionInput[]
+    connectOrCreate?: ProfessionalCreateOrConnectWithoutProfessionInput | ProfessionalCreateOrConnectWithoutProfessionInput[]
+    createMany?: ProfessionalCreateManyProfessionInputEnvelope
+    connect?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+  }
+
+  export type ProfessionalUpdateManyWithoutProfessionNestedInput = {
+    create?: XOR<ProfessionalCreateWithoutProfessionInput, ProfessionalUncheckedCreateWithoutProfessionInput> | ProfessionalCreateWithoutProfessionInput[] | ProfessionalUncheckedCreateWithoutProfessionInput[]
+    connectOrCreate?: ProfessionalCreateOrConnectWithoutProfessionInput | ProfessionalCreateOrConnectWithoutProfessionInput[]
+    upsert?: ProfessionalUpsertWithWhereUniqueWithoutProfessionInput | ProfessionalUpsertWithWhereUniqueWithoutProfessionInput[]
+    createMany?: ProfessionalCreateManyProfessionInputEnvelope
+    set?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    disconnect?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    delete?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    connect?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    update?: ProfessionalUpdateWithWhereUniqueWithoutProfessionInput | ProfessionalUpdateWithWhereUniqueWithoutProfessionInput[]
+    updateMany?: ProfessionalUpdateManyWithWhereWithoutProfessionInput | ProfessionalUpdateManyWithWhereWithoutProfessionInput[]
+    deleteMany?: ProfessionalScalarWhereInput | ProfessionalScalarWhereInput[]
+  }
+
+  export type ProfessionalUncheckedUpdateManyWithoutProfessionNestedInput = {
+    create?: XOR<ProfessionalCreateWithoutProfessionInput, ProfessionalUncheckedCreateWithoutProfessionInput> | ProfessionalCreateWithoutProfessionInput[] | ProfessionalUncheckedCreateWithoutProfessionInput[]
+    connectOrCreate?: ProfessionalCreateOrConnectWithoutProfessionInput | ProfessionalCreateOrConnectWithoutProfessionInput[]
+    upsert?: ProfessionalUpsertWithWhereUniqueWithoutProfessionInput | ProfessionalUpsertWithWhereUniqueWithoutProfessionInput[]
+    createMany?: ProfessionalCreateManyProfessionInputEnvelope
+    set?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    disconnect?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    delete?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    connect?: ProfessionalWhereUniqueInput | ProfessionalWhereUniqueInput[]
+    update?: ProfessionalUpdateWithWhereUniqueWithoutProfessionInput | ProfessionalUpdateWithWhereUniqueWithoutProfessionInput[]
+    updateMany?: ProfessionalUpdateManyWithWhereWithoutProfessionInput | ProfessionalUpdateManyWithWhereWithoutProfessionInput[]
+    deleteMany?: ProfessionalScalarWhereInput | ProfessionalScalarWhereInput[]
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -5472,21 +6906,19 @@ export namespace Prisma {
   }
 
   export type ProfessionalCreateWithoutUserInput = {
-    profession?: string | null
-    customProfession?: string | null
-    isCustomProfessionApproved?: boolean
     isMobile?: boolean
     interventionRadius?: number
     siret?: string | null
+    isSiretValid?: boolean
+    profession?: ProfessionCreateNestedOneWithoutProfessionalsInput
   }
 
   export type ProfessionalUncheckedCreateWithoutUserInput = {
-    profession?: string | null
-    customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    professionId?: string | null
     isMobile?: boolean
     interventionRadius?: number
     siret?: string | null
+    isSiretValid?: boolean
   }
 
   export type ProfessionalCreateOrConnectWithoutUserInput = {
@@ -5544,12 +6976,11 @@ export namespace Prisma {
     OR?: ProfessionalScalarWhereInput[]
     NOT?: ProfessionalScalarWhereInput | ProfessionalScalarWhereInput[]
     userId?: StringFilter<"Professional"> | string
-    profession?: StringNullableFilter<"Professional"> | string | null
-    customProfession?: StringNullableFilter<"Professional"> | string | null
-    isCustomProfessionApproved?: BoolFilter<"Professional"> | boolean
+    professionId?: StringNullableFilter<"Professional"> | string | null
     isMobile?: BoolFilter<"Professional"> | boolean
     interventionRadius?: IntFilter<"Professional"> | number
     siret?: StringNullableFilter<"Professional"> | string | null
+    isSiretValid?: BoolFilter<"Professional"> | boolean
   }
 
   export type UserCreateWithoutCareSeekersInput = {
@@ -5657,6 +7088,29 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutProfessionalsInput, UserUncheckedCreateWithoutProfessionalsInput>
   }
 
+  export type ProfessionCreateWithoutProfessionalsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customProfession?: string | null
+    isCustomProfessionApproved?: boolean
+    professionName: string
+  }
+
+  export type ProfessionUncheckedCreateWithoutProfessionalsInput = {
+    id?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    customProfession?: string | null
+    isCustomProfessionApproved?: boolean
+    professionName: string
+  }
+
+  export type ProfessionCreateOrConnectWithoutProfessionalsInput = {
+    where: ProfessionWhereUniqueInput
+    create: XOR<ProfessionCreateWithoutProfessionalsInput, ProfessionUncheckedCreateWithoutProfessionalsInput>
+  }
+
   export type UserUpsertWithoutProfessionalsInput = {
     update: XOR<UserUpdateWithoutProfessionalsInput, UserUncheckedUpdateWithoutProfessionalsInput>
     create: XOR<UserCreateWithoutProfessionalsInput, UserUncheckedCreateWithoutProfessionalsInput>
@@ -5696,17 +7150,87 @@ export namespace Prisma {
     careSeekers?: CareSeekerUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type ProfessionUpsertWithoutProfessionalsInput = {
+    update: XOR<ProfessionUpdateWithoutProfessionalsInput, ProfessionUncheckedUpdateWithoutProfessionalsInput>
+    create: XOR<ProfessionCreateWithoutProfessionalsInput, ProfessionUncheckedCreateWithoutProfessionalsInput>
+    where?: ProfessionWhereInput
+  }
+
+  export type ProfessionUpdateToOneWithWhereWithoutProfessionalsInput = {
+    where?: ProfessionWhereInput
+    data: XOR<ProfessionUpdateWithoutProfessionalsInput, ProfessionUncheckedUpdateWithoutProfessionalsInput>
+  }
+
+  export type ProfessionUpdateWithoutProfessionalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionName?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProfessionUncheckedUpdateWithoutProfessionalsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
+    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionName?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProfessionalCreateWithoutProfessionInput = {
+    isMobile?: boolean
+    interventionRadius?: number
+    siret?: string | null
+    isSiretValid?: boolean
+    user: UserCreateNestedOneWithoutProfessionalsInput
+  }
+
+  export type ProfessionalUncheckedCreateWithoutProfessionInput = {
+    userId: string
+    isMobile?: boolean
+    interventionRadius?: number
+    siret?: string | null
+    isSiretValid?: boolean
+  }
+
+  export type ProfessionalCreateOrConnectWithoutProfessionInput = {
+    where: ProfessionalWhereUniqueInput
+    create: XOR<ProfessionalCreateWithoutProfessionInput, ProfessionalUncheckedCreateWithoutProfessionInput>
+  }
+
+  export type ProfessionalCreateManyProfessionInputEnvelope = {
+    data: ProfessionalCreateManyProfessionInput | ProfessionalCreateManyProfessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProfessionalUpsertWithWhereUniqueWithoutProfessionInput = {
+    where: ProfessionalWhereUniqueInput
+    update: XOR<ProfessionalUpdateWithoutProfessionInput, ProfessionalUncheckedUpdateWithoutProfessionInput>
+    create: XOR<ProfessionalCreateWithoutProfessionInput, ProfessionalUncheckedCreateWithoutProfessionInput>
+  }
+
+  export type ProfessionalUpdateWithWhereUniqueWithoutProfessionInput = {
+    where: ProfessionalWhereUniqueInput
+    data: XOR<ProfessionalUpdateWithoutProfessionInput, ProfessionalUncheckedUpdateWithoutProfessionInput>
+  }
+
+  export type ProfessionalUpdateManyWithWhereWithoutProfessionInput = {
+    where: ProfessionalScalarWhereInput
+    data: XOR<ProfessionalUpdateManyMutationInput, ProfessionalUncheckedUpdateManyWithoutProfessionInput>
+  }
+
   export type CareSeekerCreateManyUserInput = {
     isHelper?: boolean
   }
 
   export type ProfessionalCreateManyUserInput = {
-    profession?: string | null
-    customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    professionId?: string | null
     isMobile?: boolean
     interventionRadius?: number
     siret?: string | null
+    isSiretValid?: boolean
   }
 
   export type CareSeekerUpdateWithoutUserInput = {
@@ -5722,30 +7246,59 @@ export namespace Prisma {
   }
 
   export type ProfessionalUpdateWithoutUserInput = {
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
+    profession?: ProfessionUpdateOneWithoutProfessionalsNestedInput
   }
 
   export type ProfessionalUncheckedUpdateWithoutUserInput = {
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionId?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProfessionalUncheckedUpdateManyWithoutUserInput = {
-    profession?: NullableStringFieldUpdateOperationsInput | string | null
-    customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    professionId?: NullableStringFieldUpdateOperationsInput | string | null
     isMobile?: BoolFieldUpdateOperationsInput | boolean
     interventionRadius?: IntFieldUpdateOperationsInput | number
     siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProfessionalCreateManyProfessionInput = {
+    userId: string
+    isMobile?: boolean
+    interventionRadius?: number
+    siret?: string | null
+    isSiretValid?: boolean
+  }
+
+  export type ProfessionalUpdateWithoutProfessionInput = {
+    isMobile?: BoolFieldUpdateOperationsInput | boolean
+    interventionRadius?: IntFieldUpdateOperationsInput | number
+    siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
+    user?: UserUpdateOneRequiredWithoutProfessionalsNestedInput
+  }
+
+  export type ProfessionalUncheckedUpdateWithoutProfessionInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    isMobile?: BoolFieldUpdateOperationsInput | boolean
+    interventionRadius?: IntFieldUpdateOperationsInput | number
+    siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProfessionalUncheckedUpdateManyWithoutProfessionInput = {
+    userId?: StringFieldUpdateOperationsInput | string
+    isMobile?: BoolFieldUpdateOperationsInput | boolean
+    interventionRadius?: IntFieldUpdateOperationsInput | number
+    siret?: NullableStringFieldUpdateOperationsInput | string | null
+    isSiretValid?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

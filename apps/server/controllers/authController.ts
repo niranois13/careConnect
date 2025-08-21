@@ -3,7 +3,7 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 import { loginSchema } from '../../../packages/schemas/src/auth.schemas.ts';
-import { PrismaClient } from '../prisma/generated/prisma-users/index.js';
+import { PrismaClient } from '../prisma/generated/index.js';
 import { generateCookie, generateToken } from '../src/jwtHandler.ts';
 
 const prisma = new PrismaClient();

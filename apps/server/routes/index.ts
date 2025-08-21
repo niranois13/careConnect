@@ -3,6 +3,7 @@ import type { Express, Request, Response } from 'express';
 import { createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
+import { adminCreateProfessions, proCreateProfessions, getProfessions } from '../controllers/professionController.ts';
 import { createCareSeeker, createProfessional, getUsers } from '../controllers/userController.ts';
 import { authenticate } from '../middlewares/authMiddleware.ts';
 
@@ -13,6 +14,34 @@ export default function registerRoutes(app: Express) {
 
   /* UTILS */
   app.get('/api/health', getHealth);
+
+  /* PROFESSIONS */
+  app.get('/api/professions', async (req: Request, res: Response) => {
+    try {
+      await getProfessions(req, res);
+    } catch (error: unknown) {
+      console.error('Error processing the request to getProfessions:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  app.post('/api/professions', async (req: Request, res: Response) => {
+    try {
+      await proCreateProfessions(req, res);
+    } catch (error: unknown) {
+      console.error('Erreur processing the request to proCreateProfessions:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  app.post('/api/admin/professions', async (req: Request, res: Response) => {
+    try {
+      await adminCreateProfessions(req, res);
+    } catch (error: unknown) {
+      console.error('Error processing the request to adminCreateProfessions', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
 
   /* AUTH */
   app.post('/api/login', async (req: Request, res: Response) => {

@@ -1,13 +1,14 @@
-import { Toaster } from 'react-hot-toast';
-import React from 'react';
-import Header from './components/Header/Header.tsx';
-import Footer from './components/Footer/Footer.tsx';
-import HeroSection from './components/HeroSection/HeroSection.tsx'
-import { useAuth } from './hooks/useAuth.ts';
-import SearchBar from './components/SearchBar/SearchBar.tsx';
-import LandingCard from './components/Cards/LandingCard.tsx';
+import { faCalendarDays, faShieldHalved, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShieldHalved, faCalendarDays, faUsers } from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
+import { Toaster } from 'react-hot-toast';
+
+import LandingCard from './components/Cards/LandingCard.tsx';
+import Footer from './components/Footer/Footer.tsx';
+import Header from './components/Header/Header.tsx';
+import HeroSection from './components/HeroSection/HeroSection.tsx'
+import SearchBar from './components/SearchBar/SearchBar.tsx';
+import { useAuth } from './hooks/useAuth.ts';
 
 function App() {
   useAuth();

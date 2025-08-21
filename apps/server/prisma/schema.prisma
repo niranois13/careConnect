@@ -5,7 +5,7 @@ datasource db {
 
 generator users {
   provider = "prisma-client-js"
-  output = "./generated/prisma-users"
+  output = "./generated/"
   binaryTargets   = ["native", "debian-openssl-3.0.x"]
   generatedFileExtension = "ts"
   importFileExtension = "ts"
@@ -35,11 +35,22 @@ model CareSeeker {
 model Professional {
   userId                       String           @id
   user                         User             @relation("UserProfessional", fields: [userId], references: [id])
-  profession                   String?  
-  customProfession             String?
-  isCustomProfessionApproved   Boolean          @default(false)
+  professionId                 String?
+  profession                   Profession?      @relation("ProfessionalProfession", fields: [professionId], references: [id])
   isMobile                     Boolean          @default(false)
   interventionRadius           Int              @default(0)
   siret                        String?          @unique
+  isSiretValid                 Boolean          @default(false)
   //services                   ProfessionalService[]
+}
+
+model Profession {
+  id                           String        @id @default(uuid())
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  customProfession             String?
+  isCustomProfessionApproved   Boolean       @default(false)
+  professionName               String        
+
+  professionals   Professional[]  @relation("ProfessionalProfession")
 }
