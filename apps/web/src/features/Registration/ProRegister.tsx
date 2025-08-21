@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useProfessions } from '../../hooks/useProfessions.ts';
 import { useCreateProfession } from '../../hooks/useCreateProfession.tsx';
 import { useRegisterProfessional } from '../../hooks/useRegisterProfessional.tsx';
-import { ProfessionalSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
+import { professionalCreateSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
 import PasswordRules from './PasswordRules.tsx';
 
 type registerProps = {
@@ -13,7 +13,10 @@ type registerProps = {
 export default function RegisterPro({ onSuccess }: registerProps) {
   const { professions = [], isLoading } = useProfessions();
   const createProfession = useCreateProfession();
-  const registerPro = useRegisterProfessional(onSuccess);
+  const registerPro = useRegisterProfessional({
+    onSuccess,
+    onError: (error) => setFormError(error.message),
+  });
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -58,7 +61,21 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         finalProfessionId = newProfession.id;
       }
 
-      const parsed = ProfessionalSchema.safeParse({
+      console.log('payload pour Zod:', {
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber: normalizedPhoneNumber,
+        role,
+        isMobile,
+        interventionRadius,
+        siret,
+        isSiretValid,
+        professionId: finalProfessionId,
+      });
+
+      const parsed = professionalCreateSchema.safeParse({
         email,
         password,
         firstName,
@@ -74,9 +91,11 @@ export default function RegisterPro({ onSuccess }: registerProps) {
 
       if (!parsed.success) {
         setFormError(parsed.error.issues[0].message);
+        console.log('parsed.error:', parsed.error.issues[0].message)
         return;
       }
 
+      console.log('parsed.data:', parsed.data)
       registerPro.mutate(parsed.data);
     } catch (error: unknown) {
       console.warn('Erreur lors de la création du profil', error);
@@ -94,7 +113,11 @@ export default function RegisterPro({ onSuccess }: registerProps) {
 
   return (
     <form aria-label="form" onSubmit={handleSubmit} className='max-w-lg mx-auto'>
-      {formError && <p style={{ color: 'red' }}>{formError}</p>}
+      {formError && (
+        <p aria-live="polite" style={{ color: 'red' }}>
+          {formError}
+        </p>
+      )}
       <div className="flex flex-row flex-wrap justify-center space-x-2 w-full mb-5">
         <div>
           <label htmlFor="firstName" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Prénom :</label>
@@ -109,6 +132,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             required
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
             placeholder='Jean'
+            autoComplete="given-name"
           />
         </div>
         <div>
@@ -124,12 +148,13 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             required
             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
             placeholder='Martin'
+            autoComplete="family-name"
           />
         </div>
       </div>
 
       <div className="flex flex-col flex-wrap mb-5">
-        <legend className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Vous devez avoir un numéro SIRET pour utiliser <strong>careConnect</strong></legend>
+        <p className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Vous devez avoir un numéro SIRET pour utiliser <strong>careConnect</strong></p>
         <p className='block mb-1 text-sm font-light text-gray-900'>Pas de SIRET ? Vous pouvez quand même vous inscrire.</p>
         <div className='flex flex-row flex-wrap justify-center space-x-5 w-full'>
           <div>
@@ -145,6 +170,9 @@ export default function RegisterPro({ onSuccess }: registerProps) {
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
               placeholder='12345678900013'
+              inputMode="numeric"
+              pattern="\d{14}"
+              autoComplete="off"
             />
           </div>
           <div className='flex flex-col justify-baseline p-0.5'>
@@ -178,20 +206,25 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         </select>
 
         {selectedProfession?.professionName === 'Autre' && (
-          <input
-            type="text"
-            value={customProfession}
-            onChange={(e) => setCustomProfession(e.target.value)}
-            disabled={registerPro.isPending}
-            placeholder="Entrez votre profession"
-            className="flex-1 min-w-0 max-w-[180px] h-[40px] truncate text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500"
-          />
+          <div>
+            <label htmlFor='customProfession' className='sr-only'>Entrez vore profession:</label>
+            <input
+              type="text"
+              name="customProfession"
+              autoComplete="organization-title"
+              value={customProfession}
+              onChange={(e) => setCustomProfession(e.target.value)}
+              disabled={registerPro.isPending}
+              placeholder="Ex: Chiropracteur.ice"
+              className="flex-1 min-w-0 max-w-[180px] h-[40px] truncate text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            />
+          </div>
         )}
       </div>
 
       <div className="flex flex-row justify-center space-x-2 w-full mb-5">
         <div>
-          <legend className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Acceptez-vous de vous déplacer (domicile, extérieur,...) ?</legend>
+          <p className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Acceptez-vous de vous déplacer (domicile, extérieur,...) ?</p>
           <div className="flex flex-row justify-center space-x-5 flex-wrap">
             <div className='flex flex-col'>
               <label htmlFor="isMobileTrue" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Oui</label>
@@ -250,6 +283,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
           <input
             id="email"
             type="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -265,6 +299,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
           <input
             id="tel"
             type="tel"
+            autoComplete="tel-national"
             value={phoneNumber}
             onChange={(e) => {
               setPhoneNumber(e.target.value);
@@ -283,6 +318,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
           <input
             id="password"
             type="password"
+            autoComplete="new-password"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -297,6 +333,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
           <input
             id="confirmPassword"
             type="password"
+            autoComplete="new-password"
             value={confirmPassword}
             onChange={(e) => {
               setConfirmPassword(e.target.value);

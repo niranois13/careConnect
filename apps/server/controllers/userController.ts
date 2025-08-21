@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 
-import { CareSeekerSchema, ProfessionalSchema, roleQuerySchema } from '../../../packages/schemas/src/users.schemas.ts'
+import { careSeekerCreateSchema, professionalCreateSchema, roleQuerySchema } from '../../../packages/schemas/src/users.schemas.ts'
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
 
 const prisma: PrismaClient = new PrismaClient();
@@ -18,7 +18,7 @@ const selectFields = {
 
 export async function createCareSeeker(req: Request, res: Response) {
   try {
-    const userData = CareSeekerSchema.parse(req.body);
+    const userData = careSeekerCreateSchema.parse(req.body);
     const hashedPassword = await bcrypt.hash(userData.password, 10);
 
     const newUser = await prisma.user.create({
@@ -75,7 +75,8 @@ export async function createCareSeeker(req: Request, res: Response) {
 
 export async function createProfessional(req: Request, res: Response) {
   try {
-    const ProfessionalData = ProfessionalSchema.parse(req.body);
+    const ProfessionalData = professionalCreateSchema.parse(req.body);
+
     const hashedPassword = await bcrypt.hash(ProfessionalData.password, 10);
 
     const newUser = await prisma.user.create({
@@ -102,14 +103,22 @@ export async function createProfessional(req: Request, res: Response) {
     });
 
     const newUserResp = {
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      role: newUser.role,
+      "email": newUser.email,
+      "lastName": newUser.lastName,
+      "firstName": newUser.firstName,
+      "phoneNumber": newUser.phoneNumber,
+      "role": newUser.role,
+      "id": newUser.professionals[0].userId,
+      "professionId": newUser.professionals[0].professionId,
+      "isMobile": newUser.professionals[0].isMobile,
+      "interventionRadius": newUser.professionals[0].interventionRadius,
+      "siret": newUser.professionals[0].siret,
+      "isSiretValid": newUser.professionals[0].isSiretValid
     };
 
-    return res.status(201).json({ 'User added': newUserResp });
+    console.log('NewUser:', newUserResp);
+
+    return res.status(201).json(newUserResp);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       console.error('Error in createProfessional:', error.issues);

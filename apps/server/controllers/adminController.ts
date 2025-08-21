@@ -2,14 +2,14 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 
-import { AdminSchema } from '../../../packages/schemas/src/admins.schema.ts';
+import { adminCreateSchema } from '../../../packages/schemas/src/admins.schema.ts';
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
 
 const prisma: PrismaClient = new PrismaClient();
 
 export async function createAdmin(req: Request, res: Response) {
   try {
-    const adminData = AdminSchema.parse(req.body);
+    const adminData = adminCreateSchema.parse(req.body);
     const hashedPassword = await bcrypt.hash(adminData.password, 10);
 
     const newAdmin = await prisma.user.create({

@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { z } from 'zod';
 
-import { CareSeekerSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
+import { careSeekerCreateSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
 import PasswordRules from './PasswordRules.tsx';
 
-const userRegistrationSchema = CareSeekerSchema;
+const userRegistrationSchema = careSeekerCreateSchema;
 
 type registerData = z.infer<typeof userRegistrationSchema>;
 
