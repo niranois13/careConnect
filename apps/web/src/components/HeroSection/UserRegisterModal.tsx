@@ -14,19 +14,24 @@ export default function UserRegisterModal({ onClose }: userModalProps) {
       }
     };
 
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+
     document.addEventListener("keydown", handleKeyDown);
+
     return () => {
+      document.body.style.overflow = originalStyle;
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);
 
   return (
     <div
-      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 "
+      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="bg-purple-50 shadow-xl rounded p-6 relative border-2 border-b-purple-800"
+        className="bg-purple-50 shadow-xl rounded p-6 relative border-2 border-b-purple-800 max-h-[90vh] w-full max-w-lg overflow-y-auto"
         onClick={(e) => { e.stopPropagation(); }}
       >
         <button
@@ -36,7 +41,7 @@ export default function UserRegisterModal({ onClose }: userModalProps) {
         >
           ✕
         </button>
-      <RegisterUser onSuccess={onClose}/>
+        <RegisterUser onSuccess={onClose} />
       </div>
     </div>
   );

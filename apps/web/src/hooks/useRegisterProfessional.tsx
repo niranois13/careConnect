@@ -9,9 +9,7 @@ type ProfessionalResponse = z.infer<typeof professionalResponseSchema>;
 
 async function registerProfessional(data: RegisterData): Promise<ProfessionalResponse> {
   try {
-    console.log('Avant registerProfessionl 1st parse:', data);
     const parsedData = professionalCreateSchema.parse(data);
-    console.log('Après registerProfessionl 1st parse:', parsedData)
 
     const res = await fetch("/api/professional", {
       method: "POST",
@@ -21,10 +19,7 @@ async function registerProfessional(data: RegisterData): Promise<ProfessionalRes
     });
 
     const json = await res.json();
-
-    console.log('Avant registerProfessionl 2nd parse:', json);
     const parsedResponse = professionalResponseSchema.parse(json);
-    console.log('Après registerProfessionl 2nd parse:', parsedResponse);
 
     return parsedResponse;
   } catch (error: unknown) {
@@ -49,8 +44,7 @@ export function useRegisterProfessional(options?: UseRegisterProfessionalOptions
       options?.onSuccess?.();
     },
     onError: (error: Error) => {
-      const toastError = toast.error(error.message);
-      console.log('toastError:', toastError)
+      toast.error(error.message);
       options?.onError?.(error);
     },
   });

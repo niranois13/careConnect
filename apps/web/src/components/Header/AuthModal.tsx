@@ -6,9 +6,7 @@ interface AuthModalProps {
   onClose: () => void;
 }
 
-export default function AuthModal(
-  { onClose }: AuthModalProps,
-) {
+export default function AuthModal({ onClose }: AuthModalProps,) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -16,8 +14,13 @@ export default function AuthModal(
       }
     };
 
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+
     document.addEventListener("keydown", handleKeyDown);
+
     return () => {
+      document.body.style.overflow = originalStyle;
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [onClose]);

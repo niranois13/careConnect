@@ -44,7 +44,6 @@ function Login({ onSuccess }: LoginProps) {
   const mutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
-      console.log('Connexion réussie:', data);
       dispatch(login(data));
       onSuccess?.();
     },

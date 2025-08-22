@@ -11,7 +11,6 @@ async function handleLogout(): Promise<LogoutResponse> {
     method: 'POST',
     credentials: 'include',
   });
-  console.log('logout res', res);
   if (!res.ok) {
     throw new Error('Echec de la déconnexion.');
   }
@@ -19,7 +18,6 @@ async function handleLogout(): Promise<LogoutResponse> {
 }
 
 function Logout() {
-  console.log('Logout component mounted');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -42,7 +40,6 @@ function Logout() {
     <button
       className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-semibold rounded-lg text-sm px-5 py-2.5"
       onClick={() => {
-        console.log('Logout button clicked');
         mutation.mutate();
       }}
       disabled={mutation.isPending}

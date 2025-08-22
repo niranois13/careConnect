@@ -26,7 +26,7 @@ function App() {
           <HeroSection />
 
           <div className="flex justify-center mt-2 py-3">
-            <SearchBar size="lg" label="Je recherche un professionnel" labelPosition="top" labelStyle='landing'/>
+            <SearchBar size="landing" label="Je recherche un professionnel" labelPosition="top" labelStyle='landing'/>
           </div>
 
           <div className='flex flex-wrap bg-purple-50 rounded-lg w-full max-w-5/6 mx-auto mt-2 py-3'>

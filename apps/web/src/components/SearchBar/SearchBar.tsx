@@ -3,7 +3,7 @@ import React, { useState } from "react";
 interface SearchBarProps {
   placeholder?: string;
   buttonText?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "default" | "panel" | "landing";
   label?: string;
   labelPosition?: "top" | "left";
   labelStyle?: "default" | "landing" | "panel";
@@ -13,7 +13,7 @@ interface SearchBarProps {
 export default function SearchBar({
   placeholder = 'Exemple: "Moniteur éducateur", "Thonon-les-Bains"',
   buttonText = "Je recherche",
-  size = "md",
+  size = "default",
   label,
   labelPosition = "top",
   labelStyle = "default",
@@ -22,9 +22,9 @@ export default function SearchBar({
   const [value, setValue] = useState("");
 
   const sizeClasses = {
-    sm: "text-xs w-full max-w-75",
-    md: "text-sm w-full max-w-100",
-    lg: "text-base w-full max-w-150",
+    default: "text-xs w-full max-w-75",
+    panel: "text-sm w-full max-w-100",
+    landing: "text-base w-full lg:max-w-190 md:max-w-175 sm:max-w-150 xs:max-w-100",
   };
 
   const labelClasses = {
@@ -42,7 +42,7 @@ export default function SearchBar({
   if (label && labelPosition === "top") {
       return (
       <div className={`flex flex-col items-center ${sizeClasses[size]}`}>
-          <label className={labelClasses[labelStyle]}>{label}</label>
+          <label htmlFor="searchField" className={labelClasses[labelStyle]}>{label}</label>
         <form
           onSubmit={handleSubmit}
           className={`flex items-stretch border-2 border-purple-700 rounded-full overflow-hidden ${sizeClasses[size]}`}

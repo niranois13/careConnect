@@ -61,20 +61,6 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         finalProfessionId = newProfession.id;
       }
 
-      console.log('payload pour Zod:', {
-        email,
-        password,
-        firstName,
-        lastName,
-        phoneNumber: normalizedPhoneNumber,
-        role,
-        isMobile,
-        interventionRadius,
-        siret,
-        isSiretValid,
-        professionId: finalProfessionId,
-      });
-
       const parsed = professionalCreateSchema.safeParse({
         email,
         password,
@@ -91,11 +77,9 @@ export default function RegisterPro({ onSuccess }: registerProps) {
 
       if (!parsed.success) {
         setFormError(parsed.error.issues[0].message);
-        console.log('parsed.error:', parsed.error.issues[0].message)
         return;
       }
 
-      console.log('parsed.data:', parsed.data)
       registerPro.mutate(parsed.data);
     } catch (error: unknown) {
       console.warn('Erreur lors de la création du profil', error);

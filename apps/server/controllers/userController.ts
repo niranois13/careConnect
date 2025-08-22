@@ -116,8 +116,6 @@ export async function createProfessional(req: Request, res: Response) {
       "isSiretValid": newUser.professionals[0].isSiretValid
     };
 
-    console.log('NewUser:', newUserResp);
-
     return res.status(201).json(newUserResp);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {

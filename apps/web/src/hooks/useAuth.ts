@@ -13,7 +13,6 @@ export function useAuth() {
   useEffect(() => {
     if (fetchedRef.current) return;
     fetchedRef.current = true;
-    console.log('fetchUser called');
     const fetchUser = async () => {
       try {
         const res = await fetch('/api/me', {

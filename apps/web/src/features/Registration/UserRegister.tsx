@@ -63,8 +63,7 @@ function RegisterUser({ onSuccess }: registerProps) {
 
   const mutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: () => {
       toast.success('Compte créé avec succès !');
       setEmail('');
       setPassword('');

@@ -8,7 +8,6 @@ import Logout from './Logout.tsx';
 export default function AuthPanel() {
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-  console.log('AuthPanel isLoggedIn:', isLoggedIn);
 
   return (
     <div>

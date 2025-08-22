@@ -2,9 +2,6 @@ import { useEffect,useState } from 'react';
 
 import ProRegisterModal from './ProRegisterModal.tsx'
 import UserRegisterModal from './UserRegisterModal.tsx';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { logout } from '../../features/Auth/authSlice.ts';
-// import type { RootState } from '../../store/index.ts';
 
 export default function HeroSection() {
   const [isUserRegisterModalOpen, setUserRegisterModalOpen] = useState(false);
