@@ -6,6 +6,7 @@ import { loginSchema } from '../../../packages/schemas/src/auth.schemas.ts';
 import { PrismaClient } from '../prisma/generated/index.js';
 import { generateCookie, generateToken } from '../src/jwtHandler.ts';
 
+
 const prisma = new PrismaClient();
 
 export async function loginUser(req: Request, res: Response) {
@@ -31,14 +32,11 @@ export async function loginUser(req: Request, res: Response) {
     generateCookie(res, token);
 
     return res.status(200).json({
-      user: {
-        id: User.id,
-        email: User.email,
-        firstName: User.firstName,
-        lastName: User.lastName,
-        role: User.role,
-      },
+      "id": User.id,
+      "email": User.email,
+      "role": User.role 
     });
+
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       console.error('Error in creatCareSeeker:', error.issues);

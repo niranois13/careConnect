@@ -14,6 +14,8 @@ const selectFields = {
   lastName: true,
   phoneNumber: true,
   role: true,
+  createdAt: true,
+  updatedAt: true
 };
 
 export async function createCareSeeker(req: Request, res: Response) {
@@ -157,6 +159,30 @@ export async function getUsers(req: Request, res: Response) {
       },
       select: selectFields,
     });
+    return res.status(200).json({ Users });
+  } catch (error: unknown) {
+    console.error('Error in getUsers:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+export async function getCareSeekers(req: Request, res: Response) {
+  try {
+    const parseResult = roleQuerySchema.safeParse(req.query);
+
+    if (!parseResult.success) {
+      return res.status(400).json({ error: 'Invalid role filter' });
+    }
+
+    const role = parseResult.data.role;
+
+    const whereClause = role ? { role } : {};
+
+    const Users = await prisma.user.findMany({
+      where: whereClause,
+      select: selectFields,
+    });
+
     return res.status(200).json({ Users: Users });
   } catch (error: unknown) {
     console.error('Error in getUsers:', error);

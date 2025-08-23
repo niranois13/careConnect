@@ -49,7 +49,10 @@ export const professionalCreateSchema = userCreateSchema.extend({
 
 // ---------- RESPONSE SCHEMAS ----------
 export const userResponseSchema = baseUserSchema.extend({
-  id: z.string().uuid(),  // standardise sur `id`
+  id: z.string().uuid(),
+  createdAt: z.string().datetime( { offset: true } ).pipe( z.coerce.date() ),
+  updatedAt: z.string().datetime( { offset: true } ).pipe( z.coerce.date() ),
+  role: z.string(),
 });
 
 export const careSeekerResponseSchema = userResponseSchema.extend({
@@ -62,7 +65,7 @@ export const professionalResponseSchema = userResponseSchema.extend({
   isMobile: z.boolean(),
   interventionRadius: z.number(),
   siret: z.string()
-    .transform(val => val === "" ? null : val) // normalize empty string to null
+    .transform(val => val === "" ? null : val)
     .nullable()
     .refine(val => val === null || /^\d{14}$/.test(val), {
       message: "Le SIRET doit contenir exactement 14 chiffres",

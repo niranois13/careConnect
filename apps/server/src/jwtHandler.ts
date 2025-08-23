@@ -16,7 +16,12 @@ export function generateToken(payload: jwtPayload): token {
 }
 
 export function verifyToken(token: string) {
-  const payload = jwt.verify(token, JWT_SECRET);
+  const payload = jwt.verify(token, JWT_SECRET) as jwtPayload;
+
+  if (!payload.id || !payload.email || !payload.role) {
+    throw new Error('Malformed token payload');
+  }
+
   return payload;
 }
 

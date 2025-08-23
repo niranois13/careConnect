@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-import type { z } from "zod";
+import { z } from "zod";
 import { professionalCreateSchema, professionalResponseSchema } from "../../../../packages/schemas/src/users.schemas.ts";
 
 type RegisterData = z.infer<typeof professionalCreateSchema>;

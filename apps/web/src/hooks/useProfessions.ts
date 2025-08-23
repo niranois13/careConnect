@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { z } from 'zod';
+import { z, ZodError } from 'zod';
 
 import { approvedProfessionResponseSchema } from '../../../../packages/schemas/src/profession.schemas.ts';
 
@@ -32,12 +32,14 @@ export function useProfessions() {
         setProfessions(parsedData);
 
       } catch (error: unknown) {
-        console.error('Erreur while fetching professions:', error);
-        if (error instanceof Error)
-        {
+        if (error instanceof ZodError) {
+          console.error("Validation error:", error.issues);
+          setError(new Error("Invalid data format from server"));
+        } else if (error instanceof Error) {
+          console.error("Error while fetching users:", error.message);
           setError(error);
         } else {
-          setError(new Error('Unknown error while fetching professions'));
+          setError(new Error("Unknown error while fetching users"));
         }
         setProfessions([]);
       } finally {

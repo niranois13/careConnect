@@ -3,17 +3,16 @@ import type { Express, Request, Response } from 'express';
 import { createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
-import { adminCreateProfessions, proCreateProfessions, getProfessions } from '../controllers/professionController.ts';
+import { adminCreateProfessions, getProfessions, proCreateProfessions } from '../controllers/professionController.ts';
 import { createCareSeeker, createProfessional, getUsers } from '../controllers/userController.ts';
 import { authenticate } from '../middlewares/authMiddleware.ts';
+import { requireRole } from '../middlewares/requireRole.ts';
+import { requireAuth } from '../middlewares/requireAuth.ts';
+import { requireSelf } from '../middlewares/requireSelf.ts';
 
 export default function registerRoutes(app: Express) {
-  app.get('/api', (req: Request, res: Response) => {
-    res.send('/ called successfully');
-  });
-
   /* UTILS */
-  app.get('/api/health', getHealth);
+  app.get('/api/health', requireRole('ADMIN'), getHealth);
 
   /* PROFESSIONS */
   app.get('/api/professions', async (req: Request, res: Response) => {
@@ -25,7 +24,7 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.post('/api/professions', async (req: Request, res: Response) => {
+  app.post('/api/professions', requireRole('PROFESSIONAL'), async (req: Request, res: Response) => {
     try {
       await proCreateProfessions(req, res);
     } catch (error: unknown) {
@@ -34,7 +33,7 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.post('/api/admin/professions', async (req: Request, res: Response) => {
+  app.post('/api/admin/professions', requireRole('ADMIN'), async (req: Request, res: Response) => {
     try {
       await adminCreateProfessions(req, res);
     } catch (error: unknown) {
@@ -71,7 +70,7 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.get('/api/me', authenticate, (req: Request, res: Response) => {
+  app.get('/api/me', requireAuth, (req: Request, res: Response) => {
     res.json(req.user);
   });
 
@@ -94,7 +93,17 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  app.get('/api/users', async (req: Request, res: Response) => {
+  /* ADMIN */
+  app.post('/api/admin', requireRole('ADMIN'), async (req: Request, res: Response) => {
+    try {
+      await createAdmin(req, res);
+    } catch (error: unknown) {
+      console.error('Error processing the request to createAdmin:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+  app.get('/api/admin/users', requireRole('ADMIN'), async (req: Request, res: Response) => {
     try {
       await getUsers(req, res);
     } catch (error: unknown) {
@@ -103,13 +112,13 @@ export default function registerRoutes(app: Express) {
     }
   });
 
-  /* ADMIN */
-  app.post('/api/admin', async (req: Request, res: Response) => {
-    try {
-      await createAdmin(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to createAdmin:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+
+
+// GET /api/admin/users/:id → Détails utilisateur
+
+// PUT /api/admin/users/:id → Modifier utilisateur (nom, email, isActive, role…)
+
+// DELETE /api/admin/users/:id → Supprimer un utilisateur
+
+// POST /api/admin/users → Créer un utilisteur
 }

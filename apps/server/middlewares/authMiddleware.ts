@@ -14,6 +14,7 @@ export function authenticate(req: Request, res: Response, next: NextFunction): v
   try {
     const payload = verifyToken(token);
     req.user = payload;
+
     next();
   } catch (error: unknown) {
     console.error('Error in authenticate():', error);

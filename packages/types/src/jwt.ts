@@ -1,5 +1,3 @@
-// import { Role } from '../../../apps/server/prisma/generated/prisma-users/index.js';
-
 export const UserRole = {
   ADMIN: "ADMIN",
   CARESEEKER: "CARESEEKER",
