@@ -72,6 +72,7 @@ function Login({ onSuccess }: LoginProps) {
         <label htmlFor="email" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Email :</label>
         <input
           type="email"
+          id="email"
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
@@ -80,12 +81,14 @@ function Login({ onSuccess }: LoginProps) {
           required
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
           placeholder='example@mail.com'
+          autoComplete='username'
         />
       </div>
       <div className='mb-5'>
         <label htmlFor="password" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Mot de passe :</label>
         <input
           type="password"
+          id='password'
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
@@ -93,6 +96,7 @@ function Login({ onSuccess }: LoginProps) {
           disabled={mutation.isPending}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
           required
+          autoComplete='current-password'
         />
       </div>
       <button

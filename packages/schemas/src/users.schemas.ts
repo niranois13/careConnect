@@ -29,14 +29,20 @@ export const userCreateSchema = baseUserSchema.extend({
 
 export const careSeekerCreateSchema = userCreateSchema.extend({
   role: z.literal('CARESEEKER'),
-  isHelper: z.boolean().default(false).optional(),
+  isHelper: z.boolean().default(false),
 });
 
 export const professionalCreateSchema = userCreateSchema.extend({
   role: z.literal('PROFESSIONAL'),
   isMobile: z.boolean().default(false),
   interventionRadius: z.number().default(0),
-  siret: z.string().trim().length(14),
+  siret: z.string()
+    .transform(val => val === "" ? null : val) // normalize empty string to null
+    .nullable()
+    .refine(val => val === null || /^\d{14}$/.test(val), {
+      message: "Le SIRET doit contenir exactement 14 chiffres",
+    })
+    .optional(),
   isSiretValid: z.boolean().default(false),
   professionId: z.string().uuid().optional(),
 });
@@ -48,14 +54,20 @@ export const userResponseSchema = baseUserSchema.extend({
 
 export const careSeekerResponseSchema = userResponseSchema.extend({
   role: z.literal('CARESEEKER'),
-  isHelper: z.boolean().default(false).optional(),
+  isHelper: z.boolean().default(false),
 });
 
 export const professionalResponseSchema = userResponseSchema.extend({
   role: z.literal('PROFESSIONAL'),
   isMobile: z.boolean(),
   interventionRadius: z.number(),
-  siret: z.string().length(14),
+  siret: z.string()
+    .transform(val => val === "" ? null : val) // normalize empty string to null
+    .nullable()
+    .refine(val => val === null || /^\d{14}$/.test(val), {
+      message: "Le SIRET doit contenir exactement 14 chiffres",
+    })
+    .optional(),
   isSiretValid: z.boolean(),
   professionId: z.string().uuid().optional(),
 });

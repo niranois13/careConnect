@@ -49,6 +49,13 @@ export default function RegisterPro({ onSuccess }: registerProps) {
       normalizedPhoneNumber = phoneNumber.trim();
     }
 
+    let normalizedSiret: string | null;
+    if (!siret || siret.trim() === '') {
+      normalizedSiret = null;
+    } else {
+      normalizedSiret = siret.trim();
+    }
+
     try {
       let finalProfessionId = professionId;
 
@@ -56,7 +63,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         const newProfession = await createProfession.mutateAsync({
           professionName: 'Autre',
           customProfession,
-          isCustomProfessionApproved: false,
+          isProfessionApproved: false,
         });
         finalProfessionId = newProfession.id;
       }
@@ -70,7 +77,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         role,
         isMobile,
         interventionRadius,
-        siret,
+        siret:  normalizedSiret,
         isSiretValid,
         professionId: finalProfessionId,
       });
@@ -96,235 +103,207 @@ export default function RegisterPro({ onSuccess }: registerProps) {
   const selectedProfession = professions.find(p => p.id === professionId);
 
   return (
-    <form aria-label="form" onSubmit={handleSubmit} className='max-w-lg mx-auto'>
-      {formError && (
-        <p aria-live="polite" style={{ color: 'red' }}>
-          {formError}
-        </p>
-      )}
-      <div className="flex flex-row flex-wrap justify-center space-x-2 w-full mb-5">
-        <div>
-          <label htmlFor="firstName" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Prénom :</label>
+    <form aria-label="form" onSubmit={handleSubmit} className="max-w-lg mx-auto">
+      {formError && <p aria-live="polite" className="text-red-600">{formError}</p>}
+
+      {/* Name */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="firstName" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            Prénom :
+          </label>
           <input
             id="firstName"
             type="text"
             value={firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value);
-            }}
+            onChange={(e) => setFirstName(e.target.value)}
             disabled={registerPro.isPending}
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
-            placeholder='Jean'
+            placeholder="Jean"
             autoComplete="given-name"
+            className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
-        <div>
-          <label htmlFor="lastName" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Nom :</label>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="lastName" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            Nom :
+          </label>
           <input
             id="lastName"
             type="text"
             value={lastName}
-            onChange={(e) => {
-              setLastName(e.target.value);
-            }}
+            onChange={(e) => setLastName(e.target.value)}
             disabled={registerPro.isPending}
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
-            placeholder='Martin'
+            placeholder="Martin"
             autoComplete="family-name"
+            className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
       </div>
 
-      <div className="flex flex-col flex-wrap mb-5">
-        <p className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Vous devez avoir un numéro SIRET pour utiliser <strong>careConnect</strong></p>
-        <p className='block mb-1 text-sm font-light text-gray-900'>Pas de SIRET ? Vous pouvez quand même vous inscrire.</p>
-        <div className='flex flex-row flex-wrap justify-center space-x-5 w-full'>
-          <div>
-            <label htmlFor='siret' className='block text-sm font-medium text-gray-900 dark:text-white'>Numéro SIRET :</label>
-            <input
-              id="siret"
-              type="text"
-              value={siret}
-              onChange={(e) => {
-                setSiret(e.target.value);
-              }}
-              disabled={registerPro.isPending}
-              required
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
-              placeholder='12345678900013'
-              inputMode="numeric"
-              pattern="\d{14}"
-              autoComplete="off"
-            />
-          </div>
-          <div className='flex flex-col justify-baseline p-0.5'>
-            <p>Plus d'infos sur:</p>
-            <a
-              href='https://entreprendre.service-public.fr/vosdroits/F32135'
-              className='text-purple-800 font-semibold hover:text-purple-600'
-            >
-              entreprendre.service-public.fr
-            </a>
-          </div>
-        </div>
+      {/* SIRET */}
+      <div className="mb-5">
+        <label htmlFor="siret" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Numéro SIRET :
+        </label>
+        <input
+          id="siret"
+          type="text"
+          value={siret}
+          onChange={(e) => setSiret(e.target.value)}
+          disabled={registerPro.isPending}
+          placeholder="12345678900013"
+          inputMode="numeric"
+          autoComplete="off"
+          className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+        />
+        <p className="text-sm text-gray-700 mt-1">
+          Plus d'infos sur: <a href="https://entreprendre.service-public.fr/vosdroits/F32135" className="text-purple-800 font-semibold hover:text-purple-600">entreprendre.service-public.fr</a>
+        </p>
       </div>
 
-      <div className="flex flex-row justify-center flex-wrap space-x-2 mb-5">
+      {/* Profession */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <label htmlFor='professionSelect' className='sr-only'>Choisissez votre profession:</label>
         <select
           value={professionId}
+          id="professionSelect"
           onChange={(e) => setProfessionId(e.target.value)}
           disabled={registerPro.isPending}
-          className="flex-shrink min-w-0 max-w-[45ch] h-[40px] truncate text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500"
           required
+          className="min-w-0 max-w-[45ch] h-[40px] text-center text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
         >
-          <option value="" disabled>
-            {isLoading ? 'Chargement...' : 'Choisissez votre profession'}
-          </option>
-          {professions.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.professionName}
-            </option>
-          ))}
+          <option value="" disabled>{isLoading ? 'Chargement...' : 'Choisissez votre profession'}</option>
+          {professions.map((p) => <option key={p.id} value={p.id}>{p.professionName}</option>)}
         </select>
 
         {selectedProfession?.professionName === 'Autre' && (
-          <div>
-            <label htmlFor='customProfession' className='sr-only'>Entrez vore profession:</label>
-            <input
-              type="text"
-              name="customProfession"
-              autoComplete="organization-title"
-              value={customProfession}
-              onChange={(e) => setCustomProfession(e.target.value)}
-              disabled={registerPro.isPending}
-              placeholder="Ex: Chiropracteur.ice"
-              className="flex-1 min-w-0 max-w-[180px] h-[40px] truncate text-center bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500"
-            />
-          </div>
+          <input
+            type="text"
+            id="customProfession"
+            name="customProfession"
+            value={customProfession}
+            onChange={(e) => setCustomProfession(e.target.value)}
+            disabled={registerPro.isPending}
+            placeholder="Ex: Chiropracteur.ice"
+            autoComplete="organization-title"
+            className="flex-1 min-w-0 max-w-[180px] h-[40px] text-center text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
         )}
       </div>
 
-      <div className="flex flex-row justify-center space-x-2 w-full mb-5">
-        <div>
-          <p className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Acceptez-vous de vous déplacer (domicile, extérieur,...) ?</p>
-          <div className="flex flex-row justify-center space-x-5 flex-wrap">
-            <div className='flex flex-col'>
-              <label htmlFor="isMobileTrue" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Oui</label>
-              <input
-                id="isMobileTrue"
-                type="radio"
-                name="isMobile"
-                checked={isMobile}
-                onChange={() => {
-                  setIsMobile(true);
-                }}
-                disabled={registerPro.isPending}
-                required
-                className="block p-1.5"
-              />
-            </div>
-            <div className='flex flex-col'>
-              <label htmlFor="isMobileFalse" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Non</label>
-              <input
-                id="isMobileFalse"
-                type="radio"
-                checked={!isMobile}
-                name="isMobile"
-                onChange={() => {
-                  setIsMobile(false);
-                }}
-                disabled={registerPro.isPending}
-                required
-                className="block p-1.5"
-              />
-            </div>
-            <div className='flex flex-col'>
-              <label htmlFor="interventionRadius" className='block text-sm font-medium text-gray-900 dark:text-white'>Rayon d'intervention: {interventionRadius} km:</label>
-              <input
-                id="interventionRadius"
-                type="range"
-                min={0}
-                max={200}
-                step={1}
-                value={interventionRadius}
-                onChange={(e) => {
-                  setInterventionRadius(Number(e.target.value));
-                }}
-                disabled={registerPro.isPending}
-                required
-                className="block p-1.5"
-              />
-            </div>
-          </div>
+      {/* Mobility */}
+      <div className="mb-5">
+        <p className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+          Acceptez-vous de vous déplacer ?
+        </p>
+        <div className="flex flex-row flex-wrap justify-center gap-x-5">
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              name="isMobile"
+              checked={isMobile}
+              onChange={() => setIsMobile(true)}
+              disabled={registerPro.isPending}
+              required
+            /> Oui
+          </label>
+          <label className="flex items-center gap-1">
+            <input
+              type="radio"
+              name="isMobile"
+              checked={!isMobile}
+              onChange={() => setIsMobile(false)}
+              disabled={registerPro.isPending}
+              required
+            /> Non
+          </label>
         </div>
+
+        <label htmlFor="interventionRadius" className="block mt-2 text-sm font-medium text-gray-900 dark:text-white">
+          Rayon d'intervention: {interventionRadius} km
+        </label>
+        <input
+          id="interventionRadius"
+          type="range"
+          min={0}
+          max={200}
+          step={1}
+          value={interventionRadius}
+          onChange={(e) => setInterventionRadius(Number(e.target.value))}
+          disabled={registerPro.isPending}
+          required
+          className="w-full"
+        />
       </div>
 
-      <div className="flex flex-row flex-wrap justify-center space-x-2 w-full mb-5">
-        <div>
-          <label htmlFor="email" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Email :</label>
+      {/* Contact & Password */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="email" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            Email :
+          </label>
           <input
             id="email"
             type="email"
-            autoComplete="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={registerPro.isPending}
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
-            placeholder='example@mail.com'
+            placeholder="example@mail.com"
+            autoComplete="email"
+            className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
-        <div>
-          <label htmlFor="tel" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Téléphone :</label>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="tel" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            Téléphone :
+          </label>
           <input
             id="tel"
             type="tel"
-            autoComplete="tel-national"
             value={phoneNumber}
-            onChange={(e) => {
-              setPhoneNumber(e.target.value);
-            }}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             disabled={registerPro.isPending}
             pattern="^0\d{9}$"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
-            placeholder='0123456789'
+            placeholder="0123456789"
+            autoComplete="tel"
+            className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
       </div>
 
-      <div className="flex flex-row flex-wrap justify-center space-x-2 w-full mb-1">
-        <div>
-          <label htmlFor="password" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Mot de passe :</label>
+      {/* Password */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="password" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            Mot de passe :
+          </label>
           <input
             id="password"
             type="password"
-            autoComplete="new-password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(e) => setPassword(e.target.value)}
             disabled={registerPro.isPending}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
             required
+            autoComplete="new-password"
+            className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
-        <div>
-          <label htmlFor="confirmPassword" className='block mb-1 text-sm font-medium text-gray-900 dark:text-white'>Confirmez le mot de passe :</label>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="confirmPassword" className="block mb-1 text-sm font-medium text-gray-900 dark:text-white">
+            Confirmez le mot de passe :
+          </label>
           <input
             id="confirmPassword"
             type="password"
-            autoComplete="new-password"
             value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-            }}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={registerPro.isPending}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-1.5"
             required
+            autoComplete="new-password"
+            className="w-full p-1.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
       </div>
@@ -334,7 +313,8 @@ export default function RegisterPro({ onSuccess }: registerProps) {
       <button
         type="submit"
         disabled={registerPro.isPending}
-        className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm w-full p-2.5 text-center">
+        className="w-full p-2.5 text-sm font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+      >
         {registerPro.isPending ? 'Création du compte..' : 'Créer mon compte'}
       </button>
     </form>

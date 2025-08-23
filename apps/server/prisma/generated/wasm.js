@@ -152,7 +152,7 @@ exports.Prisma.ProfessionScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   customProfession: 'customProfession',
-  isCustomProfessionApproved: 'isCustomProfessionApproved',
+  isProfessionApproved: 'isProfessionApproved',
   professionName: 'professionName'
 };
 

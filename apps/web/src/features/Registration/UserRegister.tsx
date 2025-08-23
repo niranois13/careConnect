@@ -112,101 +112,111 @@ function RegisterUser({ onSuccess }: registerProps) {
   };
 
   return (
-    <form aria-label="form" onSubmit={handleSubmit} className='max-w-lg mx-auto'>
-      {formError && <p style={{ color: 'red' }}>{formError}</p>}
-      <div className="flex flex-row justify-center space-x-2">
-        <div className='mb-5'>
-          <label htmlFor="firstName" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Prénom :</label>
+    <form aria-label="form" onSubmit={handleSubmit} className="max-w-lg mx-auto">
+      {formError && <p aria-live="polite" className="text-red-600">{formError}</p>}
+
+      {/* Name fields */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="firstName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Prénom :
+          </label>
           <input
             id="firstName"
             type="text"
             value={firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value);
-            }}
+            onChange={(e) => setFirstName(e.target.value)}
             disabled={mutation.isPending}
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-            placeholder='Jean'
+            placeholder="Jean"
+            autoComplete="given-name"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
-        <div className='mb-5'>
-          <label htmlFor="lastName" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Nom :</label>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="lastName" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Nom :
+          </label>
           <input
             id="lastName"
             type="text"
             value={lastName}
-            onChange={(e) => {
-              setLastName(e.target.value);
-            }}
+            onChange={(e) => setLastName(e.target.value)}
             disabled={mutation.isPending}
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-            placeholder='Martin'
+            placeholder="Martin"
+            autoComplete="family-name"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
       </div>
 
-      <div className="flex flex-row justify-center space-x-2">
-        <div className='mb-5'>
-          <label htmlFor="email" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Email :</label>
+      {/* Contact */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Email :
+          </label>
           <input
             id="email"
             type="email"
             value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
+            onChange={(e) => setEmail(e.target.value)}
             disabled={mutation.isPending}
             required
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-            placeholder='example@mail.com'
+            placeholder="example@mail.com"
+            autoComplete="email"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
-        <div className='mb-5'>
-          <label htmlFor="tel" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Téléphone :</label>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="tel" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Téléphone :
+          </label>
           <input
             id="tel"
             type="tel"
             value={phoneNumber}
-            onChange={(e) => {
-              setPhoneNumber(e.target.value);
-            }}
+            onChange={(e) => setPhoneNumber(e.target.value)}
             disabled={mutation.isPending}
             pattern="^0\d{9}$"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
-            placeholder='0123456789'
+            placeholder="0123456789"
+            autoComplete="tel"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
       </div>
 
-      <div className="flex flex-row justify-center space-x-2">
-        <div>
-          <label htmlFor="password" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Mot de passe :</label>
+      {/* Password */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Mot de passe :
+          </label>
           <input
             id="password"
             type="password"
             value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            onChange={(e) => setPassword(e.target.value)}
             disabled={mutation.isPending}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
             required
+            autoComplete="new-password"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
-        <div>
-          <label htmlFor="confirmPassword" className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Confirmez le mot de passe :</label>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="confirmPassword" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Confirmez le mot de passe :
+          </label>
           <input
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-            }}
+            onChange={(e) => setConfirmPassword(e.target.value)}
             disabled={mutation.isPending}
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-purple-500 focus:border-purple-500 block w-full p-2.5"
             required
+            autoComplete="new-password"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
       </div>
@@ -216,8 +226,9 @@ function RegisterUser({ onSuccess }: registerProps) {
       <button
         type="submit"
         disabled={mutation.isPending}
-        className="text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center">
-        {mutation.isPending ? 'Création du compte..' : 'Créer mon compte'}
+        className="w-full px-5 py-2.5 text-sm font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+      >
+        {mutation.isPending ? 'Création du compte...' : 'Créer mon compte'}
       </button>
     </form>
   );

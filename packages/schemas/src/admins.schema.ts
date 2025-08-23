@@ -9,6 +9,6 @@ export const adminCreateSchema = userCreateSchema.extend({
   role: z.literal('ADMIN'),
   adminKey: z.string().refine(
     (val) => val === ADMIN_KEY,
-    (val) => ({ message: `Invalid admin key: ${val}` }),
+    { message: `Invalid credentials` },
   ),
-});
+}).omit({ adminKey: true } );

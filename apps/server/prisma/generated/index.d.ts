@@ -4528,7 +4528,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     customProfession: string | null
-    isCustomProfessionApproved: boolean | null
+    isProfessionApproved: boolean | null
     professionName: string | null
   }
 
@@ -4537,7 +4537,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     customProfession: string | null
-    isCustomProfessionApproved: boolean | null
+    isProfessionApproved: boolean | null
     professionName: string | null
   }
 
@@ -4546,7 +4546,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     customProfession: number
-    isCustomProfessionApproved: number
+    isProfessionApproved: number
     professionName: number
     _all: number
   }
@@ -4557,7 +4557,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     customProfession?: true
-    isCustomProfessionApproved?: true
+    isProfessionApproved?: true
     professionName?: true
   }
 
@@ -4566,7 +4566,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     customProfession?: true
-    isCustomProfessionApproved?: true
+    isProfessionApproved?: true
     professionName?: true
   }
 
@@ -4575,7 +4575,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     customProfession?: true
-    isCustomProfessionApproved?: true
+    isProfessionApproved?: true
     professionName?: true
     _all?: true
   }
@@ -4657,7 +4657,7 @@ export namespace Prisma {
     createdAt: Date
     updatedAt: Date
     customProfession: string | null
-    isCustomProfessionApproved: boolean
+    isProfessionApproved: boolean
     professionName: string
     _count: ProfessionCountAggregateOutputType | null
     _min: ProfessionMinAggregateOutputType | null
@@ -4683,7 +4683,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName?: boolean
     professionals?: boolean | Profession$professionalsArgs<ExtArgs>
     _count?: boolean | ProfessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -4694,7 +4694,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName?: boolean
   }, ExtArgs["result"]["profession"]>
 
@@ -4703,7 +4703,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName?: boolean
   }, ExtArgs["result"]["profession"]>
 
@@ -4712,11 +4712,11 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     customProfession?: boolean
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName?: boolean
   }
 
-  export type ProfessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customProfession" | "isCustomProfessionApproved" | "professionName", ExtArgs["result"]["profession"]>
+  export type ProfessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "customProfession" | "isProfessionApproved" | "professionName", ExtArgs["result"]["profession"]>
   export type ProfessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     professionals?: boolean | Profession$professionalsArgs<ExtArgs>
     _count?: boolean | ProfessionCountOutputTypeDefaultArgs<ExtArgs>
@@ -4734,7 +4734,7 @@ export namespace Prisma {
       createdAt: Date
       updatedAt: Date
       customProfession: string | null
-      isCustomProfessionApproved: boolean
+      isProfessionApproved: boolean
       professionName: string
     }, ExtArgs["result"]["profession"]>
     composites: {}
@@ -5164,7 +5164,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"Profession", 'DateTime'>
     readonly updatedAt: FieldRef<"Profession", 'DateTime'>
     readonly customProfession: FieldRef<"Profession", 'String'>
-    readonly isCustomProfessionApproved: FieldRef<"Profession", 'Boolean'>
+    readonly isProfessionApproved: FieldRef<"Profession", 'Boolean'>
     readonly professionName: FieldRef<"Profession", 'String'>
   }
     
@@ -5651,7 +5651,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
     customProfession: 'customProfession',
-    isCustomProfessionApproved: 'isCustomProfessionApproved',
+    isProfessionApproved: 'isProfessionApproved',
     professionName: 'professionName'
   };
 
@@ -5949,7 +5949,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Profession"> | Date | string
     updatedAt?: DateTimeFilter<"Profession"> | Date | string
     customProfession?: StringNullableFilter<"Profession"> | string | null
-    isCustomProfessionApproved?: BoolFilter<"Profession"> | boolean
+    isProfessionApproved?: BoolFilter<"Profession"> | boolean
     professionName?: StringFilter<"Profession"> | string
     professionals?: ProfessionalListRelationFilter
   }
@@ -5959,7 +5959,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customProfession?: SortOrderInput | SortOrder
-    isCustomProfessionApproved?: SortOrder
+    isProfessionApproved?: SortOrder
     professionName?: SortOrder
     professionals?: ProfessionalOrderByRelationAggregateInput
   }
@@ -5972,7 +5972,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Profession"> | Date | string
     updatedAt?: DateTimeFilter<"Profession"> | Date | string
     customProfession?: StringNullableFilter<"Profession"> | string | null
-    isCustomProfessionApproved?: BoolFilter<"Profession"> | boolean
+    isProfessionApproved?: BoolFilter<"Profession"> | boolean
     professionName?: StringFilter<"Profession"> | string
     professionals?: ProfessionalListRelationFilter
   }, "id">
@@ -5982,7 +5982,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customProfession?: SortOrderInput | SortOrder
-    isCustomProfessionApproved?: SortOrder
+    isProfessionApproved?: SortOrder
     professionName?: SortOrder
     _count?: ProfessionCountOrderByAggregateInput
     _max?: ProfessionMaxOrderByAggregateInput
@@ -5997,7 +5997,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"Profession"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Profession"> | Date | string
     customProfession?: StringNullableWithAggregatesFilter<"Profession"> | string | null
-    isCustomProfessionApproved?: BoolWithAggregatesFilter<"Profession"> | boolean
+    isProfessionApproved?: BoolWithAggregatesFilter<"Profession"> | boolean
     professionName?: StringWithAggregatesFilter<"Profession"> | string
   }
 
@@ -6200,7 +6200,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName: string
     professionals?: ProfessionalCreateNestedManyWithoutProfessionInput
   }
@@ -6210,7 +6210,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName: string
     professionals?: ProfessionalUncheckedCreateNestedManyWithoutProfessionInput
   }
@@ -6220,7 +6220,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    isProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     professionName?: StringFieldUpdateOperationsInput | string
     professionals?: ProfessionalUpdateManyWithoutProfessionNestedInput
   }
@@ -6230,7 +6230,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    isProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     professionName?: StringFieldUpdateOperationsInput | string
     professionals?: ProfessionalUncheckedUpdateManyWithoutProfessionNestedInput
   }
@@ -6240,7 +6240,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName: string
   }
 
@@ -6249,7 +6249,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    isProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     professionName?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6258,7 +6258,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    isProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     professionName?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6522,7 +6522,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customProfession?: SortOrder
-    isCustomProfessionApproved?: SortOrder
+    isProfessionApproved?: SortOrder
     professionName?: SortOrder
   }
 
@@ -6531,7 +6531,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customProfession?: SortOrder
-    isCustomProfessionApproved?: SortOrder
+    isProfessionApproved?: SortOrder
     professionName?: SortOrder
   }
 
@@ -6540,7 +6540,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     customProfession?: SortOrder
-    isCustomProfessionApproved?: SortOrder
+    isProfessionApproved?: SortOrder
     professionName?: SortOrder
   }
 
@@ -7093,7 +7093,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName: string
   }
 
@@ -7102,7 +7102,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     customProfession?: string | null
-    isCustomProfessionApproved?: boolean
+    isProfessionApproved?: boolean
     professionName: string
   }
 
@@ -7166,7 +7166,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    isProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     professionName?: StringFieldUpdateOperationsInput | string
   }
 
@@ -7175,7 +7175,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     customProfession?: NullableStringFieldUpdateOperationsInput | string | null
-    isCustomProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
+    isProfessionApproved?: BoolFieldUpdateOperationsInput | boolean
     professionName?: StringFieldUpdateOperationsInput | string
   }
 

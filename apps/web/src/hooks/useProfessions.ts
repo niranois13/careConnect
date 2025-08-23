@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { z } from 'zod';
 
-import { RegisteredProfessionSchema } from '../../../../packages/schemas/src/profession.schemas.ts';
+import { approvedProfessionResponseSchema } from '../../../../packages/schemas/src/profession.schemas.ts';
 
-type ProfessionResponse = z.infer<typeof RegisteredProfessionSchema>;
+type ProfessionResponse = z.infer<typeof approvedProfessionResponseSchema>;
 
 export function useProfessions() {
   const [professions, setProfessions] = useState<ProfessionResponse[]>([]);
@@ -19,7 +19,7 @@ export function useProfessions() {
           throw new Error('Impossible de récupérer les professions');
         }
         const data = await res.json();
-        const parsedData = z.array(RegisteredProfessionSchema).parse(data);
+        const parsedData = z.array(approvedProfessionResponseSchema).parse(data);
 
         parsedData.sort((a, b) => {
           if (a.professionName === 'Autre')

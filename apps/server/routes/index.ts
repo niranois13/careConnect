@@ -43,6 +43,15 @@ export default function registerRoutes(app: Express) {
     }
   });
 
+  // app.put('/api/admin/professions', async (req: Request, res: Response) => {
+  //   try {
+  //     await adminPutProfessions(req, res);
+  //   } catch (error: unknown) {
+  //     console.error('Error while processing the request to adminPutProfessions', error);
+  //     res.status(500).json({ error: 'Internal Server Error' });
+  //   }
+  // })
+
   /* AUTH */
   app.post('/api/login', async (req: Request, res: Response) => {
     try {

@@ -49,6 +49,7 @@ export default function SearchBar({
         >
           <input
             type="text"
+            id="searchField"
             name="searchField"
             value={value}
             onChange={(e) => { setValue(e.target.value); }}
