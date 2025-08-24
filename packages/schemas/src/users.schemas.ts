@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { professionResponseSchema } from './profession.schemas.ts';
 
 const alphaRegex: RegExp = /^[A-Za-zÀ-ÿ\s'-]+$/;
 const nameField = z
@@ -16,6 +17,7 @@ const passField = z
 // ---------- BASE ----------
 export const baseUserSchema = z.object({
   email: z.string().email(),
+  emailVerified: z.boolean().default(false),
   lastName: nameField,
   firstName: nameField,
   phoneNumber: z.string().trim().min(10).max(12).nullable(),
@@ -73,6 +75,15 @@ export const professionalResponseSchema = userResponseSchema.extend({
     .optional(),
   isSiretValid: z.boolean(),
   professionId: z.string().uuid().optional(),
+});
+
+export const adminProfessionalRelationsResponseSchema = z.object({
+  isMobile: z.boolean(),
+  interventionRadius: z.number(),
+  siret: z.string().nullable(),
+  isSiretValid: z.boolean(),
+  user: userResponseSchema,
+  profession: professionResponseSchema
 });
 
 // ---------- QUERIES ----------

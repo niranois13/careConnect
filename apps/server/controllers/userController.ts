@@ -18,6 +18,34 @@ const selectFields = {
   updatedAt: true
 };
 
+const fullProSelect = {
+  isMobile: true,
+  interventionRadius: true,
+  siret: true,
+  isSiretValid: true,
+  user: {
+    select: {
+      id: true,
+      email: true,
+      firstName: true,
+      lastName: true,
+      phoneNumber: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+      emailVerified: true,
+    },
+  },
+  profession: {
+    select: {
+      id: true,
+      customProfession: true,
+      isProfessionApproved: true,
+      professionName: true,
+    },
+  },
+}
+
 export async function createCareSeeker(req: Request, res: Response) {
   try {
     const userData = careSeekerCreateSchema.parse(req.body);
@@ -166,7 +194,7 @@ export async function getUsers(req: Request, res: Response) {
   }
 }
 
-export async function getCareSeekers(req: Request, res: Response) {
+export async function getProfessionalById(req: Request, res: Response) {
   try {
     const parseResult = roleQuerySchema.safeParse(req.query);
 
@@ -174,18 +202,59 @@ export async function getCareSeekers(req: Request, res: Response) {
       return res.status(400).json({ error: 'Invalid role filter' });
     }
 
+    if (!req.params.id || typeof req.params.id != 'string') {
+      return res.status(400).json({ error: 'Invalid id filter' });
+    }
+    const id = req.params.id;
+
     const role = parseResult.data.role;
+    if (role !== 'PROFESSIONAL')
+      return res.status(400).json({ error: 'Invalid role filter' });
 
-    const whereClause = role ? { role } : {};
+    const professional = await prisma.professional.findFirst({
+      where: {
+        userId: id
+      },
+      select: fullProSelect
+    });
+    console.log('Professional:', professional);
 
-    const Users = await prisma.user.findMany({
-      where: whereClause,
-      select: selectFields,
+    return res.status(200).json({ professional });
+  } catch (error: unknown) {
+    console.error('Error in getSpecificUser:', error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+export async function getCareSeekerById(req: Request, res: Response) {
+  try {
+    const parseResult = roleQuerySchema.safeParse(req.query);
+
+    if (!parseResult.success) {
+      return res.status(400).json({ error: 'Invalid role filter' });
+    }
+
+    if (!req.params.id || typeof req.params.id != 'string') {
+      return res.status(400).json({ error: 'Invalid id filter' });
+    }
+    const id = req.params.id;
+
+    const role = parseResult.data.role;
+    if (role !== 'CARESEEKER')
+      return res.status(400).json({ error: 'Invalid role filter' });
+
+    const careseeker = await prisma.careSeeker.findFirst({
+      where: {
+        userId: id
+      },
+      include: {
+        user: true
+      },
     });
 
-    return res.status(200).json({ Users: Users });
+    return res.status(200).json({ careseeker });
   } catch (error: unknown) {
-    console.error('Error in getUsers:', error);
+    console.error('Error in getSpecificUser:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }

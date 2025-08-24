@@ -1,13 +1,17 @@
 import { useEffect } from "react";
+import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
+import { z } from "zod";
+import CareSeekerProfile from "./CareSeekerProfile.tsx";
+import ProfessionalProfile from "./ProfessionalProfile.tsx";
 
 interface AdminUserModalProps {
+  user: z.infer<typeof userResponseSchema>;
   onClose: () => void;
 }
 
-export default function AdminUserModal({
-  user,
-  onClose
-  }: AdminUserModalProps,) {
+export default function AdminUserModal({ user, onClose }: AdminUserModalProps,) {
+  // const { careSeeker, isLoading: isLoadingCare, error: errorCare, refetch: refetchCare } = useGetCareSeekerById(userId);
+  // const { professional, isLoading: isLoadingPro, error: errorPro, refetch: refetchPro } = useGetProfessionalById(userId);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -32,7 +36,7 @@ export default function AdminUserModal({
       onClick={onClose}
     >
       <div
-        className="bg-purple-50 shadow-xl rounded p-6 w-100 relative border-2 border-b-purple-800"
+        className="bg-purple-50 shadow-xl rounded p-6 max-w-3xl w-full max-h-[80vh] overflow-y-auto relative border-2 border-b-purple-800"
         onClick={(e) => { e.stopPropagation(); }} // Pour empêcher la fermeture quand on clique dans la modale
       >
         <button
@@ -42,7 +46,8 @@ export default function AdminUserModal({
         >
           ✕
         </button>
-        
+        {user.role === "CARESEEKER" && <CareSeekerProfile user={user} />}
+        {user.role === "PROFESSIONAL" && <ProfessionalProfile selectedUser={user} />}
       </div>
     </div>
   );

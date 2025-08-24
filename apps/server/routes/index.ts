@@ -4,11 +4,10 @@ import { createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
 import { adminCreateProfessions, getProfessions, proCreateProfessions } from '../controllers/professionController.ts';
-import { createCareSeeker, createProfessional, getUsers } from '../controllers/userController.ts';
-import { authenticate } from '../middlewares/authMiddleware.ts';
-import { requireRole } from '../middlewares/requireRole.ts';
+import { createCareSeeker, createProfessional, getCareSeekerById, getProfessionalById, getUsers } from '../controllers/userController.ts';
 import { requireAuth } from '../middlewares/requireAuth.ts';
-import { requireSelf } from '../middlewares/requireSelf.ts';
+import { requireRole } from '../middlewares/requireRole.ts';
+// import { requireSelf } from '../middlewares/requireSelf.ts';
 
 export default function registerRoutes(app: Express) {
   /* UTILS */
@@ -112,6 +111,23 @@ export default function registerRoutes(app: Express) {
     }
   });
 
+  app.get('/api/admin/careseeker/:id', requireRole('ADMIN'), async (req: Request, res: Response) => {
+    try {
+      await getCareSeekerById(req, res);
+    } catch (error: unknown) {
+      console.error('Error while processing the request to getSpecificUser:', error);
+      res.status(500).json({ error: 'Internal Server Error '});
+    }
+  })
+
+  app.get('/api/admin/professional/:id', requireRole('ADMIN'), async (req: Request, res: Response) => {
+      try {
+        await getProfessionalById(req, res);
+      } catch (error: unknown) {
+        console.error('Error while processing the request to getSpecificUser:', error);
+        res.status(500).json({ error: 'Internal Server Error '});
+      }
+    })
 
 
 // GET /api/admin/users/:id → Détails utilisateur

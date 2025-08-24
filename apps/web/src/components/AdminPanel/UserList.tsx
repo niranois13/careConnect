@@ -11,7 +11,6 @@ export function UserList() {
   const [selectedUser, setSelectedUser] = useState<typeof users[0] | null>(null);
   const { users, isLoading, error, refetch } = useGetUsers(sortDirection);
 
-  // Filtre rôle
   let filteredUsers = filterRole ? users.filter(u => u.role === filterRole) : users;
 
   // Recherche
@@ -140,7 +139,7 @@ export function UserList() {
       {selectedUser && (
         <AdminUserModal
           user={selectedUser}
-          onClose={() => setSelectedUserId(null)}
+          onClose={() => setSelectedUser(null)}
         />
       )}
     </div>
