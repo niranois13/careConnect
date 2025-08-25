@@ -47,7 +47,7 @@ export default function AdminUserModal({ user, onClose }: AdminUserModalProps,) 
           ✕
         </button>
         {user.role === "CARESEEKER" && <CareSeekerProfile user={user} />}
-        {user.role === "PROFESSIONAL" && <ProfessionalProfile selectedUser={user} />}
+        {user.role === "PROFESSIONAL" && <ProfessionalProfile user={user} />}
       </div>
     </div>
   );

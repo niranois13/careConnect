@@ -86,6 +86,33 @@ export const adminProfessionalRelationsResponseSchema = z.object({
   profession: professionResponseSchema
 });
 
+export const professionalUpdateSchema = z.object({
+    firstName: nameField,
+    lastName: nameField,
+    email: z.string().email(),
+    emailVerified: z.boolean().default(false),
+    phoneNumber: z.string()
+      .transform(val => val === "" ? null : val)
+      .nullable()
+      .refine(val => val === null || (val.length >= 10 && val.length <= 12), {
+        message: "Le numéro de téléphone doit contenir entre 10 chiffres (0123456789) et 12 caractères (+33123456780)"
+      }),
+    isMobile: z.boolean(),
+    interventionRadius: z.number(),
+    siret: z.string()
+      .transform(val => val === "" ? null : val)
+      .nullable()
+      .refine(val => val === null || /^\d{14}$/.test(val), {
+        message: "Le SIRET doit contenir exactement 14 chiffres",
+      })
+    .optional(),
+    isSiretValid: z.boolean(),
+    professionId: z.string().uuid("L'id de la profession est requis"),
+    professionName: z.string().trim().min(1, 'Le nom de la profession est requis'),
+    customProfession: z.string().trim().optional(),
+    isProfessionApproved: z.boolean().default(true),
+});
+
 // ---------- QUERIES ----------
 export const roleQuerySchema = z.object({
   role: z.enum(['CARESEEKER', 'PROFESSIONAL', 'ADMIN']).optional(),

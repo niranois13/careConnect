@@ -1,36 +1,36 @@
+import { useState, useEffect } from "react";
 import { useGetProfessionalById } from "../../hooks/useGetUsers.tsx";
-
+import { useUpdateProfessional } from "../../hooks/useUpdateProfessional.tsx";
 import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
-import { z } from "zod";
-import React, { useEffect, useState } from "react";
+import { z } from 'zod';
 
 interface AdminUserModalProps {
-  selectedUser: z.infer<typeof userResponseSchema>;
+  user: z.infer<typeof userResponseSchema>;
 }
 
-export default function ProfessionalProfile({ selectedUser }: AdminUserModalProps) {
-  const { professional, isLoading, error } = useGetProfessionalById(selectedUser.id);
+export default function ProfessionalProfile({ user }: AdminUserModalProps) {
+  const { professional, isLoading, error } = useGetProfessionalById(user.id);
+  const updateProfessional = useUpdateProfessional(user.id);
+
   const [formData, setFormData] = useState({
-    id: '',
-    firstName: '',
-    lastName: '',
-    email: '',
+    firstName: "",
+    lastName: "",
+    email: "",
     emailVerified: false,
-    phoneNumber: '',
-    siret: '',
+    phoneNumber: "",
+    siret: "",
     isSiretValid: false,
-    professionId: '',
-    professionName: '',
-    customProfession: '',
+    professionId: "",
+    professionName: "",
+    customProfession: "",
     isProfessionApproved: false,
     isMobile: false,
     interventionRadius: 0,
-  })
+  });
 
   useEffect(() => {
     if (professional && professional.user && professional.profession) {
       setFormData({
-        id: professional.user.id,
         firstName: professional.user.firstName,
         lastName: professional.user.lastName,
         email: professional.user.email,
@@ -43,7 +43,7 @@ export default function ProfessionalProfile({ selectedUser }: AdminUserModalProp
         customProfession: professional.profession.customProfession ?? "",
         isProfessionApproved: professional.profession.isProfessionApproved,
         isMobile: professional.isMobile,
-        interventionRadius: professional.interventionRadius
+        interventionRadius: professional.interventionRadius,
       });
     }
   }, [professional]);
@@ -55,27 +55,30 @@ export default function ProfessionalProfile({ selectedUser }: AdminUserModalProp
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
-    setFormData(prev => ({ ...prev, [name]: checked }));
+    setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: Number(value) }));
+    setFormData((prev) => ({ ...prev, [name]: Number(value) }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("Submit payload:", formData);
+    e.preventDefault();
+
+    updateProfessional.mutate(formData);
   };
+
+  if (isLoading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur: {String(error)}</p>;
 
   return (
     <>
-      {isLoading && <p>Chargement...</p>}
-      {error && <p className="text-red-600">{error.message}</p>}
       {professional && (
         <form aria-label="form" onSubmit={handleSubmit} className="ml-10">
           <div className='mb-3'>
 
-            <h2 className='text-lg mb-1 font-semibold text-gray-900'>Profil</h2>
+            <h2 className='text-lg mb-1 font-semibold text-gray-900 ml-5'>Profil</h2>
 
             <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
               <label htmlFor='id' className="text-gray-900">ID :</label>
@@ -84,7 +87,7 @@ export default function ProfessionalProfile({ selectedUser }: AdminUserModalProp
                 name='id'
                 type='text'
                 readOnly
-                value={formData.id}
+                value={professional.user.id}
                 className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
               />
             </div>
@@ -143,6 +146,17 @@ export default function ProfessionalProfile({ selectedUser }: AdminUserModalProp
                 />
               </div>
             </div>
+            <div className='flex flex-wrap gap-2 mb-1 items-center'>
+              <label htmlFor="phoneNumber" className="text-gray-900">Téléphone :</label>
+              <input
+                id='phoneNumber'
+                name='phoneNumber'
+                type='text'
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+            </div>
 
             <div className='flex flex-row flex-wrap items-center gap-4 mb-2'>
               <div className='flex flex-wrap gap-2 mb-1 items-center'>
@@ -153,7 +167,7 @@ export default function ProfessionalProfile({ selectedUser }: AdminUserModalProp
                   type='text'
                   value={formData.siret}
                   readOnly
-                  className='w-full max-w-1/2 p-1 font-medium text-gray-900'
+                  className='w-full max-w-1/2 font-medium text-gray-900'
                 />
               </div>
               <div className='flex flex-wrap gap-2 mb-1 items-center'>
@@ -172,7 +186,7 @@ export default function ProfessionalProfile({ selectedUser }: AdminUserModalProp
 
           <div>
 
-            <h2 className='text-lg mb-1 font-semibold text-gray-900'>Professionnel</h2>
+            <h2 className='text-lg mb-1 font-semibold text-gray-900 ml-5'>Professionnel</h2>
 
             <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
               <label htmlFor='professionId' className="text-gray-900">ID de la profession :</label>

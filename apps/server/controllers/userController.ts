@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
 
-import { careSeekerCreateSchema, professionalCreateSchema, roleQuerySchema } from '../../../packages/schemas/src/users.schemas.ts'
+import { careSeekerCreateSchema, professionalCreateSchema, professionalUpdateSchema, roleQuerySchema } from '../../../packages/schemas/src/users.schemas.ts'
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
 
 const prisma: PrismaClient = new PrismaClient();
@@ -45,6 +45,7 @@ const fullProSelect = {
     },
   },
 }
+
 
 export async function createCareSeeker(req: Request, res: Response) {
   try {
@@ -223,6 +224,65 @@ export async function getProfessionalById(req: Request, res: Response) {
   } catch (error: unknown) {
     console.error('Error in getSpecificUser:', error);
     return res.status(500).json({ error: 'Internal Server Error' });
+  }
+}
+
+export async function updateProfessional(req: Request, res: Response) {
+  try {
+    const parsedData = professionalUpdateSchema.safeParse(req.body)
+    if (!parsedData.success) {
+      console.log('updateProfessional - parsedData.error:', parsedData.error);
+      return res.status(400).json({ error: 'Invalid request format' });
+    }
+    const professionalData = parsedData.data;
+
+    const professional = await prisma.professional.update({
+      where: { userId: req.params.id },
+      data: {
+        isMobile: professionalData.isMobile,
+        interventionRadius: professionalData.interventionRadius,
+        siret: professionalData.siret || null,
+        isSiretValid: professionalData.isSiretValid,
+        user: {
+            update: {
+            email: professionalData.email,
+            firstName: professionalData.firstName,
+            lastName: professionalData.lastName,
+            phoneNumber: professionalData.phoneNumber || null,
+            emailVerified: professionalData.emailVerified,
+          },
+        },
+        profession: {
+          update: {
+            professionName: professionalData.professionName,
+            customProfession: professionalData.customProfession,
+            isProfessionApproved: professionalData.isProfessionApproved,
+          },
+        },
+      },
+    })
+    return res.status(201).json({ professional });
+
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      console.error('Data validation error in updateProfessional:', error.issues);
+      return res.status(400).json({ error: error.issues });
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Email and/or Phone number already in use.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error in createCareSeeker:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 }
 
