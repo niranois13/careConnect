@@ -3,8 +3,20 @@ import type { Express, Request, Response } from 'express';
 import { createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
-import { adminCreateProfessions, getProfessions, proCreateProfessions } from '../controllers/professionController.ts';
-import { createCareSeeker, createProfessional, getCareSeekerById, getProfessionalById, getUsers, updateProfessional } from '../controllers/userController.ts';
+import {
+  adminCreateProfessions,
+  getProfessions,
+  proCreateProfessions
+} from '../controllers/professionController.ts';
+import {
+  createCareSeeker,
+  createProfessional,
+  getCareSeekerById,
+  getProfessionalById,
+  getUsers,
+  updateCareseeker,
+  updateProfessional
+} from '../controllers/userController.ts';
 import { requireAuth } from '../middlewares/requireAuth.ts';
 import { requireRole } from '../middlewares/requireRole.ts';
 import { requireSelf } from '../middlewares/requireSelf.ts';
@@ -46,91 +58,27 @@ export default function registerRoutes(app: Express) {
   app.post('/api/careseeker', asyncHandler(createCareSeeker));
 
   /* PROFESSIONAL */
-  app.post('/api/professional', async (req: Request, res: Response) => {
-    try {
-      await createProfessional(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to createProfessional:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  app.post('/api/professional', asyncHandler(createProfessional));
 
-  app.put('/api/professional/:id', requireRole('ADMIN'), requireSelf(), async (req: Request, res: Response) => {
-    try {
-      await updateProfessional(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to updateProfessional:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  })
+  app.put('/api/professional/:id', requireSelf(), asyncHandler(updateProfessional))
 
   /* ADMIN */
-  app.post('/api/admin', requireRole('ADMIN'), async (req: Request, res: Response) => {
-    try {
-      await createAdmin(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to createAdmin:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  app.post('/api/admin', requireRole('ADMIN'), asyncHandler(createAdmin));
 
   /* ADMIN USERS */
-  app.get('/api/admin/users', requireRole('ADMIN'), async (req: Request, res: Response) => {
-    try {
-      await getUsers(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to getUsers:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  app.get('/api/admin/users', requireRole('ADMIN'), asyncHandler(getUsers));
 
   /* ADMIN CARESEEKER */
-  app.get('/api/admin/careseeker/:id', requireRole('ADMIN'), async (req: Request, res: Response) => {
-    try {
-      await getCareSeekerById(req, res);
-    } catch (error: unknown) {
-      console.error('Error while processing the request to getSpecificUser:', error);
-      res.status(500).json({ error: 'Internal Server Error '});
-    }
-  })
+  app.get('/api/admin/careseeker/:id', requireRole('ADMIN'), asyncHandler(getCareSeekerById));
+  app.put('/api/admin/careseeker/:id', requireRole('ADMIN'), asyncHandler(updateCareseeker));
 
   /* ADMIN PROFESSIONAL */
-  app.get('/api/admin/professional/:id', requireRole('ADMIN'), async (req: Request, res: Response) => {
-      try {
-        await getProfessionalById(req, res);
-      } catch (error: unknown) {
-        console.error('Error while processing the request to getSpecificUser:', error);
-        res.status(500).json({ error: 'Internal Server Error '});
-      }
-    })
-
-  app.put('/api/admin/professional/:id', requireRole('ADMIN'), async (req: Request, res: Response) => {
-    try {
-      await updateProfessional(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to updateProfessional:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  })
+  app.get('/api/admin/professional/:id', requireRole('ADMIN'), asyncHandler(getProfessionalById));
+  app.put('/api/admin/professional/:id', requireRole('ADMIN'), asyncHandler(updateProfessional));
 
   /* ADMIN PROFESSIONS */
-    app.post('/api/admin/professions', requireRole('ADMIN'), async (req: Request, res: Response) => {
-    try {
-      await adminCreateProfessions(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to adminCreateProfessions', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
-  // app.put('/api/admin/professions', async (req: Request, res: Response) => {
-  //   try {
-  //     await adminPutProfessions(req, res);
-  //   } catch (error: unknown) {
-  //     console.error('Error while processing the request to adminPutProfessions', error);
-  //     res.status(500).json({ error: 'Internal Server Error' });
-  //   }
-  // })
+  app.post('/api/admin/professions', requireRole('ADMIN'), asyncHandler(adminCreateProfessions));
+  // app.put('/api/admin/professions', requireRole('ADMIN'), asyncHandler(adminPutProfessions));
 
 
 // GET /api/admin/users/:id → Détails utilisateur

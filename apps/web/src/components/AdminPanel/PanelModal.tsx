@@ -10,8 +10,6 @@ interface AdminUserModalProps {
 }
 
 export default function AdminUserModal({ user, onClose }: AdminUserModalProps,) {
-  // const { careSeeker, isLoading: isLoadingCare, error: errorCare, refetch: refetchCare } = useGetCareSeekerById(userId);
-  // const { professional, isLoading: isLoadingPro, error: errorPro, refetch: refetchPro } = useGetProfessionalById(userId);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -32,7 +30,7 @@ export default function AdminUserModal({ user, onClose }: AdminUserModalProps,) 
 
   return (
     <div
-      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 "
+      className="fixed flex-shrink-0 inset-0 bg-opacity-50 flex justify-center items-center z-50 "
       onClick={onClose}
     >
       <div

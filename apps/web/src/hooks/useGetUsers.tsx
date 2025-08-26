@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
 import { z, ZodError } from "zod";
-import { careSeekerResponseSchema, professionalResponseSchema, adminProfessionalRelationsResponseSchema, userResponseSchema } from "../../../../packages/schemas/src/users.schemas.ts";
+import { careSeekerResponseSchema, professionalResponseSchema, adminProfessionalRelationsResponseSchema, userResponseSchema, adminCareSeekerRelationsResponseSchema } from "../../../../packages/schemas/src/users.schemas.ts";
 
 type User = z.infer<typeof userResponseSchema>;
 type adminProfessional = z.infer<typeof adminProfessionalRelationsResponseSchema>;
+type adminCareSeeker = z.infer<typeof adminCareSeekerRelationsResponseSchema>;
 
 export function useGetUsers(sortOrder: "asc" | "desc" = "desc") {
   const [users, setUsers] = useState<User[]>([]);
@@ -171,7 +172,7 @@ export function useGetProfessionals(sortOrder: "asc" | "desc" = "desc") {
 }
 
 export function useGetCareSeekerById(careSeekerId: string) {
-  const [careSeeker, setCareSeeker] = useState<User | null>(null);
+  const [careSeeker, setCareSeeker] = useState<adminCareSeeker | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -190,9 +191,13 @@ export function useGetCareSeekerById(careSeekerId: string) {
       }
 
       const json = await res.json();
-      const parsedData = careSeekerResponseSchema.parse(json);
+      const parsedData = adminCareSeekerRelationsResponseSchema.safeParse(json.careseeker);
+      if (!parsedData.success) {
+        console.log('parsedData error:', parsedData.error);
+        throw new Error()
+      }
 
-      setCareSeeker(parsedData);
+      setCareSeeker(parsedData.data);
       setError(null);
     } catch (error: unknown) {
       if (error instanceof ZodError) {
@@ -218,6 +223,7 @@ export function useGetCareSeekerById(careSeekerId: string) {
 }
 
 export function useGetProfessionalById(professionalId: string) {
+  console.log('0. useGetProfessionalById called')
   const [professional, setProfessional] = useState<adminProfessional | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);

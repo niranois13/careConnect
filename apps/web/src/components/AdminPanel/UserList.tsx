@@ -13,7 +13,6 @@ export function UserList() {
 
   let filteredUsers = filterRole ? users.filter(u => u.role === filterRole) : users;
 
-  // Recherche
   if (searchTerm.trim()) {
     const term = searchTerm.toLowerCase();
     filteredUsers = filteredUsers.filter(
@@ -27,7 +26,6 @@ export function UserList() {
 
   const displayedUsers = expanded ? filteredUsers : filteredUsers.slice(0, 5);
 
-  // Tri
   const sortedUsers = [...displayedUsers].sort((a, b) => {
     if (!sortColumn) return 0;
     const valA = a[sortColumn];
@@ -49,10 +47,10 @@ export function UserList() {
   };
 
   return (
-    <div className="p-1 border rounded-md shadow-sm flex flex-col h-full">
+    <div className="p-0.5 mx-2 my-1 shadow-sm flex flex-col h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-1 gap-2">
-        <h2 className="text-xl font-semibold">Liste des utilisateurs</h2>
+        <h2 className="text-lg font-semibold">Liste des utilisateurs</h2>
 
         <div className="flex flex-wrap items-center gap-2">
           <input
@@ -89,7 +87,7 @@ export function UserList() {
       {/* Table */}
       {!isLoading && !error && (
         <div className="overflow-auto flex-1">
-          <table className="min-w-full border text-left">
+          <table className="w-full border text-center">
             <thead className="bg-purple-200 sticky top-0">
               <tr>
                 {[
@@ -99,11 +97,11 @@ export function UserList() {
                   { label: "Email", key: "email" },
                   { label: "Rôle", key: "role" },
                   { label: "Créé le", key: "createdAt" },
-                  { label: "Actions", key: null }, // Actions ne se trie pas
+                  { label: "Actions", key: null },
                 ].map(({ label, key }) => (
                   <th
                     key={label}
-                    className={`border px-4 py-2 ${key ? "cursor-pointer select-none" : ""}`}
+                    className={`border px-2 py-1 ${key ? "cursor-pointer select-none" : ""}`}
                     onClick={key ? () => handleSort(key as keyof typeof users[0]) : undefined}
                   >
                     {label} {sortColumn === key ? (sortDirection === "asc" ? "↑" : "↓") : ""}
@@ -114,15 +112,15 @@ export function UserList() {
             <tbody>
               {sortedUsers.map(u => (
                 <tr key={u.id} className="hover:bg-purple-50 odd:bg-white even:bg-purple-50">
-                  <td className="border px-4 py-2">{u.id}</td>
-                  <td className="border px-4 py-2">{u.firstName}</td>
-                  <td className="border px-4 py-2">{u.lastName}</td>
-                  <td className="border px-4 py-2">{u.email}</td>
-                  <td className="border px-4 py-2">{u.role}</td>
-                  <td className="border px-4 py-2">{new Date(u.createdAt).toLocaleDateString("fr-FR")}</td>
-                  <td className="border px-4 py-2">
+                  <td className="border px-2 py-1">{u.id}</td>
+                  <td className="border px-2 py-1">{u.firstName}</td>
+                  <td className="border px-2 py-1">{u.lastName}</td>
+                  <td className="border px-2 py-1">{u.email}</td>
+                  <td className="border px-2 py-1">{u.role}</td>
+                  <td className="border px-2 py-1">{new Date(u.createdAt).toLocaleDateString("fr-FR")}</td>
+                  <td className="border px-2 py-1">
                     <button
-                      className="bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600 text-sm"
+                      className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-purple-600 text-sm"
                       onClick={() => setSelectedUser(u)}
                     >
                       Voir / Éditer
