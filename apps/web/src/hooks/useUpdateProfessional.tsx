@@ -10,7 +10,7 @@ type UpdateProfessionalResponse = z.infer<typeof adminProfessionalRelationsRespo
 async function updateProfessional(userId: string, data: UpdateProfessionalData): Promise<UpdateProfessionalResponse> {
   try {
     const parsedData = professionalUpdateSchema.parse(data);
-    console.log('updateProfessional - parsedData:', parsedData);
+    console.log('1. updateProfessional - parsedData:', parsedData);
 
     const res = await fetch(`/api/admin/professional/${userId}`, {
       method: "PUT",
@@ -24,7 +24,12 @@ async function updateProfessional(userId: string, data: UpdateProfessionalData):
     }
 
     const json = await res.json();
-    return adminProfessionalRelationsResponseSchema.parse(json);
+    const parsed = adminProfessionalRelationsResponseSchema.safeParse(json.professional);
+    if (!parsed.success)
+      throw (parsed.error);
+
+    return parsed.data;
+    
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       throw new Error(error.issues[0]?.message ?? "Erreur de validation.");
@@ -36,21 +41,14 @@ async function updateProfessional(userId: string, data: UpdateProfessionalData):
   }
 }
 
-type UseUpdateProfessionalOptions = {
-  onSuccess?: (data: UpdateProfessionalResponse) => void;
-  onError?: (error: Error) => void;
-};
-
-export function useUpdateProfessional(userId: string, options?: UseUpdateProfessionalOptions) {
+export function useUpdateProfessional(userId: string) {
   return useMutation<UpdateProfessionalResponse, Error, UpdateProfessionalData>({
     mutationFn: (data) => updateProfessional(userId, data),
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast.success("Utilisateur mis à jour avec succès !");
-      options?.onSuccess?.(data);
     },
     onError: (error: Error) => {
       toast.error(error.message);
-      options?.onError?.(error);
     },
   });
 }

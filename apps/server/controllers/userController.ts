@@ -260,7 +260,10 @@ export async function updateProfessional(req: Request, res: Response) {
           },
         },
       },
+      select: fullProSelect,
     })
+
+    console.log('API resp - professional:', professional);
     return res.status(201).json({ professional });
 
   } catch (error: unknown) {

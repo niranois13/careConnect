@@ -237,9 +237,7 @@ export function useGetProfessionalById(professionalId: string) {
       }
 
       const json = await res.json();
-      console.log('jsonProfessional:', json);
       const parsedData = adminProfessionalRelationsResponseSchema.parse(json.professional);
-      console.log('parsedDataProfessional:', parsedData);
       setProfessional(parsedData);
       setError(null);
     } catch (error: unknown) {

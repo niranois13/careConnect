@@ -9,38 +9,24 @@ import { requireAuth } from '../middlewares/requireAuth.ts';
 import { requireRole } from '../middlewares/requireRole.ts';
 import { requireSelf } from '../middlewares/requireSelf.ts';
 
+const asyncHandler = (fn: (req: Request, res: Response) => Promise<unknown>) =>
+  (req: Request, res: Response) => {
+    fn(req, res).catch((error: unknown) => {
+      console.error("Unhandled error:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    });
+};
+
 export default function registerRoutes(app: Express) {
   /* UTILS */
   app.get('/api/health', requireRole('ADMIN'), getHealth);
 
   /* PROFESSIONS */
-  app.get('/api/professions', async (req: Request, res: Response) => {
-    try {
-      await getProfessions(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to getProfessions:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
-
-  app.post('/api/professions', requireRole('PROFESSIONAL'), async (req: Request, res: Response) => {
-    try {
-      await proCreateProfessions(req, res);
-    } catch (error: unknown) {
-      console.error('Erreur processing the request to proCreateProfessions:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  app.get('/api/professions', asyncHandler(getProfessions));
+  app.post('/api/professions', requireRole('PROFESSIONAL'), asyncHandler(proCreateProfessions));
 
   /* AUTH */
-  app.post('/api/login', async (req: Request, res: Response) => {
-    try {
-      await loginUser(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to userLogin:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  app.post('/api/login', asyncHandler(loginUser));
 
   app.post('/api/logout', (req: Request, res: Response) => {
     try {
@@ -57,14 +43,7 @@ export default function registerRoutes(app: Express) {
 
   /* USERS */
   /* CARESEEKER */
-  app.post('/api/careseeker', async (req: Request, res: Response) => {
-    try {
-      await createCareSeeker(req, res);
-    } catch (error: unknown) {
-      console.error('Error processing the request to createCareSeeker:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
-    }
-  });
+  app.post('/api/careseeker', asyncHandler(createCareSeeker));
 
   /* PROFESSIONAL */
   app.post('/api/professional', async (req: Request, res: Response) => {
