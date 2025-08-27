@@ -2,9 +2,9 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 import {
-  adminProfessionRelationsResponseSchema,
   customProfessionCreateSchema,
   professionCreateSchema,
+  professionUpdateResponseSchema,
   professionUpdateSchema,
 } from '../../../packages/schemas/src/profession.schemas.ts';
 import {
@@ -16,6 +16,7 @@ const fullProfessionSelect = {
   id: true,
   professionName: true,
   customProfession: true,
+  isProfessionApproved: true,
   createdAt: true,
   updatedAt: true,
   professionals: {
@@ -59,14 +60,14 @@ export async function adminCreateProfessions(req: Request, res: Response) {
     return res.status(201).json({ 'Profession added': newProfessionResp });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
-      console.error('Error in createCareSeeker:', error.issues);
+      console.error('Error in adminCreateProfessions:', error.issues);
       return res.status(400).json({ error: error.issues });
     }
 
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       switch (error.code) {
         case 'P2002':
-          return res.status(400).json({ error: 'Email and/or Phone number already in use.' });
+          return res.status(400).json({ error: 'Profession already exists.' });
         case 'P2003':
           return res.status(400).json({ error: 'Invalid foreign key reference.' });
         case 'P2000':
@@ -84,14 +85,32 @@ export async function adminCreateProfessions(req: Request, res: Response) {
 export async function getProfessions(req: Request, res: Response) {
   try {
     const professionsData = await prisma.profession.findMany({
-      orderBy:{
+      orderBy: {
         professionName: 'asc'
       }
     })
     res.status(200).json(professionsData);
   } catch (error: unknown) {
-    console.error('Erreur in getApprovedProfessions:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    if (error instanceof z.ZodError) {
+      console.error('Error in createCareSeeker:', error.issues);
+      return res.status(400).json({ error: error.issues });
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Profession already exists.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error getProfessions:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 };
 
@@ -109,8 +128,26 @@ export async function getApprovedProfessions(req: Request, res: Response) {
     });
     res.status(200).json(professionsData);
   } catch (error: unknown) {
-    console.error('Erreur in getApprovedProfessions:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    if (error instanceof z.ZodError) {
+      console.error('Error in getApprovedProfessions:', error.issues);
+      return res.status(400).json({ error: error.issues });
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Profession already exists.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error in createCareSeeker:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 };
 
@@ -145,11 +182,30 @@ export async function proCreateProfessions(req: Request, res: Response) {
     });
 
     return res.status(201).json(newProfession)
-  } catch (error) {
-    console.error('Error while calling createProfession:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+  } catch (error: unknown) {
+    if (error instanceof z.ZodError) {
+      console.error('Error in createCareSeeker:', error.issues);
+      return res.status(400).json({ error: error.issues });
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Profession already exists.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error in proCreateProfessions:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 };
+
 
 export async function getProfessionsById(req: Request, res: Response) {
   try {
@@ -163,10 +219,29 @@ export async function getProfessionsById(req: Request, res: Response) {
       select: fullProfessionSelect,
     });
 
+    console.log('getProfessionById output:', professionData);
     res.status(200).json(professionData);
   } catch (error: unknown) {
-    console.error('Erreur in getProfessions:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    if (error instanceof z.ZodError) {
+      console.error('Error in createCareSeeker:', error.issues);
+      return res.status(400).json({ error: error.issues });
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Profession already exists.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error in getProfessionsById:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 };
 
@@ -189,14 +264,65 @@ export async function updateProfessions(req: Request, res: Response) {
         customProfession: professionData.customProfession,
         isProfessionApproved: professionData.isProfessionApproved
       }
-  })
+    })
 
-    const parsedProfession = adminProfessionRelationsResponseSchema.safeParse(profession);
-    if (parsedProfession.success)
-      return res.status(201).json({ profession });
-
+    const parsedProfession = professionUpdateResponseSchema.safeParse(profession);
+    if (!parsedProfession.success) {
+      console.error("Zod validation failed:", parsedProfession.error);
+      return res.status(500).json({ error: "Validation failed on updated profession" });
+    }
+    return res.status(201).json({ profession });
   } catch (error: unknown) {
-    console.error('Erreur in getProfessions:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    if (error instanceof z.ZodError) {
+      console.error('Error in createCareSeeker:', error.issues);
+      return res.status(400).json({ error: error.issues });
+    }
+
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Profession already exists.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error in updateProfessions:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+}
+
+export async function deleteProfessions(req: Request, res: Response) {
+  try {
+    if (!req.params.id || typeof req.params.id != 'string') {
+      return res.status(404).json({ error: 'Not Found' });
+    }
+    const id = req.params.id;
+
+    const removedProfession = await prisma.profession.delete({
+      where: { id },
+    })
+
+    return res.status(200).json({ removedProfession });
+  } catch (error: unknown) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (error.code) {
+        case 'P2002':
+          return res.status(400).json({ error: 'Profession already exists.' });
+        case 'P2003':
+          return res.status(400).json({ error: 'Invalid foreign key reference.' });
+        case 'P2000':
+          return res.status(400).json({ error: 'Input too long for a field.' });
+        case 'P2025':
+          return res.status(404).json({ error: 'Resource not found.' });
+      }
+
+      console.error('Error in deleteProfessions:', error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 }

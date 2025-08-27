@@ -25,6 +25,15 @@ export const baseUserSchema = z.object({
   role: z.enum(['CARESEEKER', 'PROFESSIONAL', 'ADMIN']),
 });
 
+export const professionalRelationSchema = z.object({
+  userId: z.string().uuid(),
+  user: z.object({
+    firstName: z.string(),
+    lastName: z.string(),
+    email: z.string().email(),
+  }),
+});
+
 // ---------- REQUEST SCHEMAS ----------
 export const userCreateSchema = baseUserSchema.extend({
   password: passField, // only for input

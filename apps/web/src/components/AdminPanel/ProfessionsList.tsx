@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useGetProfessions } from "../../hooks/useProfessions.tsx";
-import { AdminProfessionModal }  from "./PanelModal.tsx";
+import { AdminCreateProfessionModal, AdminProfessionModal }  from "./PanelModal.tsx";
 
 export function ProfessionsList() {
+  const [modalOpen, setModalOpen] = useState(false);
   const [sortColumn, setSortColumn] = useState<keyof typeof professions[0] | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [expanded, setExpanded] = useState(false);
@@ -54,6 +55,12 @@ export function ProfessionsList() {
         <h2 className="text-lg font-semibold">Liste des professions</h2>
 
         <div className="flex flex-wrap items-center gap-2">
+          <button
+            className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-purple-600 text-sm"
+            onClick={() => setModalOpen(true)}
+          >
+            Ajouter une profession
+          </button>
           <input
             type="text"
             value={searchTerm}
@@ -137,7 +144,10 @@ export function ProfessionsList() {
         </div>
       )}
 
-      {/* Modal */}
+      {modalOpen && (
+        <AdminCreateProfessionModal onClose={() => { setModalOpen(false); }}/>
+      )}
+      {/* Edit Modal */}
       {selectedProfessionId && (
         <AdminProfessionModal
           professionId={selectedProfessionId}

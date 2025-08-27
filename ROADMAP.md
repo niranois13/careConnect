@@ -24,7 +24,7 @@
 - Créer un `docker-compose.yml` avec les services suivants :
   - server (app Node.js) :ballot_box_with_check: - **10.04.2025**
   - db (PostgreSQL) :ballot_box_with_check: - **11.04.2025**
-  - web (front React)
+  - web (front React) - **~06.2025**
   - redis (cache)
   - volume optionnel pour coffre-fort numérique.
 
@@ -44,14 +44,14 @@ J'ai eu l'obligation d'accepter du .js (et donc de modif tsconfig), la manière 
 
 #### model Client (User) — renommage souhaité : :ballot_box_with_check: **11.04.2025**
 
-A été rename en CareSeeker, les personnes en situation de handicap ne sont pas des clients dans le sens où je l'entends. Ce sont des personnes en situation de fragilité qui cherche un accompagnement difficile à trouver.
+A été rename en CareSeeker, les personnes en situation de handicap ne sont pas des clients dans le sens où je l'entends. Ce sont des personnes en situation de fragilité qui cherchent un accompagnement difficile à trouver.
 
 #### model Professional (User) :ballot_box_with_check: **11.04.2025**
 
 ### Gestion Admin
 
-- stocker une ADMIN_KEY dans le .env
-- ajouter une logique de comparaison avec dans la route
+- stocker une ADMIN_KEY dans le .env **~15.04.2025**
+- ajouter une logique de comparaison avec dans la route **~15.04.2025**
 
 ### Zod
 
@@ -75,18 +75,41 @@ En remplacement:
 
 1. POST:/careseeker :ballot_box_with_check: **12.04.2025**
 2. POST:/professionals :ballot_box_with_check: **12.04.2025**
-3. GET:/careseeker:id
-4. GET:/professionals:id
-5. PUT:/careseeker:id
-6. PUT/professionals:id
+3. GET:/careseeker:id **~08.08.2025**
+4. GET:/professionals:id **~08.08.2025**
+5. PUT:/careseeker:id **~08.08.2025**
+6. PUT/professionals:id **~08.08.2025**
 7. DELETE:/careseeker:id
 8. DELETE:/professionals:id
    Les login/logout:
-9. post:/Login
-10. post:/logout
+9. post:/Login **~10.04.2025**
+10. post:/logout **~10.04.2025**
     Et les endpoints admin only:
 11. post /admin
 12. GET/users :ballot_box_with_check: **12.04.2025**
+13. Possibilité d'ajouts de professions par Admin ou Professionals **~20.08.2025**
+14. DELETE admin/profession/:id **~27.08.2025**
+15. > Logique de suppression des professions:
+      1. admin supprime définitivement n'importe quelle profession _besoin de rajouter une étape dans le controller, **AVANT** la suppression_
+      2. update tous les professionels ayant cette profession en:
+      `
+        { professionName: 'Autre',
+          customProfession:'Profession Précédente Supprimée',
+          isProfessionApproved: false
+        }
+      `.
+      3. Utiliser ce customProfession pour afficher un message sur le panel Professional:
+      `
+        'Votre profession choisie a été supprimée, merci d'en choisir une nouvelle afin de pouvoir coninuer à utiliser careConnect.'
+      `.
+    > Revoir la logique du controller updateProfessions:
+      1. Si le professionnel se retrouve avec 'professionName='Autre', 'customProfession='', 'isProfessionApproved'
+      2. changer customProfession en 'Profession Précédente Supprimée ou Non Valide'.
+      3. Dans le panel professional, afficher un message:
+      `
+        'Votre profession choisie a été supprimée, merci d'en choisir une nouvelle afin de pouvoir coninuer à utiliser careConnect.'
+      `
+    => De cette manière, impossibilité d'avoir un utilisateur sans aucune profession. Soit il est en attente de validation de sa proposition, soit il réalise un nouveau choix (parmis les professions approuvées, soit c'est bon :)
 
 ### Validators
 
@@ -99,17 +122,18 @@ En remplacement:
 
 ### Roles
 
-- Protéger les routes tRPC selon le `role` de l'utilisateur.
+- Protéger les routes tRPC (hum Express) selon le `role` de l'utilisateur.
 - Récupérer les infos du `role` dans le middleware via JWT ou session.
+  => Ajout de 3 middlewares (requireAuth, requireRole, requireSelf) **25.08.2025**
 
 ## Front-end part 1:
 
 ### Pages à faire :
 
-- HomePage (présentation de l'app + CTA inscription/login)
+- HomePage (présentation de l'app + CTA inscription/login) **15.08.2025**
 - Dashboard Client (vue utilisateur avec calendrier, infos, messages)
 - Dashboard Professionel (vue gestion rendez-vous, dispos, services)
-- Panel Admin (gestion utilisateurs, vérifications, etc)
+- Panel Admin (gestion utilisateurs, vérifications, etc) **Débuté de le 16.08.2025**
 
 ### Forms & Queries
 
@@ -119,7 +143,7 @@ En remplacement:
 
 ## Redis
 
-Une fois que j'ai un site 'fonctionnel' avec un back et un front, je vais rajoute Redis ppur de la mise en cache.
+Une fois que j'ai un site 'fonctionnel' avec un back et un front, je vais rajouter Redis ppur de la mise en cache.
 
 ### LogOut avancé
 

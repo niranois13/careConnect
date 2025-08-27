@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { professionalResponseSchema as _professionalResponseSchema} from './users.schemas.ts';
+import { professionalRelationSchema } from './users.schemas.ts';
 
 // ---------- Request ----------
 export const professionCreateSchema = z.object({
@@ -17,7 +17,7 @@ export const customProfessionCreateSchema = z.object({
 
 export const professionUpdateSchema = z.object({
   professionName: z.string().trim().min(1, 'Le nom de la profession est requis'),
-  customProfession: z.string().trim().min(2, 'Une profession personnalisée est requise'),
+  customProfession: z.string().trim().optional(),
   isProfessionApproved: z.boolean().default(false),
 })
 
@@ -41,6 +41,13 @@ export const adminProfessionRelationsResponseSchema = z.object({
   professionName: z.string().trim().min(1, 'Le nom de la profession est requis'),
   customProfession: z.string().trim().optional(),
   isProfessionApproved: z.boolean().default(false),
-  professional: z.lazy(() => _professionalResponseSchema),
+  createdAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
+  updatedAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
+  professionals: z.lazy(() => z.array(professionalRelationSchema)),
 });
 
+export const professionUpdateResponseSchema = z.object({
+  professionName: z.string().trim().min(1, 'Le nom de la profession est requis'),
+  customProfession: z.string().trim().optional(),
+  isProfessionApproved: z.boolean().default(false),
+})
