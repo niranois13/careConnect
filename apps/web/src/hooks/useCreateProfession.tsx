@@ -12,6 +12,7 @@ async function createProfession(payload: ProfessionPayload): Promise<ProfessionR
     const res = await fetch("/api/professions", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "include",
       body: JSON.stringify(parsedPayload),
     });
 

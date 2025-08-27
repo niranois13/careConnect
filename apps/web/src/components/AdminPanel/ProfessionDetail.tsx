@@ -8,8 +8,9 @@ interface AdminProfessionModalProps {
 }
 
 export default function ProfessionDetail({ professionId }: AdminProfessionModalProps) {
-  const { profession, isLoading, error} = useGetProfessionById(professionId);
-    const updateProfession = useUpdateProfession(professionId);
+  const { profession, isLoading, error } = useGetProfessionById(professionId);
+  console.log('ProfessionDetail - profession object received:', profession);
+  const updateProfession = useUpdateProfession(professionId);
 
   const [formData, setFormData] = useState({
     professionName: "",
@@ -26,7 +27,7 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
       });
     }
   }, [profession]);
-
+  console.log('formData submitted:', formData);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -65,8 +66,8 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
             </div>
 
             <div className='flex flex-wrap gap-5 mb-2'>
-              <p className="block mb-1 text-sm text-gray-900">Créée le : <strong>{new Date(profession.professional.createdAt).toLocaleDateString("fr-FR")}</strong></p>
-              <p className="block mb-1 text-sm text-gray-900">Dernière modification : <strong>{new Date(profession.professional.updatedAt).toLocaleDateString("fr-FR")}</strong></p>
+              <p className="block mb-1 text-sm text-gray-900">Créée le : <strong>{new Date(profession.createdAt).toLocaleDateString("fr-FR")}</strong></p>
+              <p className="block mb-1 text-sm text-gray-900">Dernière modification : <strong>{new Date(profession.updatedAt).toLocaleDateString("fr-FR")}</strong></p>
             </div>
 
             <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
@@ -77,7 +78,7 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
                 type='text'
                 onChange={handleInputChange}
                 value={formData.professionName}
-                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
               />
             </div>
             <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
@@ -88,18 +89,18 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
                 type='text'
                 onChange={handleInputChange}
                 value={formData.customProfession}
-                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
               />
             </div>
             <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
-              <label htmlFor='professionName' className="text-gray-900">Validée ?</label>
+              <label htmlFor='isProfessionApproved' className="text-gray-900">Validée ?</label>
               <input
-                id='professionName'
-                name='professionName'
+                id='isProfessionApproved'
+                name='isProfessionApproved'
                 type='checkbox'
                 onChange={handleCheckboxChange}
                 checked={formData.isProfessionApproved}
-                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+                className=' checked:bg-purple-300 p-0 m-0 default:bg-gray-50 w-5 h-5 border-gray-300 border-2 rounded-sm focus:ring-purple-500 focus:border-purple-500'
               />
             </div>
           </div>
@@ -113,10 +114,9 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
                   id='firstName'
                   name='firstName'
                   type='text'
-                  value={profession.professional.firstName}
+                  value={profession.professionals[0]?.user?.firstName ?? "Admin"}
                   readOnly
-                  className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
-                />
+                  className="w-full max-w-1/2 p-1 text-gray-900 font-medium" />
               </div>
               <div className='flex flex-wrap gap-5 mb-1 items-center'>
                 <label htmlFor='lastName' className="text-gray-900">Nom :</label>
@@ -124,10 +124,9 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
                   id='lastName'
                   name='lastName'
                   type='text'
-                  value={profession.professional.lastName}
+                  value={profession.professionals[0]?.user?.lastName ?? "Admin"}
                   readOnly
-                  className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
-                />
+                  className="w-full max-w-1/2 p-1 text-gray-900 font-medium" />
               </div>
             </div>
 
@@ -138,9 +137,9 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
                   id='email'
                   name='email'
                   type='text'
-                  value={profession.professional.email}
-                  className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
-                />
+                  value={profession.professionals[0]?.user?.email ?? ""}
+                  readOnly
+                  className="w-full max-w-1/2 p-1 text-gray-900 font-medium" />
               </div>
             </div>
           </div>

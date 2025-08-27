@@ -120,14 +120,15 @@ export function useGetProfessionById(professionId: string) {
       const res = await fetch(`/api/professions/${professionId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
       });
       if (!res.ok) {
         throw new Error('Impossible de récupérer les professions');
       }
 
       const data = await res.json();
+      console.log('useGetProfessionById - Res data:', data);
       const parsedData = adminProfessionRelationsResponseSchema.parse(data);
+      console.log('useGetProfessionById - Parsed res data:', parsedData);
 
       setProfession(parsedData);
       setError(null);

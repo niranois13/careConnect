@@ -3,18 +3,20 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 
 import {
-  adminProfessionRelationsResponseSchema,
+  professionUpdateResponseSchema,
   professionUpdateSchema
 } from "../../../../packages/schemas/src/profession.schemas.ts";
 
 type UpdateProfessionData = z.infer<typeof professionUpdateSchema>;
-type UpdateProfessionResponse = z.infer<typeof adminProfessionRelationsResponseSchema>;
+type UpdateProfessionResponse = z.infer<typeof professionUpdateResponseSchema>;
 
 export async function updateProfession(professionId: string, data: UpdateProfessionData): Promise<UpdateProfessionResponse> {
   try {
+    console.log('useUpdateProfession.professionUpdate - Called with this data:', data)
     const parsedData = professionUpdateSchema.parse(data);
+    console.log('useUpdateProfession.professionUpdate - parsedData:', parsedData)
 
-    const res = await fetch(`/api/admin/profession/${professionId}`, {
+    const res = await fetch(`/api/admin/professions/${professionId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -26,9 +28,12 @@ export async function updateProfession(professionId: string, data: UpdateProfess
     }
 
     const json = await res.json();
-    const parsed = adminProfessionRelationsResponseSchema.safeParse(json.profession);
-    if (!parsed.success)
-      throw (parsed.error);
+    console.log('useUpdateProfession.updateProfession - Response json:', json)
+    const parsed = professionUpdateResponseSchema.safeParse(json.profession);
+    if (!parsed.success) {
+      console.error("Zod validation failed:", parsed.error);
+      throw new Error;
+    }
 
     return parsed.data;
 
@@ -46,10 +51,12 @@ export async function updateProfession(professionId: string, data: UpdateProfess
 export function useUpdateProfession(professionId: string) {
   return useMutation<UpdateProfessionResponse, Error, UpdateProfessionData>({
     mutationFn: (data) => updateProfession(professionId, data),
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('useUpdateProfession.useMutation - DataReceived:', data);
       toast.success("Utilisateur mis à jour avec succès !");
     },
     onError: (error: Error) => {
+      console.log('useUpdateProfession.useMutation - DataReceivedError:', error);
       toast.error(error.message);
     },
   });
