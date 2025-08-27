@@ -10,7 +10,6 @@ interface AdminUserModalProps {
 
 export default function CareSeekerProfile({ user }: AdminUserModalProps) {
   const { careSeeker, isLoading, error } = useGetCareSeekerById(user.id);
-  console.log('CareSeekerProfile\'s CareSeeker:', careSeeker);
   const updateProfessional = useUpdateCareSeeker(user.id);
 
   const [formData, setFormData] = useState({

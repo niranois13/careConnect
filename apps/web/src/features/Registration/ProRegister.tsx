@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useProfessions } from '../../hooks/useProfessions.ts';
+import { useGetApprovedProfessions } from '../../hooks/useProfessions.tsx';
 import { useCreateProfession } from '../../hooks/useCreateProfession.tsx';
 import { useRegisterProfessional } from '../../hooks/useRegisterProfessional.tsx';
 import { professionalCreateSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
@@ -11,7 +11,7 @@ type registerProps = {
 };
 
 export default function RegisterPro({ onSuccess }: registerProps) {
-  const { professions = [], isLoading } = useProfessions();
+  const { professions = [], isLoading } = useGetApprovedProfessions();
   const createProfession = useCreateProfession();
   const registerPro = useRegisterProfessional({
     onSuccess,

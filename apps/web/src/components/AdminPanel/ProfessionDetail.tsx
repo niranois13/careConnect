@@ -1,0 +1,161 @@
+import { useState, useEffect } from "react";
+import { useGetProfessionById } from "../../hooks/useProfessions.tsx";
+import { useUpdateProfession } from "../../hooks/useUpdateProfession.tsx";
+
+interface AdminProfessionModalProps {
+  professionId: string;
+  onClose: () => void;
+}
+
+export default function ProfessionDetail({ professionId }: AdminProfessionModalProps) {
+  const { profession, isLoading, error} = useGetProfessionById(professionId);
+    const updateProfession = useUpdateProfession(professionId);
+
+  const [formData, setFormData] = useState({
+    professionName: "",
+    customProfession: "",
+    isProfessionApproved: false,
+  });
+
+  useEffect(() => {
+    if (profession) {
+      setFormData({
+        professionName: profession.professionName,
+        customProfession: profession.customProfession ?? "",
+        isProfessionApproved: profession.isProfessionApproved,
+      });
+    }
+  }, [profession]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, checked } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    updateProfession.mutate(formData);
+  };
+
+  if (isLoading) return <p>Chargement...</p>;
+  if (error) return <p>Erreur: {String(error)}</p>;
+
+  return (
+    <>
+      {profession && (
+        <form aria-label="form" onSubmit={handleSubmit} className="ml-10">
+          <div className='mb-3'>
+            <h2 className='text-lg mb-1 font-semibold text-gray-900 ml-5'>Profession</h2>
+            <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
+              <label htmlFor='id' className="text-gray-900">ID :</label>
+              <input
+                id='id'
+                name='id'
+                type='text'
+                readOnly
+                value={profession.id}
+                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+              />
+            </div>
+
+            <div className='flex flex-wrap gap-5 mb-2'>
+              <p className="block mb-1 text-sm text-gray-900">Créée le : <strong>{new Date(profession.professional.createdAt).toLocaleDateString("fr-FR")}</strong></p>
+              <p className="block mb-1 text-sm text-gray-900">Dernière modification : <strong>{new Date(profession.professional.updatedAt).toLocaleDateString("fr-FR")}</strong></p>
+            </div>
+
+            <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
+              <label htmlFor='professionName' className="text-gray-900">Titre :</label>
+              <input
+                id='professionName'
+                name='professionName'
+                type='text'
+                onChange={handleInputChange}
+                value={formData.professionName}
+                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+              />
+            </div>
+            <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
+              <label htmlFor='customProfession' className="text-gray-900">Profession personnalisée :</label>
+              <input
+                id='customProfession'
+                name='customProfession'
+                type='text'
+                onChange={handleInputChange}
+                value={formData.customProfession}
+                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+              />
+            </div>
+            <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
+              <label htmlFor='professionName' className="text-gray-900">Validée ?</label>
+              <input
+                id='professionName'
+                name='professionName'
+                type='checkbox'
+                onChange={handleCheckboxChange}
+                checked={formData.isProfessionApproved}
+                className="w-full max-w-1/2 p-1 text-gray-900 font-medium"
+              />
+            </div>
+          </div>
+
+          <div className='mb-3'>
+            <h2 className='text-lg mb-1 font-semibold text-gray-900 ml-5'>Créée par : </h2>
+            <div className='flex flex-row flex-wrap items-center gap-4 mb-2'>
+              <div className='flex flex-wrap gap-2 mb-1 items-center'>
+                <label htmlFor='firstName' className="text-gray-900">Prénom :</label>
+                <input
+                  id='firstName'
+                  name='firstName'
+                  type='text'
+                  value={profession.professional.firstName}
+                  readOnly
+                  className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+                />
+              </div>
+              <div className='flex flex-wrap gap-5 mb-1 items-center'>
+                <label htmlFor='lastName' className="text-gray-900">Nom :</label>
+                <input
+                  id='lastName'
+                  name='lastName'
+                  type='text'
+                  value={profession.professional.lastName}
+                  readOnly
+                  className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+                />
+              </div>
+            </div>
+
+            <div className='flex flex-row flex-wrap items-center gap-4 mb-2'>
+              <div className='flex flex-wrap gap-2 mb-1 items-center'>
+                <label htmlFor="email" className="text-gray-900">Email :</label>
+                <input
+                  id='email'
+                  name='email'
+                  type='text'
+                  value={profession.professional.email}
+                  className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+            >
+              Valider les changements
+            </button>
+          </div>
+        </form>
+      )}
+    </>
+  );
+
+}

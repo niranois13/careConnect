@@ -331,8 +331,6 @@ export async function getCareSeekerById(req: Request, res: Response) {
       },
       select: fullCareSelect
     });
-
-    console.log('CareSeeker:', careseeker);
     return res.status(200).json({ careseeker });
   } catch (error: unknown) {
     console.error('Error in getSpecificUser:', error);
@@ -348,6 +346,7 @@ export async function updateCareseeker(req: Request, res: Response) {
     }
     const careSeekerData = parsedData.data;
 
+    
     const careSeeker = await prisma.careSeeker.update({
       where: { userId: req.params.id },
       data: {

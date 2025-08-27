@@ -2,13 +2,35 @@ import type { Request, Response } from 'express';
 import { z } from 'zod';
 
 import {
+  adminProfessionRelationsResponseSchema,
+  customProfessionCreateSchema,
   professionCreateSchema,
-  customProfessionCreateSchema
+  professionUpdateSchema,
 } from '../../../packages/schemas/src/profession.schemas.ts';
-import { 
+import {
   Prisma,
   PrismaClient
 } from '../prisma/generated/index.js';
+
+const fullProfessionSelect = {
+  id: true,
+  professionName: true,
+  customProfession: true,
+  createdAt: true,
+  updatedAt: true,
+  professionals: {
+    select: {
+      userId: true,
+      user: {
+        select: {
+          firstName: true,
+          lastName: true,
+          email: true,
+        },
+      },
+    }
+  }
+};
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -62,10 +84,23 @@ export async function adminCreateProfessions(req: Request, res: Response) {
 export async function getProfessions(req: Request, res: Response) {
   try {
     const professionsData = await prisma.profession.findMany({
+      orderBy:{
+        professionName: 'asc'
+      }
+    })
+    res.status(200).json(professionsData);
+  } catch (error: unknown) {
+    console.error('Erreur in getApprovedProfessions:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export async function getApprovedProfessions(req: Request, res: Response) {
+  try {
+    const professionsData = await prisma.profession.findMany({
       where: {
         AND: [
-          { customProfession: "" },
-          { isProfessionApproved: false },
+          { isProfessionApproved: true },
         ]
       },
       orderBy: {
@@ -74,7 +109,7 @@ export async function getProfessions(req: Request, res: Response) {
     });
     res.status(200).json(professionsData);
   } catch (error: unknown) {
-    console.error('Erreur in getProfessions:', error);
+    console.error('Erreur in getApprovedProfessions:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
@@ -115,3 +150,53 @@ export async function proCreateProfessions(req: Request, res: Response) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export async function getProfessionsById(req: Request, res: Response) {
+  try {
+    if (!req.params.id || typeof req.params.id != 'string') {
+      return res.status(404).json({ error: 'Not Found' });
+    }
+    const id = req.params.id;
+
+    const professionData = await prisma.profession.findFirst({
+      where: { id },
+      select: fullProfessionSelect,
+    });
+
+    res.status(200).json(professionData);
+  } catch (error: unknown) {
+    console.error('Erreur in getProfessions:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export async function updateProfessions(req: Request, res: Response) {
+  try {
+    if (!req.params.id || typeof req.params.id != 'string') {
+      return res.status(404).json({ error: 'Not Found' });
+    }
+
+    const parsedData = professionUpdateSchema.safeParse(req.body)
+    if (!parsedData.success) {
+      return res.status(400).json({ error: 'Invalid request format' });
+    }
+    const professionData = parsedData.data;
+
+    const profession = await prisma.profession.update({
+      where: { id: req.params.id },
+      data: {
+        professionName: professionData.professionName,
+        customProfession: professionData.customProfession,
+        isProfessionApproved: professionData.isProfessionApproved
+      }
+  })
+
+    const parsedProfession = adminProfessionRelationsResponseSchema.safeParse(profession);
+    if (parsedProfession.success)
+      return res.status(201).json({ profession });
+
+  } catch (error: unknown) {
+    console.error('Erreur in getProfessions:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+}

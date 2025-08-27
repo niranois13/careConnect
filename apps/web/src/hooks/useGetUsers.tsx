@@ -223,7 +223,6 @@ export function useGetCareSeekerById(careSeekerId: string) {
 }
 
 export function useGetProfessionalById(professionalId: string) {
-  console.log('0. useGetProfessionalById called')
   const [professional, setProfessional] = useState<adminProfessional | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);

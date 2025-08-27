@@ -5,8 +5,10 @@ import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
 import {
   adminCreateProfessions,
+  getApprovedProfessions,
   getProfessions,
-  proCreateProfessions
+  getProfessionsById,
+  proCreateProfessions,
 } from '../controllers/professionController.ts';
 import {
   createCareSeeker,
@@ -35,7 +37,9 @@ export default function registerRoutes(app: Express) {
 
   /* PROFESSIONS */
   app.get('/api/professions', asyncHandler(getProfessions));
+  app.get('/api/professions/approved', asyncHandler(getApprovedProfessions));
   app.post('/api/professions', requireRole('PROFESSIONAL'), asyncHandler(proCreateProfessions));
+  app.get('/api/professions/:id', requireRole('ADMIN'), asyncHandler(getProfessionsById));
 
   /* AUTH */
   app.post('/api/login', asyncHandler(loginUser));

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { professionResponseSchema } from './profession.schemas.ts';
 
 const alphaRegex: RegExp = /^[A-Za-zÀ-ÿ\s'-]+$/;
@@ -83,7 +84,7 @@ export const adminProfessionalRelationsResponseSchema = z.object({
   siret: z.string().nullable(),
   isSiretValid: z.boolean(),
   user: userResponseSchema,
-  profession: professionResponseSchema
+  profession: z.lazy(() => professionResponseSchema),
 });
 
 export const careSeekerUpdateSchema = z.object({

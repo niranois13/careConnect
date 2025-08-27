@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGetUsers } from "../../hooks/useGetUsers.tsx";
-import AdminUserModal from "./PanelModal.tsx";
+import { AdminUserModal } from "./PanelModal.tsx";
 
 export function UserList() {
   const [sortColumn, setSortColumn] = useState<keyof typeof users[0] | null>(null);
