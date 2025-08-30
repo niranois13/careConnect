@@ -43,9 +43,15 @@ export default function ProfessionDetail({ professionId, endpoint }: AdminProfes
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (actionType == 'update')
+
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    if (!submitter)
+      return;
+
+    const action = submitter.name;
+    if (action == 'update')
       updateProfession.mutate(formData);
-    if (actionType == 'delete')
+    if (action == 'delete')
       deleteProfession.mutate(professionId);
   };
 
@@ -55,7 +61,7 @@ export default function ProfessionDetail({ professionId, endpoint }: AdminProfes
   return (
     <>
       {profession && (
-        <form aria-label="form" onSubmit={handleSubmit} className="ml-10">
+        <form aria-label="form" id='profession-form' onSubmit={handleSubmit} className="ml-10">
           <div className='mb-3'>
             <h2 className='text-lg mb-1 font-semibold text-gray-900 ml-5'>Profession</h2>
             <div className='flex flex-row flex-wrap gap-2 items-center mb-2'>
@@ -155,7 +161,7 @@ export default function ProfessionDetail({ professionId, endpoint }: AdminProfes
               <p className="text-xs">ex: "chiropracteur" devient "Chiropracteur.rice"</p>
               <button
                 type="submit"
-                onClick={() => setActionType('update')}
+                name='update'
                 className="p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-3 focus:ring-purple-300"
               >
                 Valider les changements
@@ -166,7 +172,7 @@ export default function ProfessionDetail({ professionId, endpoint }: AdminProfes
               <p className="text-xs">Cette action est irrémédiable et impactera les utilisateurs concernés</p>
               <button
                 type="submit"
-                onClick={() => setActionType('delete')}
+                name='delete'
                 className=" p-2.5 font-medium text-white bg-red-500 rounded-lg hover:bg-red-800 focus:outline-none focus:ring-3 focus:ring-red-300"
               >
                 Refuser ou Supprimer la profession

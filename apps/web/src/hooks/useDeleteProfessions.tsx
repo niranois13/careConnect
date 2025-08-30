@@ -18,8 +18,7 @@ export async function deleteProfession(professionId: string): Promise<DeleteProf
     }
 
     const json = await res.json();
-    const parsed = professionResponseSchema.safeParse(json.removedProfession);
-
+    const parsed = professionResponseSchema.safeParse(json.profession);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);
       throw new Error("Erreur de validation du serveur.");
