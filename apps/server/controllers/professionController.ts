@@ -50,14 +50,14 @@ export async function adminCreateProfessions(req: Request, res: Response) {
       }
     });
 
-    const newProfessionResp = {
+    const profession = {
       id: newProfession.id,
       professionName: newProfession.professionName,
       CustomProfession: newProfession.customProfession,
       isProfessionApproved: newProfession.isProfessionApproved,
     };
 
-    return res.status(201).json({ 'Profession added': newProfessionResp });
+    return res.status(201).json({ profession });
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       console.error('Error in adminCreateProfessions:', error.issues);
@@ -209,7 +209,9 @@ export async function proCreateProfessions(req: Request, res: Response) {
 
 export async function getProfessionsById(req: Request, res: Response) {
   try {
+    console.log('getProfessionById called with this id:', req.params.id);
     if (!req.params.id || typeof req.params.id != 'string') {
+      console.log('Not Found ID? :', req.params.id);
       return res.status(404).json({ error: 'Not Found' });
     }
     const id = req.params.id;
@@ -301,13 +303,30 @@ export async function deleteProfessions(req: Request, res: Response) {
     if (!req.params.id || typeof req.params.id != 'string') {
       return res.status(404).json({ error: 'Not Found' });
     }
-    const id = req.params.id;
 
-    const removedProfession = await prisma.profession.delete({
-      where: { id },
+    const naProfession = await prisma.profession.findFirst({
+      where: { professionName: 'N/A',
+      AND: { customProfession: 'N/A' },
+      }
+    })
+    const naProfessionId = naProfession?.id
+    if (!naProfession || !naProfessionId) {
+      return res.status(400).json({ error: 'Invalid request format' });
+    }
+
+    await prisma.professional.updateMany({
+      where: { professionId: req.params.id },
+      data: { professionId: naProfessionId }
     })
 
-    return res.status(200).json({ removedProfession });
+    const profession = await prisma.profession.delete({
+      where: { id: req.params.id },
+    })
+
+    return res.status(200).json({
+      message: 'Profession deleted successfully, users reassigned to N/A',
+      profession
+    });
   } catch (error: unknown) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       switch (error.code) {

@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
 import { useGetProfessionById } from "../../hooks/useProfessions.tsx";
 import { useUpdateProfession } from "../../hooks/useUpdateProfession.tsx";
+import { useDeleteProfession } from "../../hooks/useDeleteProfessions.tsx";
 
 interface AdminProfessionModalProps {
   professionId: string;
+  endpoint: string;
   onClose: () => void;
 }
 
-export default function ProfessionDetail({ professionId }: AdminProfessionModalProps) {
-  const { profession, isLoading, error } = useGetProfessionById(professionId);
-  console.log('ProfessionDetail - profession object received:', profession);
+export default function ProfessionDetail({ professionId, endpoint }: AdminProfessionModalProps) {
+  const { profession, isLoading, error } = useGetProfessionById(professionId, endpoint);
+  const [actionType, setActionType] = useState<'update' | 'delete'>('update');
   const updateProfession = useUpdateProfession(professionId);
+  const deleteProfession = useDeleteProfession(professionId);
 
   const [formData, setFormData] = useState({
     professionName: "",
@@ -40,8 +43,10 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    updateProfession.mutate(formData);
+    if (actionType == 'update')
+      updateProfession.mutate(formData);
+    if (actionType == 'delete')
+      deleteProfession.mutate(professionId);
   };
 
   if (isLoading) return <p>Chargement...</p>;
@@ -144,13 +149,29 @@ export default function ProfessionDetail({ professionId }: AdminProfessionModalP
             </div>
           </div>
 
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
-            >
-              Valider les changements
-            </button>
+          <div className="flex justify-around">
+            <div className="w-full max-w-2/5 flex flex-col justify-center text-center">
+              <p className="text-xs">Avant de valider une profession personnalisée, veuillez respecter la norme des intitulés: </p>
+              <p className="text-xs">ex: "chiropracteur" devient "Chiropracteur.rice"</p>
+              <button
+                type="submit"
+                onClick={() => setActionType('update')}
+                className="p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-3 focus:ring-purple-300"
+              >
+                Valider les changements
+              </button>
+            </div>
+            <div className="w-full max-w-2/5 flex flex-col justify-center text-center">
+              <p className="text-xs">Attention</p>
+              <p className="text-xs">Cette action est irrémédiable et impactera les utilisateurs concernés</p>
+              <button
+                type="submit"
+                onClick={() => setActionType('delete')}
+                className=" p-2.5 font-medium text-white bg-red-500 rounded-lg hover:bg-red-800 focus:outline-none focus:ring-3 focus:ring-red-300"
+              >
+                Refuser ou Supprimer la profession
+              </button>
+            </div>
           </div>
         </form>
       )}

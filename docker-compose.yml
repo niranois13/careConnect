@@ -19,6 +19,7 @@ services:
       [
         'nodemon',
         '--legacy-watch',
+        '--polling',
         '--watch',
         './apps/server/',
         '--ext',

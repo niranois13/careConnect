@@ -109,7 +109,10 @@ export function useGetApprovedProfessions() {
 }
 
 
-export function useGetProfessionById(professionId: string) {
+export function useGetProfessionById(
+  professionId: string,
+  endpoint: string = '/api/professions',
+) {
   const [profession, setProfession] = useState<RelationsProfessionResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -117,7 +120,7 @@ export function useGetProfessionById(professionId: string) {
   const fetchProfession = useCallback(async () => {
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/professions/${professionId}`, {
+      const res = await fetch(`${endpoint}/${professionId}`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });

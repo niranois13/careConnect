@@ -45,12 +45,12 @@ model Professional {
 }
 
 model Profession {
-  id                         String   @id @default(uuid())
-  createdAt                  DateTime @default(now())
-  updatedAt                  DateTime @updatedAt
-  customProfession           String?
-  isCustomProfessionApproved Boolean  @default(false)
-  professionName             String   @unique
+  id                   String   @id @default(uuid())
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  customProfession     String?
+  isProfessionApproved Boolean  @default(false)
+  professionName       String
 
   professionals Professional[] @relation("ProfessionalProfession")
 }

@@ -151,6 +151,7 @@ export function ProfessionsList() {
       {selectedProfessionId && (
         <AdminProfessionModal
           professionId={selectedProfessionId}
+          endpoint={'/api/admin/professions'}
           onClose={() => setSelectedProfessionId(null)}
         />
       )}

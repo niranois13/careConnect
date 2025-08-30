@@ -70,7 +70,7 @@ export default function registerRoutes(app: Express) {
   app.put('/api/professional/:id', requireSelf(), asyncHandler(updateProfessional))
 
   /* ADMIN */
-  app.post('/api/admin', requireRole('ADMIN'), asyncHandler(createAdmin));
+  app.post('/api/admin', asyncHandler(createAdmin));
 
   /* ADMIN USERS */
   app.get('/api/admin/users', requireRole('ADMIN'), asyncHandler(getUsers));
@@ -86,6 +86,7 @@ export default function registerRoutes(app: Express) {
   /* ADMIN PROFESSIONS */
   app.post('/api/admin/professions', requireRole('ADMIN'), asyncHandler(adminCreateProfessions));
   app.put('/api/admin/professions/:id', requireRole('ADMIN'), asyncHandler(updateProfessions));
+  app.get('/api/admin/professions/:id', requireRole('ADMIN'), asyncHandler(getProfessionsById));
   app.delete('/api/admin/professions/:id', requireRole('ADMIN'), asyncHandler(deleteProfessions));
 
 

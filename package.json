@@ -1,9 +1,9 @@
 {
   "type": "module",
   "scripts": {
-    "start": "docker-compose up --build",
-    "dev": "docker-compose up",
-    "stop": "docker-compose down",
+    "start": "docker compose up --build",
+    "dev": "docker compose up",
+    "stop": "docker compose down",
     "lint": "eslint . --ext .ts,.tsx --fix",
     "format": "prettier --write .",
     "dev:web": "vite --config apps/web/vite.config.ts"

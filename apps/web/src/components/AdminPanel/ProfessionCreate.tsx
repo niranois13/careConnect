@@ -9,7 +9,6 @@ export default function ProfessionCreate() {
     isProfessionApproved: false,
   });
 
-  console.log('formData submitted:', formData);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));

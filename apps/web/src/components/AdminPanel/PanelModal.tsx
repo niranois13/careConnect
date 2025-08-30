@@ -56,10 +56,11 @@ export function AdminUserModal({ user, onClose }: AdminUserModalProps,) {
 
 interface AdminProfessionModalProps {
   professionId: string;
+  endpoint: string
   onClose: () => void;
 }
 
-export function AdminProfessionModal({ professionId, onClose}: AdminProfessionModalProps) {
+export function AdminProfessionModal({ professionId, endpoint, onClose}: AdminProfessionModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -96,6 +97,7 @@ export function AdminProfessionModal({ professionId, onClose}: AdminProfessionMo
         </button>
         <ProfessionDetail
         professionId={professionId}
+        endpoint={endpoint}
         onClose={onClose} />
       </div>
     </div>
