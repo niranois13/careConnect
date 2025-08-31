@@ -13,7 +13,6 @@ type UpdateCareSeekerResponse = z.infer<typeof adminCareSeekerRelationsResponseS
 async function updateCareSeeker(userId: string, data: UpdateCareSeekerData): Promise<UpdateCareSeekerResponse> {
   try {
     const parsedData = careSeekerUpdateSchema.parse(data);
-    console.log('1. updateCareSeeker - parsedData:', parsedData);
 
     const res = await fetch(`/api/admin/careseeker/${userId}`, {
       method: "PUT",
@@ -27,10 +26,8 @@ async function updateCareSeeker(userId: string, data: UpdateCareSeekerData): Pro
     }
 
     const json = await res.json();
-    console.log('UPDATE JSON RECEIVED:', json)
     const parsed = adminCareSeekerRelationsResponseSchema.safeParse(json.careSeeker);
     if (!parsed.success) {
-      console.log('parsed.error:', parsed.error);
       throw (parsed.error);
     }
 

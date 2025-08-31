@@ -209,9 +209,7 @@ export async function proCreateProfessions(req: Request, res: Response) {
 
 export async function getProfessionsById(req: Request, res: Response) {
   try {
-    console.log('getProfessionById called with this id:', req.params.id);
     if (!req.params.id || typeof req.params.id != 'string') {
-      console.log('Not Found ID? :', req.params.id);
       return res.status(404).json({ error: 'Not Found' });
     }
     const id = req.params.id;
@@ -221,7 +219,6 @@ export async function getProfessionsById(req: Request, res: Response) {
       select: fullProfessionSelect,
     });
 
-    console.log('getProfessionById output:', professionData);
     res.status(200).json(professionData);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {

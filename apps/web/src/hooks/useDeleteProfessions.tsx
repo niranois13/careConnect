@@ -39,8 +39,7 @@ export async function deleteProfession(professionId: string): Promise<DeleteProf
 export function useDeleteProfession(professionId: string) {
   return useMutation<DeleteProfessionResponse, Error, string>({
     mutationFn: () => deleteProfession(professionId),
-    onSuccess: (data) => {
-      console.log("Profession deleted successfully:", data);
+    onSuccess: () => {
       toast.success("Profession supprimée avec succès !");
     },
     onError: (error: Error) => {

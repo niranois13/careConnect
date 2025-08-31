@@ -193,7 +193,7 @@ export function useGetCareSeekerById(careSeekerId: string) {
       const json = await res.json();
       const parsedData = adminCareSeekerRelationsResponseSchema.safeParse(json.careseeker);
       if (!parsedData.success) {
-        console.log('parsedData error:', parsedData.error);
+        console.error('parsedData error:', parsedData.error);
         throw new Error()
       }
 

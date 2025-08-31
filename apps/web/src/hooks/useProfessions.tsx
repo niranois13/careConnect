@@ -129,9 +129,7 @@ export function useGetProfessionById(
       }
 
       const data = await res.json();
-      console.log('useGetProfessionById - Res data:', data);
       const parsedData = adminProfessionRelationsResponseSchema.parse(data);
-      console.log('useGetProfessionById - Parsed res data:', parsedData);
 
       setProfession(parsedData);
       setError(null);

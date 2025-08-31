@@ -13,7 +13,6 @@ type UpdateProfessionalResponse = z.infer<typeof adminProfessionalRelationsRespo
 async function updateProfessional(userId: string, data: UpdateProfessionalData): Promise<UpdateProfessionalResponse> {
   try {
     const parsedData = professionalUpdateSchema.parse(data);
-    console.log('1. updateProfessional - parsedData:', parsedData);
 
     const res = await fetch(`/api/admin/professional/${userId}`, {
       method: "PUT",

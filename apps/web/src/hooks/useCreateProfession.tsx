@@ -21,7 +21,6 @@ async function createProfession(
     });
 
     const json = await res.json();
-    console.log('Profession creation JSON Response:', json)
     const parsedResponse = approvedProfessionResponseSchema.safeParse(json.profession);
     if (!parsedResponse.success) {
       console.error("Zod validation failed:", parsedResponse.error);

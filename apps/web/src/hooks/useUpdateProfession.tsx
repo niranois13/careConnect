@@ -12,9 +12,7 @@ type UpdateProfessionResponse = z.infer<typeof professionUpdateResponseSchema>;
 
 export async function updateProfession(professionId: string, data: UpdateProfessionData): Promise<UpdateProfessionResponse> {
   try {
-    console.log('useUpdateProfession.professionUpdate - Called with this data:', data)
     const parsedData = professionUpdateSchema.parse(data);
-    console.log('useUpdateProfession.professionUpdate - parsedData:', parsedData)
 
     const res = await fetch(`/api/admin/professions/${professionId}`, {
       method: "PUT",
@@ -28,7 +26,6 @@ export async function updateProfession(professionId: string, data: UpdateProfess
     }
 
     const json = await res.json();
-    console.log('useUpdateProfession.updateProfession - Response json:', json)
     const parsed = professionUpdateResponseSchema.safeParse(json.profession);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);
@@ -51,12 +48,10 @@ export async function updateProfession(professionId: string, data: UpdateProfess
 export function useUpdateProfession(professionId: string) {
   return useMutation<UpdateProfessionResponse, Error, UpdateProfessionData>({
     mutationFn: (data) => updateProfession(professionId, data),
-    onSuccess: (data) => {
-      console.log('useUpdateProfession.useMutation - DataReceived:', data);
+    onSuccess: () => {
       toast.success("Utilisateur mis à jour avec succès !");
     },
     onError: (error: Error) => {
-      console.log('useUpdateProfession.useMutation - DataReceivedError:', error);
       toast.error(error.message);
     },
   });

@@ -131,7 +131,6 @@ export async function createCareSeeker(req: Request, res: Response) {
 
 export async function createProfessional(req: Request, res: Response) {
   try {
-    console.log('Hey, i am creating a professional, kinda.');
     const ProfessionalData = professionalCreateSchema.parse(req.body);
 
     const hashedPassword = await bcrypt.hash(ProfessionalData.password, 10);
@@ -176,13 +175,12 @@ export async function createProfessional(req: Request, res: Response) {
       professionId: newUser.professionals[0].professionId,
     }
 
-    console.log('I am the professional being created:', flatNewUser);
     const professional = professionalResponseSchema.safeParse(flatNewUser)
     if (!professional.success) {
-      console.log('Z error while creating professional:', professional.error)
+      console.error('Z error while creating professional:', professional.error)
       throw new Error;
     }
-    console.log('I am done creating professional, kinda');
+
     return res.status(201).json(professional.data);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {

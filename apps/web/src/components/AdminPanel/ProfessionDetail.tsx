@@ -30,7 +30,7 @@ export default function ProfessionDetail({ professionId, endpoint }: AdminProfes
       });
     }
   }, [profession]);
-  console.log('formData submitted:', formData);
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));

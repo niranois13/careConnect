@@ -19,14 +19,13 @@ async function registerProfessional(data: RegisterData): Promise<ProfessionalRes
     });
 
     const json = await res.json();
-    console.log('Created Professional:', json)
     const parsedResponse = professionalResponseSchema.safeParse(json);
     if (!parsedResponse.success) {
       console.error("Zod validation failed:", parsedResponse.error);
       throw new Error;
     }
 
-    return parsedResponse;
+    return parsedResponse.data;
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw error;
