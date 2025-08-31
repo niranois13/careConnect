@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { loginSchema } from '../../../packages/schemas/src/auth.schemas.ts';
 import { PrismaClient } from '../prisma/generated/index.js';
 import { generateCookie, generateToken } from '../src/jwtHandler.ts';
+import { handleError } from './handleError.ts';
 
 
 const prisma = new PrismaClient();
@@ -20,12 +21,12 @@ export async function loginUser(req: Request, res: Response) {
     });
 
     if (!User) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      throw new Error('Invalid credentials')
     }
 
     const isPasswordValid = await bcrypt.compare(password, User.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      throw new Error('Invalid credentials')
     }
 
     const token = generateToken({ id: User.id, email: User.email, role: User.role });
@@ -34,16 +35,11 @@ export async function loginUser(req: Request, res: Response) {
     return res.status(200).json({
       "id": User.id,
       "email": User.email,
-      "role": User.role 
+      "role": User.role
     });
 
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in creatCareSeeker:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-    console.error('Error in userLogin:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    handleError(error, res, 'loginUser');
   }
 }
 
@@ -52,7 +48,6 @@ export function logout(req: Request, res: Response) {
     res.clearCookie('token');
     return res.status(200).json({ message: 'Token successfully cleared.' });
   } catch (error: unknown) {
-    console.error('Error in logout:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    handleError(error, res, 'logout');
   }
 }

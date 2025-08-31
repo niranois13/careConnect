@@ -11,6 +11,7 @@ import {
   professionalResponseSchema
 } from '../../../packages/schemas/src/users.schemas.ts';
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
+import { handleError } from './handleError.ts';
 
 
 const prisma: PrismaClient = new PrismaClient();
@@ -104,28 +105,9 @@ export async function createCareSeeker(req: Request, res: Response) {
       role: newUser.role,
     };
 
-    return res.status(201).json({ 'User added': newUserResp });
+    return res.status(201).json(newUserResp);
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createCareSeeker:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Email and/or Phone number already in use.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in createCareSeeker:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'createCareSeeker');
   }
 }
 
@@ -177,32 +159,12 @@ export async function createProfessional(req: Request, res: Response) {
 
     const professional = professionalResponseSchema.safeParse(flatNewUser)
     if (!professional.success) {
-      console.error('Z error while creating professional:', professional.error)
-      throw new Error;
+      throw new Error('Validation error while creating professional');
     }
 
     return res.status(201).json(professional.data);
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createProfessional:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Email and/or Phone number already in use.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in createProfessional:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'createProfessional');
   }
 }
 
@@ -211,7 +173,7 @@ export async function getUsers(req: Request, res: Response) {
     const parseResult = roleQuerySchema.safeParse(req.query);
 
     if (!parseResult.success) {
-      return res.status(400).json({ error: 'Invalid role filter' });
+      throw new Error('Invalid role filter')
     }
 
     const role = parseResult.data.role;
@@ -224,8 +186,7 @@ export async function getUsers(req: Request, res: Response) {
     });
     return res.status(200).json({ Users });
   } catch (error: unknown) {
-    console.error('Error in getUsers:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return handleError(error, res, 'getUsers');
   }
 }
 
@@ -234,17 +195,18 @@ export async function getProfessionalById(req: Request, res: Response) {
     const parseResult = roleQuerySchema.safeParse(req.query);
 
     if (!parseResult.success) {
-      return res.status(400).json({ error: 'Invalid role filter' });
+      throw new Error('Invalid role filter')
     }
 
     if (!req.params.id || typeof req.params.id != 'string') {
-      return res.status(400).json({ error: 'Invalid id filter' });
+      throw new Error('Not found')
     }
     const id = req.params.id;
 
     const role = parseResult.data.role;
-    if (role !== 'PROFESSIONAL')
-      return res.status(400).json({ error: 'Invalid role filter' });
+    if (role !== 'PROFESSIONAL') {
+      throw new Error('Invalid role filter')
+    }
 
     const professional = await prisma.professional.findFirst({
       where: {
@@ -255,16 +217,16 @@ export async function getProfessionalById(req: Request, res: Response) {
 
     return res.status(200).json({ professional });
   } catch (error: unknown) {
-    console.error('Error in getSpecificUser:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return handleError(error, res, 'getProfessionalById');
   }
 }
 
 export async function updateProfessional(req: Request, res: Response) {
   try {
     const parsedData = professionalUpdateSchema.safeParse(req.body)
-    if (!parsedData.success)
-      return res.status(400).json({ error: 'Invalid request format' });
+    if (!parsedData.success) {
+      throw new Error('Invalid request format')
+    }
 
     const professionalData = parsedData.data;
 
@@ -294,28 +256,10 @@ export async function updateProfessional(req: Request, res: Response) {
       },
       select: fullProSelect,
     })
-    return res.status(201).json({ professional });
+    return res.status(201).json(professional);
 
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Data validation error in updateProfessional:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Email, Phone number and/or SIRET already in use.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in createCareSeeker:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'updateProfessional');
   }
 }
 
@@ -324,17 +268,18 @@ export async function getCareSeekerById(req: Request, res: Response) {
     const parseResult = roleQuerySchema.safeParse(req.query);
 
     if (!parseResult.success) {
-      return res.status(400).json({ error: 'Invalid role filter' });
+      throw new Error('Invalid role filter')
     }
 
     if (!req.params.id || typeof req.params.id != 'string') {
-      return res.status(400).json({ error: 'Invalid id filter' });
+      throw new Error('Not found')
     }
     const id = req.params.id;
 
     const role = parseResult.data.role;
-    if (role !== 'CARESEEKER')
-      return res.status(400).json({ error: 'Invalid role filter' });
+    if (role !== 'CARESEEKER') {
+      throw new Error('Invalid role filter')
+    }
 
     const careseeker = await prisma.careSeeker.findFirst({
       where: {
@@ -344,8 +289,7 @@ export async function getCareSeekerById(req: Request, res: Response) {
     });
     return res.status(200).json({ careseeker });
   } catch (error: unknown) {
-    console.error('Error in getSpecificUser:', error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return handleError(error, res, 'getCareSeekerById');
   }
 }
 
@@ -353,7 +297,7 @@ export async function updateCareseeker(req: Request, res: Response) {
   try {
     const parsedData = careSeekerUpdateSchema.safeParse(req.body)
     if (!parsedData.success) {
-      return res.status(400).json({ error: 'Invalid request format' });
+      throw new Error('Invalid request format')
     }
     const careSeekerData = parsedData.data;
 
@@ -375,27 +319,9 @@ export async function updateCareseeker(req: Request, res: Response) {
       select: fullCareSelect,
     })
 
-    return res.status(201).json({ careSeeker });
+    return res.status(201).json(careSeeker);
 
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Data validation error in updateProfessional:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Email and/or Phone number already in use.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in updateCareSeeker:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'updateCareSeeker');
   }
 }

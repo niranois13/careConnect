@@ -4,6 +4,7 @@ import { z } from 'zod';
 
 import { adminCreateSchema } from '../../../packages/schemas/src/admins.schema.ts';
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
+import { handleError } from './handleError.ts';
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -33,25 +34,6 @@ export async function createAdmin(req: Request, res: Response) {
 
     return res.status(201).json({ 'Admin added': newAdminResp });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createAdmin:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Email and/or Phone number already in use.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in createAdmin:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    handleError(error, res, 'createAdmin')
   }
 }

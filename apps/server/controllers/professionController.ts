@@ -11,6 +11,7 @@ import {
   Prisma,
   PrismaClient
 } from '../prisma/generated/index.js';
+import { handleError } from './handleError.ts';
 
 const fullProfessionSelect = {
   id: true,
@@ -59,26 +60,7 @@ export async function adminCreateProfessions(req: Request, res: Response) {
 
     return res.status(201).json({ profession });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in adminCreateProfessions:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in createCareSeeker:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'adminCreateProfessions');
   }
 }
 
@@ -91,26 +73,7 @@ export async function getProfessions(req: Request, res: Response) {
     })
     res.status(200).json(professionsData);
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createCareSeeker:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error getProfessions:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'getProfessions');
   }
 };
 
@@ -128,26 +91,7 @@ export async function getApprovedProfessions(req: Request, res: Response) {
     });
     res.status(200).json(professionsData);
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in getApprovedProfessions:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in createCareSeeker:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'getApprovedProfessions');
   }
 };
 
@@ -157,9 +101,7 @@ export async function proCreateProfessions(req: Request, res: Response) {
 
     const customProfession = parsedProfession.customProfession.trim();
     if (!customProfession || customProfession.length < 2) {
-      return res.status(409).json(
-        { error: 'Conflict: invalid new profession name' }
-      );
+      throw new Error('Invalid new profession name')
     };
 
     const existingProfessionApproved = await prisma.profession.findFirst({
@@ -168,9 +110,7 @@ export async function proCreateProfessions(req: Request, res: Response) {
       }
     })
     if (existingProfessionApproved) {
-      return res.status(409).json(
-        { error: 'Conflict: a profession with this name already exists' }
-      );
+      throw new Error('A profession with this name already exists')
     }
 
     const newProfession = await prisma.profession.create({
@@ -183,26 +123,7 @@ export async function proCreateProfessions(req: Request, res: Response) {
 
     return res.status(201).json(newProfession)
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createCareSeeker:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in proCreateProfessions:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'proCreateProfessions');
   }
 };
 
@@ -210,7 +131,7 @@ export async function proCreateProfessions(req: Request, res: Response) {
 export async function getProfessionsById(req: Request, res: Response) {
   try {
     if (!req.params.id || typeof req.params.id != 'string') {
-      return res.status(404).json({ error: 'Not Found' });
+      throw new Error('Not found');
     }
     const id = req.params.id;
 
@@ -221,38 +142,19 @@ export async function getProfessionsById(req: Request, res: Response) {
 
     res.status(200).json(professionData);
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createCareSeeker:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in getProfessionsById:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'getProfessionsById');
   }
 };
 
 export async function updateProfessions(req: Request, res: Response) {
   try {
     if (!req.params.id || typeof req.params.id != 'string') {
-      return res.status(404).json({ error: 'Not Found' });
+      throw new Error('Not found');
     }
 
     const parsedData = professionUpdateSchema.safeParse(req.body)
     if (!parsedData.success) {
-      return res.status(400).json({ error: 'Invalid request format' });
+      throw new Error('Invalid request format');
     }
     const professionData = parsedData.data;
 
@@ -267,48 +169,29 @@ export async function updateProfessions(req: Request, res: Response) {
 
     const parsedProfession = professionUpdateResponseSchema.safeParse(profession);
     if (!parsedProfession.success) {
-      console.error("Zod validation failed:", parsedProfession.error);
-      return res.status(500).json({ error: "Validation failed on updated profession" });
+      throw new Error("Validation failed on updated profession");
     }
     return res.status(201).json({ profession });
   } catch (error: unknown) {
-    if (error instanceof z.ZodError) {
-      console.error('Error in createCareSeeker:', error.issues);
-      return res.status(400).json({ error: error.issues });
-    }
-
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in updateProfessions:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'updateProfessions');
   }
 }
 
 export async function deleteProfessions(req: Request, res: Response) {
   try {
     if (!req.params.id || typeof req.params.id != 'string') {
-      return res.status(404).json({ error: 'Not Found' });
+      throw new Error('Not found');
     }
 
     const naProfession = await prisma.profession.findFirst({
-      where: { professionName: 'N/A',
-      AND: { customProfession: 'N/A' },
+      where: {
+        professionName: 'N/A',
+        AND: { customProfession: 'N/A' },
       }
     })
     const naProfessionId = naProfession?.id
     if (!naProfession || !naProfessionId) {
-      return res.status(400).json({ error: 'Invalid request format' });
+      throw new Error('Fallback profession not found');
     }
 
     await prisma.professional.updateMany({
@@ -320,25 +203,8 @@ export async function deleteProfessions(req: Request, res: Response) {
       where: { id: req.params.id },
     })
 
-    return res.status(200).json({
-      message: 'Profession deleted successfully, users reassigned to N/A',
-      profession
-    });
+    return res.status(200).json(profession);
   } catch (error: unknown) {
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (error.code) {
-        case 'P2002':
-          return res.status(400).json({ error: 'Profession already exists.' });
-        case 'P2003':
-          return res.status(400).json({ error: 'Invalid foreign key reference.' });
-        case 'P2000':
-          return res.status(400).json({ error: 'Input too long for a field.' });
-        case 'P2025':
-          return res.status(404).json({ error: 'Resource not found.' });
-      }
-
-      console.error('Error in deleteProfessions:', error);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+    return handleError(error, res, 'deleteProfessions');
   }
 }

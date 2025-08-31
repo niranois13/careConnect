@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import pkg from 'pg';
 
 import { env } from '../../../env.ts';
+import { handleError } from './handleError.ts';
 
 const { Client } = pkg;
 
@@ -29,8 +30,7 @@ export async function getHealth(req: Request, res: Response) {
     const result = await db.query<HealthCheckRow>('SELECT NOW()');
     res.status(200).json({ status: 'ok', db: result.rows[0] });
   } catch (error: unknown) {
-    const err = error as Error;
-    res.status(500).json({ status: 'error', message: err.message });
+    handleError(error, res, 'getHealth');
   } finally {
     await db.end();
   }
