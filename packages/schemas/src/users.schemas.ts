@@ -21,7 +21,7 @@ export const baseUserSchema = z.object({
   emailVerified: z.boolean().default(false),
   lastName: nameField,
   firstName: nameField,
-  phoneNumber: z.string().trim().min(10).max(12).optional(),
+  phoneNumber: z.string().trim().min(10).max(12).or(z.null()),
   role: z.enum(['CARESEEKER', 'PROFESSIONAL', 'ADMIN']),
 });
 

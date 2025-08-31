@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useGetUsers } from "../../hooks/useGetUsers.tsx";
 import { AdminUserModal } from "./PanelModal.tsx";
+import { AdminCreateCareSeekerModal, AdminCreateProfessionalModal } from "./PanelModal.tsx";
 
 export function UserList() {
+  const [createCareSeekerModalOpen, setCreateCareSeekerModalOpen] = useState(false);
+  const [createProfessionalModalOpen, setCreateProfessionalModalOpen] = useState(false);
   const [sortColumn, setSortColumn] = useState<keyof typeof users[0] | null>(null);
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [expanded, setExpanded] = useState(false);
@@ -60,6 +63,19 @@ export function UserList() {
             placeholder="Rechercher..."
             className="border rounded-md px-2 py-1 text-sm flex-1 min-w-[150px]"
           />
+
+          <button
+            className='px-z py-1 rounded-md text-sm border bg-purple-600 text-white'
+            onClick={() => setCreateCareSeekerModalOpen(true)}
+          >
+            Ajouter un CareSeeker
+          </button>
+          <button
+            className='px-z py-1 rounded-md text-sm border bg-purple-600 text-white'
+            onClick={() => setCreateProfessionalModalOpen(true)}
+          >
+            Ajouter un Professionel
+          </button>
 
           <button className={`px-2 py-1 rounded-md text-sm border ${filterRole === "ADMIN" ? "bg-purple-600 text-white" : "bg-white"}`}
             onClick={() => setFilterRole(filterRole === "ADMIN" ? null : "ADMIN")}>Admin</button>
@@ -131,6 +147,16 @@ export function UserList() {
             </tbody>
           </table>
         </div>
+      )}
+
+      {createCareSeekerModalOpen && (
+        <AdminCreateCareSeekerModal
+          onClose={() => setCreateCareSeekerModalOpen(false)} />
+      )}
+
+      {createProfessionalModalOpen && (
+        <AdminCreateProfessionalModal
+          onClose={() => setCreateProfessionalModalOpen(false)} />
       )}
 
       {/* Modal */}

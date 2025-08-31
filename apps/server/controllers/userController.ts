@@ -7,9 +7,11 @@ import {
   careSeekerUpdateSchema,
   professionalCreateSchema,
   professionalUpdateSchema,
-  roleQuerySchema
+  roleQuerySchema,
+  professionalResponseSchema
 } from '../../../packages/schemas/src/users.schemas.ts';
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
+
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -129,6 +131,7 @@ export async function createCareSeeker(req: Request, res: Response) {
 
 export async function createProfessional(req: Request, res: Response) {
   try {
+    console.log('Hey, i am creating a professional, kinda.');
     const ProfessionalData = professionalCreateSchema.parse(req.body);
 
     const hashedPassword = await bcrypt.hash(ProfessionalData.password, 10);
@@ -153,24 +156,34 @@ export async function createProfessional(req: Request, res: Response) {
       },
       include: {
         professionals: true,
-      },
+      }
     });
 
-    const newUserResp = {
-      "email": newUser.email,
-      "lastName": newUser.lastName,
-      "firstName": newUser.firstName,
-      "phoneNumber": newUser.phoneNumber,
-      "role": newUser.role,
-      "id": newUser.professionals[0].userId,
-      "professionId": newUser.professionals[0].professionId,
-      "isMobile": newUser.professionals[0].isMobile,
-      "interventionRadius": newUser.professionals[0].interventionRadius,
-      "siret": newUser.professionals[0].siret,
-      "isSiretValid": newUser.professionals[0].isSiretValid
-    };
+    const flatNewUser = {
+      id: newUser.id,
+      email: newUser.email,
+      createdAt: newUser.createdAt.toISOString(),
+      updatedAt: newUser.updatedAt.toISOString(),
+      emailVerified: newUser.emailVerified,
+      lastName: newUser.lastName,
+      firstName: newUser.firstName,
+      phoneNumber: newUser.phoneNumber,
+      role: newUser.role,
+      isMobile: newUser.professionals[0].isMobile,
+      interventionRadius: newUser.professionals[0].interventionRadius,
+      siret: newUser.professionals[0].siret,
+      isSiretValid: newUser.professionals[0].isSiretValid,
+      professionId: newUser.professionals[0].professionId,
+    }
 
-    return res.status(201).json(newUserResp);
+    console.log('I am the professional being created:', flatNewUser);
+    const professional = professionalResponseSchema.safeParse(flatNewUser)
+    if (!professional.success) {
+      console.log('Z error while creating professional:', professional.error)
+      throw new Error;
+    }
+    console.log('I am done creating professional, kinda');
+    return res.status(201).json(professional.data);
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       console.error('Error in createProfessional:', error.issues);
@@ -265,7 +278,7 @@ export async function updateProfessional(req: Request, res: Response) {
         siret: professionalData.siret || null,
         isSiretValid: professionalData.isSiretValid,
         user: {
-            update: {
+          update: {
             email: professionalData.email,
             firstName: professionalData.firstName,
             lastName: professionalData.lastName,
@@ -346,13 +359,13 @@ export async function updateCareseeker(req: Request, res: Response) {
     }
     const careSeekerData = parsedData.data;
 
-    
+
     const careSeeker = await prisma.careSeeker.update({
       where: { userId: req.params.id },
       data: {
         isHelper: careSeekerData.isHelper,
         user: {
-            update: {
+          update: {
             email: careSeekerData.email,
             firstName: careSeekerData.firstName,
             lastName: careSeekerData.lastName,
