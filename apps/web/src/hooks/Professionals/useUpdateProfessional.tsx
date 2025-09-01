@@ -3,18 +3,18 @@ import { toast } from "react-hot-toast";
 import { z } from "zod";
 
 import {
-  adminCareSeekerRelationsResponseSchema,
-  careSeekerUpdateSchema
-} from "../../../../packages/schemas/src/users.schemas.ts";
+  adminProfessionalRelationsResponseSchema,
+  professionalUpdateSchema
+} from "../../../../../packages/schemas/src/users.schemas.ts";
 
-type UpdateCareSeekerData = z.infer<typeof careSeekerUpdateSchema>;
-type UpdateCareSeekerResponse = z.infer<typeof adminCareSeekerRelationsResponseSchema>;
+type UpdateProfessionalData = z.infer<typeof professionalUpdateSchema>;
+type UpdateProfessionalResponse = z.infer<typeof adminProfessionalRelationsResponseSchema>;
 
-async function updateCareSeeker(userId: string, data: UpdateCareSeekerData): Promise<UpdateCareSeekerResponse> {
+async function updateProfessional(userId: string, data: UpdateProfessionalData): Promise<UpdateProfessionalResponse> {
   try {
-    const parsedData = careSeekerUpdateSchema.parse(data);
+    const parsedData = professionalUpdateSchema.parse(data);
 
-    const res = await fetch(`/api/admin/careseeker/${userId}`, {
+    const res = await fetch(`/api/admin/professional/${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -26,12 +26,12 @@ async function updateCareSeeker(userId: string, data: UpdateCareSeekerData): Pro
     }
 
     const json = await res.json();
-    const parsed = adminCareSeekerRelationsResponseSchema.safeParse(json.careSeeker);
-    if (!parsed.success) {
+    const parsed = adminProfessionalRelationsResponseSchema.safeParse(json);
+    if (!parsed.success)
       throw (parsed.error);
-    }
 
     return parsed.data;
+
   } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       throw new Error(error.issues[0]?.message ?? "Erreur de validation.");
@@ -43,11 +43,15 @@ async function updateCareSeeker(userId: string, data: UpdateCareSeekerData): Pro
   }
 }
 
-export function useUpdateCareSeeker(userId: string) {
-  return useMutation<UpdateCareSeekerResponse, Error, UpdateCareSeekerData>({
-    mutationFn: (data) => updateCareSeeker(userId, data),
+export function useUpdateProfessional(
+  userId: string,
+  options?: { onSuccess?: () => void }
+) {
+  return useMutation<UpdateProfessionalResponse, Error, UpdateProfessionalData>({
+    mutationFn: (data) => updateProfessional(userId, data),
     onSuccess: () => {
       toast.success("Utilisateur mis à jour avec succès !");
+      options?.onSuccess?.()
     },
     onError: (error: Error) => {
       toast.error(error.message);

@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from 'express';
 
-import { createAdmin } from '../controllers/adminController.ts';
+import { adminDeleteUserById, createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
 import { getHealth } from '../controllers/healthController.ts';
 import {
@@ -31,7 +31,7 @@ const asyncHandler = (fn: (req: Request, res: Response) => Promise<unknown>) =>
       console.error("Unhandled error:", error);
       res.status(500).json({ error: "Internal Server Error" });
     });
-};
+  };
 
 export default function registerRoutes(app: Express) {
   /* UTILS */
@@ -74,6 +74,7 @@ export default function registerRoutes(app: Express) {
 
   /* ADMIN USERS */
   app.get('/api/admin/users', requireRole('ADMIN'), asyncHandler(getUsers));
+  app.delete('/api/admin/users/:id', requireRole('ADMIN'), asyncHandler(adminDeleteUserById));
 
   /* ADMIN CARESEEKER */
   app.get('/api/admin/careseeker/:id', requireRole('ADMIN'), asyncHandler(getCareSeekerById));
@@ -90,11 +91,11 @@ export default function registerRoutes(app: Express) {
   app.delete('/api/admin/professions/:id', requireRole('ADMIN'), asyncHandler(deleteProfessions));
 
 
-// GET /api/admin/users/:id → Détails utilisateur
+  // GET /api/admin/users/:id → Détails utilisateur
 
-// PUT /api/admin/users/:id → Modifier utilisateur (nom, email, isActive, role…)
+  // PUT /api/admin/users/:id → Modifier utilisateur (nom, email, isActive, role…)
 
-// DELETE /api/admin/users/:id → Supprimer un utilisateur
+  // DELETE /api/admin/users/:id → Supprimer un utilisateur
 
-// POST /api/admin/users → Créer un utilisteur
+  // POST /api/admin/users → Créer un utilisteur
 }

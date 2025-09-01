@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { adminCreateSchema } from '../../../packages/schemas/src/admins.schema.ts';
 import { Prisma, PrismaClient } from '../prisma/generated/index.js';
 import { handleError } from './handleError.ts';
+import { baseUserSchema } from '../../../packages/schemas/src/users.schemas.ts';
 
 const prisma: PrismaClient = new PrismaClient();
 
@@ -35,5 +36,27 @@ export async function createAdmin(req: Request, res: Response) {
     return res.status(201).json({ 'Admin added': newAdminResp });
   } catch (error: unknown) {
     handleError(error, res, 'createAdmin')
+  }
+}
+
+export async function adminDeleteUserById(req: Request, res: Response) {
+  try {
+    console.log('Here I am, saying goodbye to this user:', req.params.id)
+    if (!req.params.id || typeof req.params.id !== 'string') {
+      throw new Error('Not found')
+    }
+
+    const deletedUser = await prisma.user.delete({
+      where: { id: req.params.id }
+    })
+
+    console.log('deletedUser is...:', deletedUser);
+    const parsedUser = baseUserSchema.safeParse(deletedUser);
+    if (!parsedUser.success) {
+      throw new Error('Validation error while deleting User')
+    }
+    return res.status(201).json(parsedUser.data)
+  } catch (error: unknown) {
+    return handleError(error, res, 'adminDeleteUserById');
   }
 }

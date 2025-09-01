@@ -97,15 +97,7 @@ export async function createCareSeeker(req: Request, res: Response) {
       },
     });
 
-    const newUserResp = {
-      id: newUser.id,
-      email: newUser.email,
-      firstName: newUser.firstName,
-      lastName: newUser.lastName,
-      role: newUser.role,
-    };
-
-    return res.status(201).json(newUserResp);
+    return res.status(201).json(newUser);
   } catch (error: unknown) {
     return handleError(error, res, 'createCareSeeker');
   }
@@ -184,7 +176,7 @@ export async function getUsers(req: Request, res: Response) {
       },
       select: selectFields,
     });
-    return res.status(200).json({ Users });
+    return res.status(200).json(Users);
   } catch (error: unknown) {
     return handleError(error, res, 'getUsers');
   }
@@ -215,7 +207,7 @@ export async function getProfessionalById(req: Request, res: Response) {
       select: fullProSelect
     });
 
-    return res.status(200).json({ professional });
+    return res.status(200).json(professional);
   } catch (error: unknown) {
     return handleError(error, res, 'getProfessionalById');
   }
@@ -287,7 +279,7 @@ export async function getCareSeekerById(req: Request, res: Response) {
       },
       select: fullCareSelect
     });
-    return res.status(200).json({ careseeker });
+    return res.status(200).json(careseeker);
   } catch (error: unknown) {
     return handleError(error, res, 'getCareSeekerById');
   }

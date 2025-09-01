@@ -5,12 +5,15 @@ import { z } from "zod";
 import {
   professionUpdateResponseSchema,
   professionUpdateSchema
-} from "../../../../packages/schemas/src/profession.schemas.ts";
+} from "../../../../../packages/schemas/src/profession.schemas.ts";
 
 type UpdateProfessionData = z.infer<typeof professionUpdateSchema>;
 type UpdateProfessionResponse = z.infer<typeof professionUpdateResponseSchema>;
 
-export async function updateProfession(professionId: string, data: UpdateProfessionData): Promise<UpdateProfessionResponse> {
+export async function updateProfession(
+  professionId: string,
+  data: UpdateProfessionData
+): Promise<UpdateProfessionResponse> {
   try {
     const parsedData = professionUpdateSchema.parse(data);
 
@@ -26,7 +29,7 @@ export async function updateProfession(professionId: string, data: UpdateProfess
     }
 
     const json = await res.json();
-    const parsed = professionUpdateResponseSchema.safeParse(json.profession);
+    const parsed = professionUpdateResponseSchema.safeParse(json);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);
       throw new Error;
@@ -45,11 +48,15 @@ export async function updateProfession(professionId: string, data: UpdateProfess
   }
 }
 
-export function useUpdateProfession(professionId: string) {
+export function useUpdateProfession(
+  professionId: string,
+  options?: { onSuccess?: () => void }
+) {
   return useMutation<UpdateProfessionResponse, Error, UpdateProfessionData>({
     mutationFn: (data) => updateProfession(professionId, data),
     onSuccess: () => {
-      toast.success("Utilisateur mis à jour avec succès !");
+      toast.success("Profession mise à jour avec succès !");
+      options?.onSuccess?.()
     },
     onError: (error: Error) => {
       toast.error(error.message);

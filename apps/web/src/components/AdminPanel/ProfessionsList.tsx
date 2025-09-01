@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useGetProfessions } from "../../hooks/useProfessions.tsx";
-import { AdminCreateProfessionModal, AdminProfessionModal }  from "./PanelModal.tsx";
+import { useGetProfessions } from "../../hooks/Professions/useGetProfessions.tsx";
+import BaseModal from "../BaseModal/BaseModal.tsx";
+import ProfessionDetail from "./ProfessionDetail.tsx";
+import ProfessionCreate from "./ProfessionCreate.tsx";
 
 export function ProfessionsList() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -144,16 +146,29 @@ export function ProfessionsList() {
         </div>
       )}
 
+      {/* Create new Profession Modal*/}
       {modalOpen && (
-        <AdminCreateProfessionModal onClose={() => { setModalOpen(false); }}/>
+        <BaseModal onClose={() => setModalOpen(false)}>
+          <ProfessionCreate
+            onSuccess={() => {
+              refetch()
+              setTimeout(() => setModalOpen(false), 500);
+            }}
+          />
+        </BaseModal>
       )}
-      {/* Edit Modal */}
+      {/* See/Update/Delete Profession Modal */}
       {selectedProfessionId && (
-        <AdminProfessionModal
-          professionId={selectedProfessionId}
-          endpoint={'/api/admin/professions'}
-          onClose={() => setSelectedProfessionId(null)}
-        />
+        <BaseModal onClose={() => setSelectedProfessionId(null)}>
+          <ProfessionDetail
+            professionId={selectedProfessionId}
+            endpoint={'/api/admin/professions'}
+            onSuccess={() => {
+              refetch()
+              setTimeout(() => setSelectedProfessionId(null), 500);
+            }}
+          />
+        </BaseModal>
       )}
     </div>
   );

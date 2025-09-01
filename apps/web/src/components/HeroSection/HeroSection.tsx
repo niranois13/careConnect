@@ -1,16 +1,17 @@
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import ProRegisterModal from './ProRegisterModal.tsx'
-import UserRegisterModal from './UserRegisterModal.tsx';
+import BaseModal from '../BaseModal/BaseModal.tsx';
+import RegisterPro from '../../features/Registration/ProRegister.tsx';
+import RegisterUser from '../../features/Registration/UserRegister.tsx';
 
 export default function HeroSection() {
   const [isUserRegisterModalOpen, setUserRegisterModalOpen] = useState(false);
   const [isProRegisterModalOpen, setProRegisterModalOpen] = useState(false);
 
   useEffect(() => {
-      setUserRegisterModalOpen(false);
-      setProRegisterModalOpen(false);
-    }, []);
+    setUserRegisterModalOpen(false);
+    setProRegisterModalOpen(false);
+  }, []);
 
   return (
     <div className="flex flex-col items-center text-center mt-2">
@@ -25,7 +26,7 @@ export default function HeroSection() {
         <h3 className="text-2xl font-bold mb-5">Améliorer la vie, ensemble.</h3>
       </div>
 
-      <div className="flex justify-center space-x-15">
+      <div className="flex flex-wrap justify-center gap-x-15 gap-y-5">
         <button
           onClick={() => { setUserRegisterModalOpen(true); }}
           className="text-white bg-teal-700 hover:bg-teal-800 focus:ring-2 focus:outline-none focus:ring-teal-300 font-bold rounded-lg text-l px-8 py-2 text-center"
@@ -40,10 +41,15 @@ export default function HeroSection() {
         </button>
       </div>
       {isUserRegisterModalOpen &&
-              <UserRegisterModal onClose={() => { setUserRegisterModalOpen(false); }} />
+        <BaseModal onClose={() => setUserRegisterModalOpen(false)}>
+          <RegisterUser onSuccess={() => { setUserRegisterModalOpen(false); }} />
+        </BaseModal>
       }
+
       {isProRegisterModalOpen &&
-              <ProRegisterModal onClose={() => { setProRegisterModalOpen(false); }} />
+        <BaseModal onClose={() => setProRegisterModalOpen(false)}>
+          <RegisterPro onSuccess={() => setProRegisterModalOpen(false)} />
+        </BaseModal>
       }
     </div>
   )

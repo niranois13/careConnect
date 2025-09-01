@@ -1,12 +1,10 @@
-import { useEffect } from "react";
-
-import Login from "../../features/Auth/components/Login.tsx"
-
-interface AuthModalProps {
+import { ReactNode, useEffect } from "react";
+interface proModalProps {
+  children: ReactNode;
   onClose: () => void;
 }
 
-export default function AuthModal({ onClose }: AuthModalProps,) {
+export default function BaseModal({ onClose, children }: proModalProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -18,7 +16,6 @@ export default function AuthModal({ onClose }: AuthModalProps,) {
     document.body.style.overflow = "hidden";
 
     document.addEventListener("keydown", handleKeyDown);
-
     return () => {
       document.body.style.overflow = originalStyle;
       document.removeEventListener("keydown", handleKeyDown);
@@ -27,12 +24,12 @@ export default function AuthModal({ onClose }: AuthModalProps,) {
 
   return (
     <div
-      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 "
+      className="fixed inset-0 bg-opacity-50 flex justify-center items-center items-stretch z-50 overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="bg-purple-50 shadow-xl rounded p-6 w-100 relative border-2 border-b-purple-800"
-        onClick={(e) => { e.stopPropagation(); }} // Pour empêcher la fermeture quand on clique dans la modale
+        className="bg-purple-50 shadow-xl rounded p-4 relative border-2 border-b-purple-800 max-h-[90vh] max-w-[60vw] overflow-y-auto"
+        onClick={(e) => { e.stopPropagation(); }}
       >
         <button
           onClick={onClose}
@@ -41,7 +38,7 @@ export default function AuthModal({ onClose }: AuthModalProps,) {
         >
           ✕
         </button>
-        <Login onSuccess={onClose}/>
+        {children}
       </div>
     </div>
   );

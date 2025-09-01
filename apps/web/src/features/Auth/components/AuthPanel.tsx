@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import AuthModal from '../../../components/Header/AuthModal.tsx';
 import type { RootState } from '../../../store/index.ts';
 import Logout from './Logout.tsx';
+import Login from './Login.tsx';
+import BaseModal from '../../../components/BaseModal/BaseModal.tsx';
 
 export default function AuthPanel() {
   const [isAuthModalOpen, setAuthModalOpen] = useState(false);
@@ -22,9 +23,10 @@ export default function AuthPanel() {
         </button>
       )
       }
-      {
-        isAuthModalOpen &&
-        <AuthModal onClose={() => { setAuthModalOpen(false); }} />
+      {isAuthModalOpen &&
+        <BaseModal onClose={() => setAuthModalOpen(false)}>
+          <Login onSuccess={() => setAuthModalOpen(false)} />
+        </BaseModal>
       }
     </div>
   )

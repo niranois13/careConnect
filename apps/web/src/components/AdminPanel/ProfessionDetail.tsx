@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
-import { useGetProfessionById } from "../../hooks/useProfessions.tsx";
-import { useUpdateProfession } from "../../hooks/useUpdateProfession.tsx";
-import { useDeleteProfession } from "../../hooks/useDeleteProfessions.tsx";
+import { useGetProfessionById } from "../../hooks/Professions/useGetProfessionsById.tsx";
+import { useUpdateProfession } from "../../hooks/Professions/useUpdateProfession.tsx";
+import { useDeleteProfession } from "../../hooks/Professions/useDeleteProfessions.tsx";
 
 interface AdminProfessionModalProps {
   professionId: string;
   endpoint: string;
-  onClose: () => void;
+  onSuccess?: () => void;
 }
 
-export default function ProfessionDetail({ professionId, endpoint }: AdminProfessionModalProps) {
+export default function ProfessionDetail({ professionId, endpoint, onSuccess }: AdminProfessionModalProps) {
   const { profession, isLoading, error } = useGetProfessionById(professionId, endpoint);
-  const [actionType, setActionType] = useState<'update' | 'delete'>('update');
-  const updateProfession = useUpdateProfession(professionId);
-  const deleteProfession = useDeleteProfession(professionId);
+  const updateProfession = useUpdateProfession(professionId, { onSuccess });
+  const deleteProfession = useDeleteProfession(professionId, { onSuccess });
 
   const [formData, setFormData] = useState({
     professionName: "",

@@ -58,7 +58,7 @@ export async function adminCreateProfessions(req: Request, res: Response) {
       isProfessionApproved: newProfession.isProfessionApproved,
     };
 
-    return res.status(201).json({ profession });
+    return res.status(201).json(profession);
   } catch (error: unknown) {
     return handleError(error, res, 'adminCreateProfessions');
   }
@@ -171,7 +171,7 @@ export async function updateProfessions(req: Request, res: Response) {
     if (!parsedProfession.success) {
       throw new Error("Validation failed on updated profession");
     }
-    return res.status(201).json({ profession });
+    return res.status(201).json(profession);
   } catch (error: unknown) {
     return handleError(error, res, 'updateProfessions');
   }

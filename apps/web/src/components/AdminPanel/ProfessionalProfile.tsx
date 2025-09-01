@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
-import { useGetProfessionalById } from "../../hooks/useGetUsers.tsx";
-import { useUpdateProfessional } from "../../hooks/useUpdateProfessional.tsx";
+import { useGetProfessionalById } from "../../hooks/Professionals/useGetProfessionalsById.tsx";
+import { useUpdateProfessional } from "../../hooks/Professionals/useUpdateProfessional.tsx";
 import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 import { z } from 'zod';
+import { useDeleteUser } from "../../hooks/Users/useDeleteUsers.tsx";
 
 interface AdminUserModalProps {
   user: z.infer<typeof userResponseSchema>;
+  onSuccess?: () => void
 }
 
-export default function ProfessionalProfile({ user }: AdminUserModalProps) {
+export default function ProfessionalProfile({ user, onSuccess }: AdminUserModalProps) {
   const { professional, isLoading, error } = useGetProfessionalById(user.id);
-  const updateProfessional = useUpdateProfessional(user.id);
+  const updateProfessional = useUpdateProfessional(user.id, { onSuccess });
+  const deleteProfessional = useDeleteUser(user.id, { onSuccess });
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -65,8 +68,15 @@ export default function ProfessionalProfile({ user }: AdminUserModalProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    if (!submitter)
+      return;
 
-    updateProfessional.mutate(formData);
+    const action = submitter.name;
+    if (action == 'update')
+      updateProfessional.mutate(formData);
+    if (action == 'delete')
+      deleteProfessional.mutate(user.id);
   };
 
   if (isLoading) return <p>Chargement...</p>;
@@ -265,9 +275,17 @@ export default function ProfessionalProfile({ user }: AdminUserModalProps) {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+              name="update"
+              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-red-300"
             >
               Valider les changements
+            </button>
+            <button
+              type="submit"
+              name="delete"
+              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-red-500 rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              Supprimer l'utilisateur
             </button>
           </div>
         </form>

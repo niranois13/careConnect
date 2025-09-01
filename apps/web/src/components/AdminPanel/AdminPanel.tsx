@@ -4,8 +4,10 @@ import { ProfessionsList } from './ProfessionsList.tsx'
 export default function AdminPanel() {
   return (
     <>
-    <UserList />
-    <ProfessionsList />
+      <div className="flex flex-col gap-x-5 gap-y-5 m-2">
+        <UserList />
+        <ProfessionsList />
+      </div>
     </>
   )
 }

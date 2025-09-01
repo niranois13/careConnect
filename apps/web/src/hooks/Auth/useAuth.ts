@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import type { jwtPayload } from '../../../../packages/types/src/jwt.ts';
-import { login, logout } from '../features/Auth/authSlice.ts';
-import type { AppDispatch, RootState } from '../store/index.ts';
+import type { jwtPayload } from '../../../../../packages/types/src/jwt.ts';
+import { login, logout } from '../../features/Auth/authSlice.ts';
+import type { AppDispatch, RootState } from '../../store/index.ts';
 
 export function useAuth() {
   const dispatch: AppDispatch = useDispatch();

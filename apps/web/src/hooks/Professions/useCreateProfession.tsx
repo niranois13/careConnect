@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { z } from 'zod';
 
-import { professionCreateSchema, approvedProfessionResponseSchema } from "../../../../packages/schemas/src/profession.schemas.ts";
+import {
+  professionCreateSchema,
+  approvedProfessionResponseSchema
+} from "../../../../../packages/schemas/src/profession.schemas.ts";
 import { toast } from "react-hot-toast";
 
 type ProfessionPayload = z.infer<typeof professionCreateSchema>
@@ -21,7 +24,7 @@ async function createProfession(
     });
 
     const json = await res.json();
-    const parsedResponse = approvedProfessionResponseSchema.safeParse(json.profession);
+    const parsedResponse = approvedProfessionResponseSchema.safeParse(json);
     if (!parsedResponse.success) {
       console.error("Zod validation failed:", parsedResponse.error);
       throw new Error;
@@ -36,13 +39,19 @@ async function createProfession(
   }
 }
 
-export function useCreateProfession(endpoint: string = "/api/professions") {
-  return useMutation({
+export function useCreateProfession(
+  endpoint: string = "/api/professions",
+  options?: { onSuccess?: () => void }
+) {
+  return useMutation<ProfessionResponse, Error, ProfessionPayload>({
     mutationFn: (payload: ProfessionPayload) =>
       createProfession(payload, endpoint),
-    onSuccess: () =>
-      toast.success('La profession a bien été ajoutée'),
-    onError: () =>
-      toast.error('Erreur dans la création de la profession')
+    onSuccess: () => {
+      toast.success("Profession créée avec succès !");
+      options?.onSuccess?.()
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
   });
 }

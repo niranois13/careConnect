@@ -15,28 +15,29 @@ services:
       - '3000:3000'
     environment:
       - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+      - CHOKIDAR_INTERVAL=100
     command:
       [
         'nodemon',
         '--legacy-watch',
-        '--polling',
         '--watch',
-        './apps/server/',
+        '/careConnect/apps/server/',
         '--ext',
         'ts,tsx',
         '--exec',
         'pnpm',
         'ts-node',
         '--transpile-only',
-        './apps/server/src/server.ts',
+        '/careConnect/apps/server/src/server.ts',
       ]
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
     volumes:
-      - ./apps/web:/careConnect/apps/web
-      - ./packages:/careConnect/packages
+      - ./apps/web:/careConnect/apps/web:cached
+      - ./packages:/careConnect/packages:cached
     command: ['pnpm', 'dev', '--host']
     expose:
       - '5173'

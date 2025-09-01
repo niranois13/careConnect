@@ -21,6 +21,10 @@ async function loginUser(data: loginData): Promise<jwtPayload> {
       credentials: 'include',
       body: JSON.stringify(data),
     });
+    if (!res.ok) {
+      throw new Error('Identifiants incorrects')
+    }
+
     return await res.json() as jwtPayload;
   } catch (error: unknown) {
     console.warn('Erreur lors de la connexion');
@@ -58,7 +62,7 @@ function Login({ onSuccess }: LoginProps) {
 
     const parsed = loginSchema.safeParse({ email, password });
     if (!parsed.success) {
-      setFormError(parsed.error.issues[0].message);
+      setFormError('Identifiants incorrect');
       return;
     }
 

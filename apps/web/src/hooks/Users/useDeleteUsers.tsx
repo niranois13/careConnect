@@ -1,13 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
-import { professionResponseSchema } from "../../../../packages/schemas/src/profession.schemas.ts";
+import { baseUserSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 
-type DeleteProfessionResponse = z.infer<typeof professionResponseSchema>;
+type DeleteUserResponse = z.infer<typeof baseUserSchema>;
 
-export async function deleteProfession(professionId: string): Promise<DeleteProfessionResponse> {
+export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
   try {
-    const res = await fetch(`/api/admin/professions/${professionId}`, {
+    const res = await fetch(`/api/admin/users/${userId}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
@@ -18,7 +18,7 @@ export async function deleteProfession(professionId: string): Promise<DeleteProf
     }
 
     const json = await res.json();
-    const parsed = professionResponseSchema.safeParse(json.profession);
+    const parsed = baseUserSchema.safeParse(json);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);
       throw new Error("Erreur de validation du serveur.");
@@ -32,18 +32,22 @@ export async function deleteProfession(professionId: string): Promise<DeleteProf
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error("Échec de la suppression de la profession.");
+    throw new Error("Échec de la suppression de l'utilisateur.");
   }
 }
 
-export function useDeleteProfession(professionId: string) {
-  return useMutation<DeleteProfessionResponse, Error, string>({
-    mutationFn: () => deleteProfession(professionId),
+export function useDeleteUser(
+  userId: string,
+  options?: { onSuccess?: () => void }
+) {
+  return useMutation<DeleteUserResponse, Error, string>({
+    mutationFn: () => deleteUser(userId),
     onSuccess: () => {
-      toast.success("Profession supprimée avec succès !");
+      toast.success("Utilisateur supprimé avec succès !");
+      options?.onSuccess?.()
     },
     onError: (error: Error) => {
-      console.error("Error deleting profession:", error);
+      console.error("Error deleting user:", error);
       toast.error(error.message);
     },
   });

@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useGetUsers } from "../../hooks/useGetUsers.tsx";
-import { AdminUserModal } from "./PanelModal.tsx";
-import { AdminCreateCareSeekerModal, AdminCreateProfessionalModal } from "./PanelModal.tsx";
+import { useGetUsers } from "../../hooks/Users/useGetUsers.tsx";
+import RegisterUser from "../../features/Registration/UserRegister.tsx";
+import BaseModal from "../BaseModal/BaseModal.tsx";
+import RegisterPro from "../../features/Registration/ProRegister.tsx";
+import CareSeekerProfile from "./CareSeekerProfile.tsx";
+import ProfessionalProfile from "./ProfessionalProfile.tsx";
 
 export function UserList() {
   const [createCareSeekerModalOpen, setCreateCareSeekerModalOpen] = useState(false);
@@ -150,21 +153,52 @@ export function UserList() {
       )}
 
       {createCareSeekerModalOpen && (
-        <AdminCreateCareSeekerModal
-          onClose={() => setCreateCareSeekerModalOpen(false)} />
+        <BaseModal onClose={() => setCreateCareSeekerModalOpen(false)}>
+          <RegisterUser
+            onSuccess={() => {
+              refetch()
+              setTimeout(() => setCreateCareSeekerModalOpen(false), 500);
+            }}
+          />
+        </BaseModal>
       )}
 
       {createProfessionalModalOpen && (
-        <AdminCreateProfessionalModal
-          onClose={() => setCreateProfessionalModalOpen(false)} />
+        <BaseModal onClose={() => setCreateProfessionalModalOpen(false)}>
+          <RegisterPro
+            onSuccess={() => {
+              refetch()
+              setTimeout(() => setCreateProfessionalModalOpen(false))
+            }}
+          />
+        </BaseModal>
       )}
 
       {/* Modal */}
       {selectedUser && (
-        <AdminUserModal
-          user={selectedUser}
-          onClose={() => setSelectedUser(null)}
-        />
+        <BaseModal onClose={() => setSelectedUser(null)}>
+          {
+            selectedUser.role === "CARESEEKER" &&
+            <CareSeekerProfile
+              user={selectedUser}
+              onSuccess={() => {
+                refetch()
+                setSelectedUser(null)
+              }}
+            />
+          }
+
+          {
+            selectedUser.role === "PROFESSIONAL" &&
+            <ProfessionalProfile
+              user={selectedUser}
+              onSuccess={() => {
+                refetch()
+                setSelectedUser(null)
+              }}
+            />
+          }
+        </BaseModal>
       )}
     </div>
   )

@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 import { z } from "zod";
-import { professionalCreateSchema, professionalResponseSchema } from "../../../../packages/schemas/src/users.schemas.ts";
+import { professionalCreateSchema, professionalResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 
 type RegisterData = z.infer<typeof professionalCreateSchema>;
 type ProfessionalResponse = z.infer<typeof professionalResponseSchema>;

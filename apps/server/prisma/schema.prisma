@@ -28,13 +28,13 @@ model User {
 
 model CareSeeker {
   userId            String          @id
-  user              User            @relation("UserCareseeker", fields: [userId], references: [id])
+  user              User            @relation("UserCareseeker", fields: [userId], references: [id], onDelete: Cascade)
   isHelper          Boolean         @default(false)
 }
 
 model Professional {
   userId                       String           @id
-  user                         User             @relation("UserProfessional", fields: [userId], references: [id])
+  user                         User             @relation("UserProfessional", fields: [userId], references: [id], onDelete: Cascade)
   professionId                 String?
   profession                   Profession?      @relation("ProfessionalProfession", fields: [professionId], references: [id])
   isMobile                     Boolean          @default(false)

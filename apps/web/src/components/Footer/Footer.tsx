@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-purple-50 flex items-center w-full justify-center gap-4 text-xs opacity-50">
+    <footer className="bg-purple-50 flex items-center w-full justify-center gap-4 text-xs">
       <p>
         &copy; 2025 careConnect
       </p>

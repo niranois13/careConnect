@@ -1,9 +1,17 @@
 import { useState } from 'react';
 
-import { useGetApprovedProfessions } from '../../hooks/useProfessions.tsx';
-import { useCreateProfession } from '../../hooks/useCreateProfession.tsx';
-import { useRegisterProfessional } from '../../hooks/useRegisterProfessional.tsx';
-import { professionalCreateSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
+import {
+  useGetApprovedProfessions
+} from '../../hooks/Professions/useGetApprovedProfessions.tsx';
+import {
+  useCreateProfession
+} from '../../hooks/Professions/useCreateProfession.tsx';
+import {
+  useRegisterProfessional
+} from '../../hooks/Professionals/useRegisterProfessional.tsx';
+import {
+  professionalCreateSchema
+} from '../../../../../packages/schemas/src/users.schemas.ts';
 import PasswordRules from './PasswordRules.tsx';
 
 type registerProps = {
@@ -77,7 +85,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         role,
         isMobile,
         interventionRadius,
-        siret:  normalizedSiret,
+        siret: normalizedSiret,
         isSiretValid,
         professionId: finalProfessionId,
       });

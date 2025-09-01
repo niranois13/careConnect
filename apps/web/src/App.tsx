@@ -56,11 +56,11 @@ function App() {
                 />
               </div>
 
-              <div className="flex flex-wrap bg-purple-50 rounded-lg w-full max-w-5/6 mx-auto mt-2 py-3">
+              <div className="flex flex-wrap bg-purple-50 rounded-lg mx-auto mt-2 py-3">
                 <p className="text-3xl w-full text-center font-bold mb-5">
                   Pourquoi choisir <strong>careConnect</strong> ?
                 </p>
-                <div className="flex flex-wrap justify-around w-full">
+                <div className="flex flex-wrap justify-around gap-5 w-full">
                   <LandingCard
                     icon={<FontAwesomeIcon icon={faShieldHalved} size="2x" className="text-purple-700" />}
                     title="Professionnels vérifiés"

@@ -1,83 +1,28 @@
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
-import { z } from 'zod';
+import { useRegisterCareSeeker } from '../../hooks/CareSeekers/useRegisterCareSeekers.tsx';
 
 import { careSeekerCreateSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
 import PasswordRules from './PasswordRules.tsx';
-
-const userRegistrationSchema = careSeekerCreateSchema;
-
-type registerData = z.infer<typeof userRegistrationSchema>;
-
-type CareSeekerResponse = {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  phoneNumber: string | null;
-  role: string;
-};
-
-type APIResponse<T> = {
-  data: T;
-  error?: string;
-};
-
-async function registerUser(data: registerData): Promise<CareSeekerResponse> {
-  try {
-    const res = await fetch('/api/careseeker', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(data),
-    });
-    const json = (await res.json()) as APIResponse<CareSeekerResponse>;
-
-    if (!res.ok)
-      throw new Error(json.error || 'Erreur lors de la création de compte.');
-
-    return json.data;
-  } catch (error: unknown) {
-    console.warn('Erreur lors de la création de compte');
-    if (error instanceof Error) {
-      throw error;
-    }
-    throw new Error('Un erreur inconnue est survenue lors de la création de compte.');
-  }
-}
 
 type registerProps = {
   onSuccess?: () => void;
 };
 
-function RegisterUser({ onSuccess }: registerProps) {
+export default function RegisterUser({ onSuccess }: registerProps) {
+  const registerCareSeeker = useRegisterCareSeeker({
+    onSuccess,
+    onError: (error) => setFormError(error.message),
+  });
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [isHelper, setIsHelper] = useState(false);
   const role = 'CARESEEKER';
   const [formError, setFormError] = useState('');
-
-  const mutation = useMutation({
-    mutationFn: registerUser,
-    onSuccess: () => {
-      toast.success('Compte créé avec succès !');
-      setEmail('');
-      setPassword('');
-      setConfirmPassword('');
-      setFirstName('');
-      setLastName('');
-      setPhoneNumber('');
-      onSuccess?.();
-    },
-    onError: (error: Error) => {
-      toast.error(error.message);
-      setFormError(error.message);
-    },
-  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,21 +40,32 @@ function RegisterUser({ onSuccess }: registerProps) {
       normalizedPhoneNumber = phoneNumber.trim();
     }
 
-    const parsed = userRegistrationSchema.safeParse({
-      email,
-      password,
-      firstName,
-      lastName,
-      phoneNumber: normalizedPhoneNumber,
-      role
-    });
-    if (!parsed.success) {
-      setFormError(parsed.error.issues[0].message);
-      return;
-    }
+    try {
+      const parsed = careSeekerCreateSchema.safeParse({
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber: normalizedPhoneNumber,
+        role,
+        isHelper
+      });
+      if (!parsed.success) {
+        setFormError(parsed.error.issues[0].message);
+        return;
+      }
 
-    mutation.mutate(parsed.data);
-  };
+      registerCareSeeker.mutate(parsed.data);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setFormError(error.message);
+      } else {
+        setFormError(
+          'Une erreur inconnue est survenue lors de la création du profil'
+        );
+      }
+    }
+  }
 
   return (
     <form aria-label="form" onSubmit={handleSubmit} className="max-w-lg mx-auto">
@@ -126,7 +82,7 @@ function RegisterUser({ onSuccess }: registerProps) {
             type="text"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            disabled={mutation.isPending}
+            disabled={registerCareSeeker.isPending}
             required
             placeholder="Jean"
             autoComplete="given-name"
@@ -142,7 +98,7 @@ function RegisterUser({ onSuccess }: registerProps) {
             type="text"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            disabled={mutation.isPending}
+            disabled={registerCareSeeker.isPending}
             required
             placeholder="Martin"
             autoComplete="family-name"
@@ -151,8 +107,21 @@ function RegisterUser({ onSuccess }: registerProps) {
         </div>
       </div>
 
+      <div className="flex justify-center mb-5">
+        <label htmlFor="isHelper" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+          Je suis un.e aidant.e ?
+        </label>
+        <input
+          id="isHelper"
+          type="checkbox"
+          checked={isHelper}
+          onChange={(e) => setIsHelper(e.target.checked)}
+          disabled={registerCareSeeker.isPending}
+        />
+      </div>
+
       {/* Contact */}
-      <div className="flex flex-row flex-wrap justify-center gap-x-2 mb-5">
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 gap-y-2 mb-5">
         <div className="flex-1 min-w-[150px]">
           <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
             Email :
@@ -162,7 +131,7 @@ function RegisterUser({ onSuccess }: registerProps) {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            disabled={mutation.isPending}
+            disabled={registerCareSeeker.isPending}
             required
             placeholder="example@mail.com"
             autoComplete="email"
@@ -178,7 +147,7 @@ function RegisterUser({ onSuccess }: registerProps) {
             type="tel"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            disabled={mutation.isPending}
+            disabled={registerCareSeeker.isPending}
             pattern="^0\d{9}$"
             placeholder="0123456789"
             autoComplete="tel"
@@ -198,7 +167,7 @@ function RegisterUser({ onSuccess }: registerProps) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            disabled={mutation.isPending}
+            disabled={registerCareSeeker.isPending}
             required
             autoComplete="new-password"
             className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
@@ -213,7 +182,7 @@ function RegisterUser({ onSuccess }: registerProps) {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            disabled={mutation.isPending}
+            disabled={registerCareSeeker.isPending}
             required
             autoComplete="new-password"
             className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
@@ -225,13 +194,11 @@ function RegisterUser({ onSuccess }: registerProps) {
 
       <button
         type="submit"
-        disabled={mutation.isPending}
+        disabled={registerCareSeeker.isPending}
         className="w-full px-5 py-2.5 text-sm font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
       >
-        {mutation.isPending ? 'Création du compte...' : 'Créer mon compte'}
+        {registerCareSeeker.isPending ? 'Création du compte...' : 'Créer mon compte'}
       </button>
     </form>
   );
 }
-
-export default RegisterUser;

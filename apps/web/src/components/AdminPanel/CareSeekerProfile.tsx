@@ -1,16 +1,19 @@
 import { useState, useEffect } from "react";
-import { useGetCareSeekerById } from "../../hooks/useGetUsers.tsx";
-import { useUpdateCareSeeker } from "../../hooks/useUpdateCareSeeker.tsx";
+import { useGetCareSeekerById } from "../../hooks/CareSeekers/useGetCareSeekersById.tsx";
+import { useUpdateCareSeeker } from "../../hooks/CareSeekers/useUpdateCareSeeker.tsx";
 import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 import { z } from 'zod';
+import { useDeleteUser } from "../../hooks/Users/useDeleteUsers.tsx";
 
 interface AdminUserModalProps {
   user: z.infer<typeof userResponseSchema>;
+  onSuccess?: () => void;
 }
 
-export default function CareSeekerProfile({ user }: AdminUserModalProps) {
+export default function CareSeekerProfile({ user, onSuccess }: AdminUserModalProps) {
   const { careSeeker, isLoading, error } = useGetCareSeekerById(user.id);
-  const updateProfessional = useUpdateCareSeeker(user.id);
+  const updateCareSeeker = useUpdateCareSeeker(user.id, { onSuccess });
+  const deleteCareSeeker = useDeleteUser(user.id, { onSuccess });
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -46,8 +49,15 @@ export default function CareSeekerProfile({ user }: AdminUserModalProps) {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+    if (!submitter)
+      return;
 
-    updateProfessional.mutate(formData);
+    const action = submitter.name;
+    if (action == 'update')
+      updateCareSeeker.mutate(formData);
+    if (action == 'delete')
+      deleteCareSeeker.mutate(user.id);
   };
 
   if (isLoading) return <p>Chargement...</p>;
@@ -154,9 +164,17 @@ export default function CareSeekerProfile({ user }: AdminUserModalProps) {
           <div className="flex justify-center">
             <button
               type="submit"
-              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-4 focus:ring-purple-300"
+              name="update"
+              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-purple-700 rounded-lg hover:bg-purple-800 focus:outline-none focus:ring-2 focus:ring-purple-300"
             >
               Valider les changements
+            </button>
+            <button
+              type="submit"
+              name="delete"
+              className="w-full max-w-2/3 p-2.5 font-medium text-white bg-red-500 rounded-lg hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-300"
+            >
+              Supprimer l'utilisateur
             </button>
           </div>
         </form>
