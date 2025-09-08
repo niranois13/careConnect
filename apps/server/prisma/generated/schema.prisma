@@ -12,36 +12,44 @@ generator users {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
+  id            String   @id @default(uuid())
+  email         String   @unique
   password      String
   firstName     String
   lastName      String
-  phoneNumber   String?        @unique
-  role          String         @default("GUEST")
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  emailVerified Boolean        @default(false)
+  phoneNumber   String?  @unique
+  role          String   @default("GUEST")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  emailVerified Boolean  @default(false)
+
   careSeekers   CareSeeker[]   @relation("UserCareseeker")
   professionals Professional[] @relation("UserProfessional")
+  address       Address[]      @relation("UserAddress")
 }
 
 model CareSeeker {
-  userId   String  @id
-  user     User    @relation("UserCareseeker", fields: [userId], references: [id], onDelete: Cascade)
-  isHelper Boolean @default(false)
+  userId    String  @id
+  isHelper  Boolean @default(false)
+  addressId String?
+
+  user         User          @relation("UserCareseeker", fields: [userId], references: [id], onDelete: Cascade)
+  Appointments Appointment[] @relation("CareSeekerAppointments")
 }
 
 model Professional {
-  userId             String      @id
-  user               User        @relation("UserProfessional", fields: [userId], references: [id], onDelete: Cascade)
+  userId             String  @id
   professionId       String?
-  profession         Profession? @relation("ProfessionalProfession", fields: [professionId], references: [id])
-  isMobile           Boolean     @default(false)
-  interventionRadius Int         @default(0)
-  siret              String?     @unique
-  isSiretValid       Boolean     @default(false)
-  //services                   ProfessionalService[]
+  isMobile           Boolean @default(false)
+  interventionRadius Int     @default(0)
+  siret              String? @unique
+  isSiretValid       Boolean @default(false)
+
+  user       User        @relation("UserProfessional", fields: [userId], references: [id], onDelete: Cascade)
+  profession Profession? @relation("ProfessionalProfession", fields: [professionId], references: [id])
+
+  Availabilities Availability[] @relation("ProfessionalAvailabilities")
+  Appointments   Appointment[]  @relation("ProfessionalAppointments")
 }
 
 model Profession {
@@ -53,4 +61,54 @@ model Profession {
   professionName       String
 
   professionals Professional[] @relation("ProfessionalProfession")
+}
+
+model Address {
+  id         String   @id @default(uuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  street     String?
+  postalCode String?
+  city       String
+  latitude   Float?
+  longitude  Float?
+  label      String   @default("DOMICILE")
+  userId     String
+
+  user User @relation("UserAddress", fields: [userId], references: [id], onDelete: Cascade)
+
+  careSeekerAppointments   Appointment[] @relation("CareSeekerAddress")
+  professionalAppointments Appointment[] @relation("ProfessionalAddress")
+}
+
+model Availability {
+  id              String   @id @default(uuid())
+  start           DateTime
+  end             DateTime
+  title           String
+  minimumDuration Int      @default(60)
+  maximumDuration Int?
+  professionalId  String
+
+  professional Professional @relation("ProfessionalAvailabilities", fields: [professionalId], references: [userId], onDelete: Cascade)
+}
+
+model Appointment {
+  id                    String   @id @default(uuid())
+  start                 DateTime
+  end                   DateTime
+  title                 String
+  description           String?
+  status                String   @default("PENDING")
+  location              String
+  customLocation        String?
+  careSeekerId          String
+  professionalId        String
+  careSeekerAddressId   String?
+  professionalAddressId String?
+
+  careSeeker          CareSeeker   @relation("CareSeekerAppointments", fields: [careSeekerId], references: [userId], onDelete: Cascade)
+  professional        Professional @relation("ProfessionalAppointments", fields: [professionalId], references: [userId], onDelete: Cascade)
+  careSeekerAddress   Address?     @relation("CareSeekerAddress", fields: [careSeekerAddressId], references: [id], onDelete: SetNull)
+  professionalAddress Address?     @relation("ProfessionalAddress", fields: [professionalAddressId], references: [id], onDelete: SetNull)
 }

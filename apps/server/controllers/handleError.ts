@@ -1,5 +1,6 @@
 import type { Response } from "express";
 import { z } from "zod";
+
 import { Prisma } from "../prisma/generated/index.js";
 
 export function handleError(error: unknown, res: Response, context: string = "Unknown") {
@@ -20,7 +21,7 @@ export function handleError(error: unknown, res: Response, context: string = "Un
       case "P2025":
         return res.status(404).json({ error: "Resource not found." });
       default:
-        console.error(`PrismaError:${error.code} in ${context}:`, error.message);
+        console.error(`PrismaError: ${error.code} in ${context}:`, error.message);
         return res.status(500).json({ error: "Unexpected Prisma error." });
     }
   }

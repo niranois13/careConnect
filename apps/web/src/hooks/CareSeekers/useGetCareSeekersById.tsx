@@ -6,7 +6,7 @@ import {
 
 type adminCareSeeker = z.infer<typeof adminCareSeekerRelationsResponseSchema>;
 
-export function useGetCareSeekerById(careSeekerId: string) {
+export function useGetCareSeekerById(careSeekerId: string, endpoint: string = '/api/admin/careseeker') {
   const [careSeeker, setCareSeeker] = useState<adminCareSeeker | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -15,7 +15,7 @@ export function useGetCareSeekerById(careSeekerId: string) {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/admin/careseeker/${careSeekerId}?role=CARESEEKER`, {
+      const res = await fetch(`${endpoint}/${careSeekerId}?role=CARESEEKER`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -48,7 +48,7 @@ export function useGetCareSeekerById(careSeekerId: string) {
     } finally {
       setIsLoading(false);
     }
-  }, [careSeekerId]);
+  }, [careSeekerId, endpoint]);
 
   useEffect(() => {
     fetchCareSeeker();

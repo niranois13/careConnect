@@ -12,10 +12,16 @@ export default function LandingCard({
   text
 }: LandingCardProps) {
   return (
-    <div className="bg-purple-50 border-purple-700 border-2 rounded-lg max-h-50 max-w-48 p-2 flex flex-col justify-center items-start">
-      {icon && <div className="mb-1">{icon}</div>}
-      {title && <h2 className="text-l font-bold mb-1">{title}</h2>}
-      {text && <p className="text-sm text-justify">{text}</p>}
+    <div className="relative bg-purple-50 border-purple-700 border-2 rounded-lg max-h-60 max-w-58 p-4 flex flex-col mb-2">
+      {icon && (
+        <div className="absolute top-2 left-2">
+          {icon}
+        </div>
+      )}
+      <div className="flex flex-col justify-start text-justify w-full pt-8">
+        {title && <h2 className="text-l font-bold mb-1 p-1">{title}</h2>}
+        {text && <p className="text-sm p-1">{text}</p>}
+      </div>
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import type { Request, Response } from 'express';
-import { z } from 'zod';
 
 import {
   customProfessionCreateSchema,
@@ -169,7 +168,7 @@ export async function updateProfessions(req: Request, res: Response) {
 
     const parsedProfession = professionUpdateResponseSchema.safeParse(profession);
     if (!parsedProfession.success) {
-      throw new Error("Validation failed on updated profession");
+      throw new Error("Validation failed on profession update");
     }
     return res.status(201).json(profession);
   } catch (error: unknown) {

@@ -24,7 +24,6 @@ async function registerCareSeeker(data: RegisterData): Promise<CareSeekerRespons
     const json = await res.json();
     const parsedResponse = careSeekerResponseSchema.safeParse(json);
     if (!parsedResponse.success) {
-      console.error("Zod validation failed:", parsedResponse.error);
       throw new Error("Data validation error while fetching users");
     }
 

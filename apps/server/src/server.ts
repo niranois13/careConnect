@@ -1,10 +1,10 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import Helmet from 'helmet';
 import type { HelmetOptions } from 'helmet';
+import Helmet from 'helmet';
 
 import { env } from '../../../env.ts';
-import registerRoutes from '../routes/index.ts';
+import registerRoutes from '../routes/router.ts';
 
 const app = express();
 const isProd = env.NODE_ENV === 'production';

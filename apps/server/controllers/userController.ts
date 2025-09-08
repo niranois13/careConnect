@@ -1,16 +1,15 @@
 import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
-import { z } from 'zod';
 
 import {
   careSeekerCreateSchema,
   careSeekerUpdateSchema,
   professionalCreateSchema,
+  professionalResponseSchema,
   professionalUpdateSchema,
-  roleQuerySchema,
-  professionalResponseSchema
+  roleQuerySchema
 } from '../../../packages/schemas/src/users.schemas.ts';
-import { Prisma, PrismaClient } from '../prisma/generated/index.js';
+import { PrismaClient } from '../prisma/generated/index.js';
 import { handleError } from './handleError.ts';
 
 

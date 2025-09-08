@@ -1,3 +1,5 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 
 interface SearchBarProps {
@@ -40,9 +42,9 @@ export default function SearchBar({
   };
 
   if (label && labelPosition === "top") {
-      return (
+    return (
       <div className={`flex flex-col items-center ${sizeClasses[size]}`}>
-          <label htmlFor="searchField" className={labelClasses[labelStyle]}>{label}</label>
+        <label htmlFor="searchField" className={labelClasses[labelStyle]}>{label}</label>
         <form
           onSubmit={handleSubmit}
           className={`flex items-stretch border-2 border-purple-700 rounded-full overflow-hidden ${sizeClasses[size]}`}
@@ -65,5 +67,45 @@ export default function SearchBar({
         </form>
       </div>
     )
+  }
+
+
+  if (label && labelPosition === "left") {
+    return (
+      <div>
+        <label htmlFor="searchField" className='sr-only'>
+          {label}
+        </label>
+        <form
+          onSubmit={handleSubmit}
+          className={`flex items-stretch border-2 border-purple-700 rounded-full overflow-hidden ${sizeClasses[size]}`}
+        >
+          <input
+            type="text"
+            id="searchField"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            placeholder={placeholder}
+            className='px-4 py-1 bg-purple-50 text-sm leading-6 focus:outline-none placeholder:text-center'
+          />
+          <button
+            type="submit"
+            className="
+              bg-purple-100
+              hover:bg-purple-500
+              flex
+              items-center
+              justify-center
+              border-l-2
+              px-2
+              py-1
+              border-purple-700
+              "
+          >
+            <FontAwesomeIcon icon={faSearch} size='2x' className='text-purple-700 hover:text-white' />
+          </button>
+        </form>
+      </div>
+    );
   }
 }

@@ -132,7 +132,8 @@ exports.Prisma.UserScalarFieldEnum = {
 
 exports.Prisma.CareSeekerScalarFieldEnum = {
   userId: 'userId',
-  isHelper: 'isHelper'
+  isHelper: 'isHelper',
+  addressId: 'addressId'
 };
 
 exports.Prisma.ProfessionalScalarFieldEnum = {
@@ -151,6 +152,44 @@ exports.Prisma.ProfessionScalarFieldEnum = {
   customProfession: 'customProfession',
   isProfessionApproved: 'isProfessionApproved',
   professionName: 'professionName'
+};
+
+exports.Prisma.AddressScalarFieldEnum = {
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  street: 'street',
+  postalCode: 'postalCode',
+  city: 'city',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  label: 'label',
+  userId: 'userId'
+};
+
+exports.Prisma.AvailabilityScalarFieldEnum = {
+  id: 'id',
+  start: 'start',
+  end: 'end',
+  title: 'title',
+  minimumDuration: 'minimumDuration',
+  maximumDuration: 'maximumDuration',
+  professionalId: 'professionalId'
+};
+
+exports.Prisma.AppointmentScalarFieldEnum = {
+  id: 'id',
+  start: 'start',
+  end: 'end',
+  title: 'title',
+  description: 'description',
+  status: 'status',
+  location: 'location',
+  customLocation: 'customLocation',
+  careSeekerId: 'careSeekerId',
+  professionalId: 'professionalId',
+  careSeekerAddressId: 'careSeekerAddressId',
+  professionalAddressId: 'professionalAddressId'
 };
 
 exports.Prisma.SortOrder = {
@@ -173,7 +212,10 @@ exports.Prisma.ModelName = {
   User: 'User',
   CareSeeker: 'CareSeeker',
   Professional: 'Professional',
-  Profession: 'Profession'
+  Profession: 'Profession',
+  Address: 'Address',
+  Availability: 'Availability',
+  Appointment: 'Appointment'
 };
 
 /**

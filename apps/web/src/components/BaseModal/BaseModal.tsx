@@ -24,11 +24,11 @@ export default function BaseModal({ onClose, children }: proModalProps) {
 
   return (
     <div
-      className="fixed inset-0 bg-opacity-50 flex justify-center items-center items-stretch z-50 overflow-y-auto"
+      className="fixed inset-0 bg-opacity-50 flex justify-center items-center z-50 overflow-y-auto"
       onClick={onClose}
     >
       <div
-        className="bg-purple-50 shadow-xl rounded p-4 relative border-2 border-b-purple-800 max-h-[90vh] max-w-[60vw] overflow-y-auto"
+        className="bg-purple-50 shadow-xl rounded p-8 relative border-2 border-purple-800 max-h-[90vh] max-w-[60vw] overflow-y-auto"
         onClick={(e) => { e.stopPropagation(); }}
       >
         <button

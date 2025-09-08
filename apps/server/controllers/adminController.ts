@@ -1,11 +1,10 @@
 import bcrypt from 'bcryptjs';
 import type { Request, Response } from 'express';
-import { z } from 'zod';
 
 import { adminCreateSchema } from '../../../packages/schemas/src/admins.schema.ts';
-import { Prisma, PrismaClient } from '../prisma/generated/index.js';
-import { handleError } from './handleError.ts';
 import { baseUserSchema } from '../../../packages/schemas/src/users.schemas.ts';
+import { PrismaClient } from '../prisma/generated/index.js';
+import { handleError } from './handleError.ts';
 
 const prisma: PrismaClient = new PrismaClient();
 
