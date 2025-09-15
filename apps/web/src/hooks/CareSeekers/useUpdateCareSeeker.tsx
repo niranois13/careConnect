@@ -4,30 +4,38 @@ import { z } from "zod";
 
 import {
   adminCareSeekerRelationsResponseSchema,
+  careSeekerResponseSchema,
   careSeekerUpdateSchema
 } from "../../../../../packages/schemas/src/users.schemas.ts";
 
-type UpdateCareSeekerData = z.infer<typeof careSeekerUpdateSchema>;
+type UpdateCareSeekerData = z.infer<typeof careSeekerResponseSchema>;
 type UpdateCareSeekerResponse = z.infer<typeof adminCareSeekerRelationsResponseSchema>;
 
 async function updateCareSeeker(userId: string, data: UpdateCareSeekerData): Promise<UpdateCareSeekerResponse> {
   try {
-    const parsedData = careSeekerUpdateSchema.parse(data);
+    console.log('Careseeker à update - avant fetch:', data)
+    const parsedData = careSeekerUpdateSchema.safeParse(data);
+    if (!parsedData.success) {
+      console.error(parsedData.error.issues);
+      throw new Error('Data mal formatée')
+    }
 
     const res = await fetch(`/api/admin/careseeker/${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
-      body: JSON.stringify(parsedData),
+      body: JSON.stringify(parsedData.data),
     });
 
     if (!res.ok) {
       throw new Error('Erreur dans la mise à jour du professionel.');
     }
 
-    const json = await res.json();
+    const json: unknown = await res.json();
+    console.log('Updated careseeker:', json)
     const parsed = adminCareSeekerRelationsResponseSchema.safeParse(json);
     if (!parsed.success) {
+      console.error(parsed.error.issues);
       throw (parsed.error);
     }
 

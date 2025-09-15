@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z, ZodError } from 'zod';
+
 import {
   adminCareSeekerRelationsResponseSchema,
 } from "../../../../../packages/schemas/src/users.schemas.ts";
@@ -22,10 +23,10 @@ export function useGetCareSeekerById(careSeekerId: string, endpoint: string = '/
       });
 
       if (!res.ok) {
-        throw new Error(`Erreur HTTP ${res.status}`);
+        throw new Error('Server error while fetching careSeerker by Id');
       }
 
-      const json = await res.json();
+      const json: unknown = await res.json();
       const parsedData = adminCareSeekerRelationsResponseSchema.safeParse(json);
       if (!parsedData.success) {
         console.error('parsedData error:', parsedData.error);
@@ -51,7 +52,7 @@ export function useGetCareSeekerById(careSeekerId: string, endpoint: string = '/
   }, [careSeekerId, endpoint]);
 
   useEffect(() => {
-    fetchCareSeeker();
+    void fetchCareSeeker();
   }, [fetchCareSeeker]);
 
   return { careSeeker, isLoading, error, refetch: fetchCareSeeker };

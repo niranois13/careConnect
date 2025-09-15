@@ -7,7 +7,6 @@ import {
   professionUpdateSchema,
 } from '../../../packages/schemas/src/profession.schemas.ts';
 import {
-  Prisma,
   PrismaClient
 } from '../prisma/generated/index.js';
 import { handleError } from './handleError.ts';

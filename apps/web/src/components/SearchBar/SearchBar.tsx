@@ -1,5 +1,5 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 
 interface SearchBarProps {
@@ -84,7 +84,7 @@ export default function SearchBar({
             type="text"
             id="searchField"
             value={value}
-            onChange={(e) => setValue(e.target.value)}
+            onChange={(e) => { setValue(e.target.value); }}
             placeholder={placeholder}
             className='px-4 py-1 bg-purple-50 text-sm leading-6 focus:outline-none placeholder:text-center'
           />

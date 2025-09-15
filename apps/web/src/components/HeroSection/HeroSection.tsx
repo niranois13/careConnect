@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import BaseModal from '../BaseModal/BaseModal.tsx';
 import RegisterPro from '../../features/Registration/ProRegister.tsx';
 import RegisterUser from '../../features/Registration/UserRegister.tsx';
+import BaseModal from '../BaseModal/BaseModal.tsx';
 
 export default function HeroSection() {
   const [isUserRegisterModalOpen, setUserRegisterModalOpen] = useState(false);
@@ -96,14 +96,14 @@ export default function HeroSection() {
         </button>
       </div>
       {isUserRegisterModalOpen &&
-        <BaseModal onClose={() => setUserRegisterModalOpen(false)}>
+        <BaseModal onClose={() => { setUserRegisterModalOpen(false); }}>
           <RegisterUser onSuccess={() => { setUserRegisterModalOpen(false); }} />
         </BaseModal>
       }
 
       {isProRegisterModalOpen &&
-        <BaseModal onClose={() => setProRegisterModalOpen(false)}>
-          <RegisterPro onSuccess={() => setProRegisterModalOpen(false)} />
+        <BaseModal onClose={() => { setProRegisterModalOpen(false); }}>
+          <RegisterPro onSuccess={() => { setProRegisterModalOpen(false); }} />
         </BaseModal>
       }
     </div>

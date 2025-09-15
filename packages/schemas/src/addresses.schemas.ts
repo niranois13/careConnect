@@ -4,46 +4,24 @@ import { userResponseSchema } from './users.schemas.ts';
 
 
 // -------------- BASE --------------
-export const BaseAddressSchema = z.object({
-  id: z.string().uuid(),
-  label: z.string().default('DOMICILE'),
+export const baseAddressSchema = z.object({
+  label: z.string(),
   street: z.string().nullable(),
-  postalCode: z.string().length(5),
+  postalCode: z.string().nullable(),
   city: z.string(),
-})
+});
 
-// -------------- REQUESTS --------------
-export const addressCreateSchema = BaseAddressSchema.omit({
-  id: true
-}).extend({
-  userId: z.string().uuid()
-})
-
-export const adminAddressUpdateSchema = BaseAddressSchema.extend({
+export const addressResponseSchema = baseAddressSchema.extend({
+  id: z.string().uuid(),
   userId: z.string().uuid(),
-  longitude: z.number().nullable(),
-  latitude: z.number().nullable(),
+  latitude: z.number().nullable().optional(),
+  longitude: z.number().nullable().optional(),
+  createdAt: z.string().datetime({ offset: true }).optional(),
+  updatedAt: z.string().datetime({ offset: true }).optional(),
 })
 
-export const addressUpdateSchema = BaseAddressSchema.extend({
-  userId: z.string().uuid()
-})
-
-// -------------- RESPONSES --------------
-export const addressResponseSchema = BaseAddressSchema.extend({
+export const addressUserSchema = baseAddressSchema.extend({
+  id: z.string().uuid(),
   userId: z.string().uuid(),
-  createdAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
-  updatedAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
-})
-
-export const addressRelationsResponseSchema = addressResponseSchema.extend({
-  user: userResponseSchema
-})
-
-export const adminAddressResponseSchema = BaseAddressSchema.extend({
-  userId: z.string().uuid(),
-  latitude: z.number().nullable(),
-  longitude: z.number().nullable(),
-  createdAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
-  updatedAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
-})
+  user: z.lazy(() => userResponseSchema)
+});

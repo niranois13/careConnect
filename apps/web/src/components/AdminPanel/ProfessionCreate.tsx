@@ -1,4 +1,5 @@
 import { useState } from "react";
+
 import { useCreateProfession } from "../../hooks/Professions/useCreateProfession.tsx";
 
 export default function ProfessionCreate({ onSuccess }: { onSuccess: () => void }) {

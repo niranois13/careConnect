@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-import { professionalRelationSchema } from './users.schemas.ts';
+import { professionalResponseSchema } from './users.schemas.ts';
+
 
 // ---------- Request ----------
 export const professionCreateSchema = z.object({
@@ -43,7 +44,7 @@ export const adminProfessionRelationsResponseSchema = z.object({
   isProfessionApproved: z.boolean().default(false),
   createdAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
   updatedAt: z.string().datetime({ offset: true }).pipe(z.coerce.date()),
-  professionals: z.lazy(() => z.array(professionalRelationSchema)),
+  professionals: z.lazy(() => z.array(professionalResponseSchema)),
 });
 
 export const professionUpdateResponseSchema = z.object({

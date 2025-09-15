@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+
 import { baseUserSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 
 type DeleteUserResponse = z.infer<typeof baseUserSchema>;
@@ -14,10 +15,10 @@ export async function deleteUser(userId: string): Promise<DeleteUserResponse> {
     });
 
     if (!res.ok) {
-      throw new Error("Impossible de supprimer la profession");
+      throw new Error("Impossible de supprimer le professionnel");
     }
 
-    const json = await res.json();
+    const json: unknown = await res.json();
     const parsed = baseUserSchema.safeParse(json);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);

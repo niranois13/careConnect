@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { z, ZodError } from 'zod';
+
 import {
   adminProfessionRelationsResponseSchema
 } from '../../../../../packages/schemas/src/profession.schemas.ts';
@@ -25,7 +26,7 @@ export function useGetProfessionById(
         throw new Error('Impossible de récupérer les professions');
       }
 
-      const data = await res.json();
+      const data: unknown = await res.json();
       const parsedData = adminProfessionRelationsResponseSchema.parse(data);
 
       setProfession(parsedData);
@@ -47,7 +48,7 @@ export function useGetProfessionById(
   }, [professionId, endpoint]);
 
   useEffect(() => {
-    fetchProfession();
+    void fetchProfession();
   }, [fetchProfession]);
 
   return { profession, isLoading, error, refetch: fetchProfession };

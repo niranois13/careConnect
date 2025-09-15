@@ -3,17 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from './store/index.ts';
 
+import { jwtPayloadSchema } from '../../../packages/schemas/src/users.schemas.ts';
+import AdminPanel from './components/AdminPanel/AdminPanel.tsx';
 import LandingCard from './components/Cards/LandingCard.tsx';
+import CareSeekerPanel from './components/CareSeekerPanel/CareSeekerPanel.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import Header from './components/Header/Header.tsx';
 import HeroSection from './components/HeroSection/HeroSection.tsx'
 import SearchBar from './components/SearchBar/SearchBar.tsx';
-import AdminPanel from './components/AdminPanel/AdminPanel.tsx';
-import CareSeekerPanel from './components/CareSeekerPanel/CareSeekerPanel.tsx';
 import { login } from './features/Auth/authSlice.ts';
-import { jwtPayload } from '../../../packages/types/src/jwt.ts';
+import { RootState } from './store/index.ts';
 
 function App() {
   const dispatch = useDispatch();
@@ -25,14 +25,15 @@ function App() {
       try {
         const res = await fetch("/api/me", { credentials: "include" });
         if (res.ok) {
-          const user: jwtPayload = await res.json();
-          dispatch(login(user));
+          const user: unknown = await res.json();
+          const parsed = jwtPayloadSchema.parse(user)
+          dispatch(login(parsed));
         }
       } catch (err) {
         console.error("Auth bootstrap error:", err);
       }
     };
-    fetchMe();
+    void fetchMe();
   }, [dispatch]);
 
   const isAdmin = isLoggedIn && user.role === 'ADMIN';

@@ -17,20 +17,12 @@ services:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - CHOKIDAR_INTERVAL=100
-    command:
-      [
-        'nodemon',
-        '--legacy-watch',
-        '--watch',
-        '/careConnect/apps/server/',
-        '--ext',
-        'ts,tsx',
-        '--exec',
-        'pnpm',
-        'ts-node',
-        '--transpile-only',
-        '/careConnect/apps/server/src/server.ts',
-      ]
+    command: >
+        nodemon
+          --legacy-watch
+          --watch /careConnect/apps/server/
+          --ext ts,tsx
+          --exec "pnpm ts-node --transpile-only /careConnect/apps/server/src/server.ts"
   web:
     build:
       context: .

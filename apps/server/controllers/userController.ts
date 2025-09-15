@@ -23,7 +23,21 @@ const selectFields = {
   phoneNumber: true,
   role: true,
   createdAt: true,
-  updatedAt: true
+  updatedAt: true,
+  address: {
+    select: {
+      id: true,
+      userId: true,
+      label: true,
+      city: true,
+      street: true,
+      postalCode: true,
+      createdAt: true,
+      updatedAt: true,
+      latitude: true,
+      longitude: true,
+    }
+  }
 };
 
 const fullProSelect = {
@@ -42,6 +56,7 @@ const fullProSelect = {
       createdAt: true,
       updatedAt: true,
       emailVerified: true,
+      address: true
     },
   },
   profession: {
@@ -67,8 +82,20 @@ const fullCareSelect = {
       createdAt: true,
       updatedAt: true,
       emailVerified: true,
+      address: {
+        select: {
+          id: true,
+          userId: true,
+          label: true,
+          street: true,
+          postalCode: true,
+          city: true,
+          createdAt: true,
+          updatedAt: true,
+        }
+      }
     },
-  },
+  }
 }
 
 
@@ -85,6 +112,14 @@ export async function createCareSeeker(req: Request, res: Response) {
         lastName: userData.lastName,
         phoneNumber: userData.phoneNumber,
         role: 'CARESEEKER',
+        address: {
+          create: {
+            city: userData.address[0].city,
+            street: userData.address[0].street,
+            postalCode: userData.address[0].postalCode,
+            label: userData.address[0].label
+          }
+        },
         careSeekers: {
           create: {
             isHelper: userData.isHelper,
@@ -93,14 +128,15 @@ export async function createCareSeeker(req: Request, res: Response) {
       },
       include: {
         careSeekers: true,
+        address: true,
       },
     });
-
     return res.status(201).json(newUser);
   } catch (error: unknown) {
     return handleError(error, res, 'createCareSeeker');
   }
 }
+
 
 export async function createProfessional(req: Request, res: Response) {
   try {
@@ -116,6 +152,14 @@ export async function createProfessional(req: Request, res: Response) {
         lastName: ProfessionalData.lastName,
         phoneNumber: ProfessionalData.phoneNumber,
         role: 'PROFESSIONAL',
+        address: {
+          create: ProfessionalData.address.map(addr => ({
+            street: addr.street,
+            postalCode: addr.postalCode,
+            city: addr.city,
+            label: addr.label,
+          })),
+        },
         professionals: {
           create: {
             isMobile: ProfessionalData.isMobile,
@@ -128,10 +172,12 @@ export async function createProfessional(req: Request, res: Response) {
       },
       include: {
         professionals: true,
+        address: true,
       }
     });
+    console.log('New user Address:', newUser.address);
 
-    const flatNewUser = {
+    const flattenedProfessional = {
       id: newUser.id,
       email: newUser.email,
       createdAt: newUser.createdAt.toISOString(),
@@ -141,15 +187,28 @@ export async function createProfessional(req: Request, res: Response) {
       firstName: newUser.firstName,
       phoneNumber: newUser.phoneNumber,
       role: newUser.role,
-      isMobile: newUser.professionals[0].isMobile,
-      interventionRadius: newUser.professionals[0].interventionRadius,
-      siret: newUser.professionals[0].siret,
-      isSiretValid: newUser.professionals[0].isSiretValid,
-      professionId: newUser.professionals[0].professionId,
-    }
+      isMobile: newUser.professionals[0]?.isMobile ?? false,
+      interventionRadius: newUser.professionals[0]?.interventionRadius ?? 0,
+      siret: newUser.professionals[0]?.siret ?? null,
+      isSiretValid: newUser.professionals[0]?.isSiretValid ?? false,
+      professionId: newUser.professionals[0]?.professionId ?? undefined,
+      address: newUser.address.map(addr => ({
+        id: addr.id,
+        userId: addr.userId,
+        createdAt: addr.createdAt.toISOString(),
+        updatedAt: addr.updatedAt.toISOString(),
+        latitude: addr.latitude ?? null,
+        longitude: addr.longitude ?? null,
+        street: addr.street ?? null,
+        postalCode: addr.postalCode ?? null,
+        city: addr.city,
+        label: addr.label,
+      })),
+    };
 
-    const professional = professionalResponseSchema.safeParse(flatNewUser)
+    const professional = professionalResponseSchema.safeParse(flattenedProfessional)
     if (!professional.success) {
+      console.log('Professional Error:', professional.error.issues);
       throw new Error('Validation error while creating professional');
     }
 
@@ -304,8 +363,25 @@ export async function updateCareseeker(req: Request, res: Response) {
             lastName: careSeekerData.lastName,
             phoneNumber: careSeekerData.phoneNumber || null,
             emailVerified: careSeekerData.emailVerified,
+            address: {
+              upsert: careSeekerData.address.map((addr) => ({
+                where: { id: addr.id },
+                update: {
+                  street: addr.street,
+                  postalCode: addr.postalCode,
+                  city: addr.city,
+                  label: addr.label,
+                },
+                create: {
+                  street: addr.street,
+                  postalCode: addr.postalCode,
+                  city: addr.city,
+                  label: addr.label
+                }
+              }))
+            }
           },
-        },
+        }
       },
       select: fullCareSelect,
     })

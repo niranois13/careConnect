@@ -1,4 +1,5 @@
 import { ReactNode, useEffect } from "react";
+
 interface proModalProps {
   children: ReactNode;
   onClose: () => void;

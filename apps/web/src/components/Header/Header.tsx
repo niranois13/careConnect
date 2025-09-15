@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+
 import AuthPanel from '../../features/Auth/components/AuthPanel.tsx';
 import { RootState } from '../../store/index.ts';
 import SearchBar from '../SearchBar/SearchBar.tsx';

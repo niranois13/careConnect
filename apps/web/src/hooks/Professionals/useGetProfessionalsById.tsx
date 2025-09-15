@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { z, ZodError } from 'zod';
+
 import {
   adminProfessionalRelationsResponseSchema
 } from '../../../../../packages/schemas/src/users.schemas.ts';
@@ -24,10 +25,10 @@ export function useGetProfessionalById(professionalId: string) {
       });
 
       if (!res.ok) {
-        throw new Error(`Erreur HTTP ${res.status}`);
+        throw new Error(`Server error while fetching professional by id`);
       }
 
-      const json = await res.json();
+      const json: unknown = await res.json();
       const parsedData = adminProfessionalRelationsResponseSchema.parse(json);
       setProfessional(parsedData);
       setError(null);
@@ -48,7 +49,7 @@ export function useGetProfessionalById(professionalId: string) {
   }, [professionalId]);
 
   useEffect(() => {
-    fetchProfessional();
+    void fetchProfessional();
   }, [fetchProfessional]);
 
   return { professional, isLoading, error, refetch: fetchProfessional };

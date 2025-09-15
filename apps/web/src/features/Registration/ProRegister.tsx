@@ -1,17 +1,17 @@
 import { useState } from 'react';
 
 import {
-  useGetApprovedProfessions
-} from '../../hooks/Professions/useGetApprovedProfessions.tsx';
-import {
-  useCreateProfession
-} from '../../hooks/Professions/useCreateProfession.tsx';
+  professionalCreateSchema
+} from '../../../../../packages/schemas/src/users.schemas.ts';
 import {
   useRegisterProfessional
 } from '../../hooks/Professionals/useRegisterProfessional.tsx';
 import {
-  professionalCreateSchema
-} from '../../../../../packages/schemas/src/users.schemas.ts';
+  useCreateProfession
+} from '../../hooks/Professions/useCreateProfession.tsx';
+import {
+  useGetApprovedProfessions
+} from '../../hooks/Professions/useGetApprovedProfessions.tsx';
 import PasswordRules from './PasswordRules.tsx';
 
 type registerProps = {
@@ -23,7 +23,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
   const createProfession = useCreateProfession();
   const registerPro = useRegisterProfessional({
     onSuccess,
-    onError: (error) => setFormError(error.message),
+    onError: (error) => { setFormError(error.message); },
   });
 
   const [email, setEmail] = useState('');
@@ -38,6 +38,10 @@ export default function RegisterPro({ onSuccess }: registerProps) {
   const [isSiretValid] = useState(false);
   const [professionId, setProfessionId] = useState('');
   const [customProfession, setCustomProfession] = useState('');
+  const [street, setStreet] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [city, setCity] = useState('');
+  const [label, setLabel] = useState('');
   const [formError, setFormError] = useState('');
   const role = 'PROFESSIONAL';
 
@@ -88,12 +92,19 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         siret: normalizedSiret,
         isSiretValid,
         professionId: finalProfessionId,
+        address: [{
+          label,
+          street,
+          postalCode,
+          city,
+        }],
       });
 
       if (!parsed.success) {
         setFormError(parsed.error.issues[0].message);
         return;
       }
+      console.log('Parsed Professional:', parsed)
 
       registerPro.mutate(parsed.data);
     } catch (error: unknown) {
@@ -111,7 +122,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
   const selectedProfession = professions.find(p => p.id === professionId);
 
   return (
-    <form aria-label="form" onSubmit={handleSubmit} className="max-w-lg mx-auto">
+    <form aria-label="form" onSubmit={(e) => void handleSubmit(e)} className="max-w-lg mx-auto">
       {formError && <p aria-live="polite" className="text-red-600">{formError}</p>}
 
       {/* Name */}
@@ -124,7 +135,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="firstName"
             type="text"
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => { setFirstName(e.target.value); }}
             disabled={registerPro.isPending}
             required
             placeholder="Jean"
@@ -140,7 +151,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="lastName"
             type="text"
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => { setLastName(e.target.value); }}
             disabled={registerPro.isPending}
             required
             placeholder="Martin"
@@ -159,7 +170,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
           id="siret"
           type="text"
           value={siret}
-          onChange={(e) => setSiret(e.target.value)}
+          onChange={(e) => { setSiret(e.target.value); }}
           disabled={registerPro.isPending}
           placeholder="12345678900013"
           inputMode="numeric"
@@ -177,7 +188,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
         <select
           value={professionId}
           id="professionSelect"
-          onChange={(e) => setProfessionId(e.target.value)}
+          onChange={(e) => { setProfessionId(e.target.value); }}
           disabled={registerPro.isPending}
           required
           className="min-w-0 max-w-[45ch] h-[40px] text-center text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
@@ -192,7 +203,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="customProfession"
             name="customProfession"
             value={customProfession}
-            onChange={(e) => setCustomProfession(e.target.value)}
+            onChange={(e) => { setCustomProfession(e.target.value); }}
             disabled={registerPro.isPending}
             placeholder="Ex: Chiropracteur.ice"
             autoComplete="organization-title"
@@ -212,7 +223,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
               type="radio"
               name="isMobile"
               checked={isMobile}
-              onChange={() => setIsMobile(true)}
+              onChange={() => { setIsMobile(true); }}
               disabled={registerPro.isPending}
               required
             /> Oui
@@ -222,7 +233,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
               type="radio"
               name="isMobile"
               checked={!isMobile}
-              onChange={() => setIsMobile(false)}
+              onChange={() => { setIsMobile(false); }}
               disabled={registerPro.isPending}
               required
             /> Non
@@ -239,11 +250,74 @@ export default function RegisterPro({ onSuccess }: registerProps) {
           max={200}
           step={1}
           value={interventionRadius}
-          onChange={(e) => setInterventionRadius(Number(e.target.value))}
+          onChange={(e) => { setInterventionRadius(Number(e.target.value)); }}
           disabled={registerPro.isPending}
           required
           className="w-full"
         />
+      </div>
+
+      {/* Adresse */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 gap-y-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="label" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            label :
+          </label>
+          <input
+            id="label"
+            type="text"
+            value={label}
+            onChange={(e) => { setLabel(e.target.value); }}
+            disabled={registerPro.isPending}
+            placeholder="Domicile"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="street" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Rue :
+          </label>
+          <input
+            id="street"
+            type="text"
+            value={street}
+            onChange={(e) => { setStreet(e.target.value); }}
+            disabled={registerPro.isPending}
+            placeholder="1 rue des lilas"
+            autoComplete="address"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="postalCode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Code Postal :
+          </label>
+          <input
+            id="postalCode"
+            type="text"
+            value={postalCode}
+            onChange={(e) => { setPostalCode(e.target.value); }}
+            disabled={registerPro.isPending}
+            placeholder="74200"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="city" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Ville :
+          </label>
+          <input
+            id="city"
+            type="text"
+            value={city}
+            onChange={(e) => { setCity(e.target.value); }}
+            disabled={registerPro.isPending}
+            required
+            placeholder="Thonon-les-bains"
+            autoComplete="city"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
       </div>
 
       {/* Contact & Password */}
@@ -256,7 +330,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); }}
             disabled={registerPro.isPending}
             required
             placeholder="example@mail.com"
@@ -272,7 +346,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="tel"
             type="tel"
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            onChange={(e) => { setPhoneNumber(e.target.value); }}
             disabled={registerPro.isPending}
             pattern="^0\d{9}$"
             placeholder="0123456789"
@@ -292,7 +366,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); }}
             disabled={registerPro.isPending}
             required
             autoComplete="new-password"
@@ -307,7 +381,7 @@ export default function RegisterPro({ onSuccess }: registerProps) {
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => { setConfirmPassword(e.target.value); }}
             disabled={registerPro.isPending}
             required
             autoComplete="new-password"

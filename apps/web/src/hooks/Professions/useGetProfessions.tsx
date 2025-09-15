@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { z, ZodError } from 'zod';
 
 import {
@@ -24,7 +24,7 @@ export function useGetProfessions() {
         throw new Error('Impossible de récupérer les professions');
       }
 
-      const data = await res.json();
+      const data: unknown = await res.json();
       const parsedData = z.array(professionResponseSchema).parse(data);
 
       setProfessions(parsedData);
@@ -46,7 +46,7 @@ export function useGetProfessions() {
   }, []);
 
   useEffect(() => {
-    fetchProfessions();
+    void fetchProfessions();
   }, [fetchProfessions]);
 
   return { professions, isLoading, error, refetch: fetchProfessions };

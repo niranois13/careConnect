@@ -1,6 +1,7 @@
-import type { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../src/jwtHandler.ts';
+import type { NextFunction,Request, Response } from 'express';
+
 import type { jwtPayload } from '../../../packages/types/src/jwt.ts';
+import { verifyToken } from '../src/jwtHandler.ts';
 
 export interface AuthRequest extends Request {
   user?: jwtPayload;

@@ -1,19 +1,19 @@
-import { useGetCareSeekerById } from "../../hooks/CareSeekers/useGetCareSeekersById.tsx"
 import {
-  faUser,
   faAddressBook,
   faAt,
-  faPhone,
-  faPenToSquare,
-  faLocationDot,
-  faClockRotateLeft,
+  faCircleInfo,
   faCircleUser,
-  faCircleInfo
+  faClockRotateLeft,
+  faPenToSquare,
+  faPhone,
+  faUser
 } from "@fortawesome/free-solid-svg-icons";
-import PanelCard from "../Cards/Panel/PanelCards.tsx";
-import PanelCardButtons from "../Cards/Panel/PanelButtons.tsx";
-import PanelCardField from "../Cards/Panel/PanelCardsFields.tsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { useGetCareSeekerById } from "../../hooks/CareSeekers/useGetCareSeekersById.tsx"
+import PanelCardButtons from "../Cards/Panel/PanelButtons.tsx";
+import PanelCard from "../Cards/Panel/PanelCards.tsx";
+import PanelCardField from "../Cards/Panel/PanelCardsFields.tsx";
 
 interface CareSeekerPanelProps {
   userId: string
@@ -58,16 +58,16 @@ export default function CareSeekerPanel({ userId }: CareSeekerPanelProps) {
               labelIcon={<FontAwesomeIcon icon={faPhone} size="1x" className="text-purple-700" />}
               mainText={careSeeker.user.phoneNumber?.toString() ?? "N/A"}
             />
-            <PanelCardField
+            {/* <PanelCardField
               labelIcon={<FontAwesomeIcon icon={faLocationDot} size="1x" className="text-purple-700" />}
-              mainText={careSeeker.adress?.toString() ?? "N/A"}
-            />
+              mainText={careSeeker.address?.toString() ?? "N/A"}
+            /> */}
             <PanelCardButtons
               buttons={[
                 {
                   icon: <FontAwesomeIcon icon={faPenToSquare} size="2x" className="text-white" />,
                   label: "Modifier",
-                  onClick: () => console.log("Modifier profil")
+                  onClick: () => { console.log("Modifier profil"); }
                 }
               ]}
             />
@@ -91,7 +91,7 @@ export default function CareSeekerPanel({ userId }: CareSeekerPanelProps) {
                 {
                   icon: <FontAwesomeIcon icon={faPenToSquare} size="2x" className="text-white" />,
                   label: "Voir plus",
-                  onClick: () => console.log("Modifier profil")
+                  onClick: () => { console.log("Modifier profil"); }
                 }
               ]}
             />

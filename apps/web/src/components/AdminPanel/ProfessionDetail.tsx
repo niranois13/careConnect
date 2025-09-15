@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { useDeleteProfession } from "../../hooks/Professions/useDeleteProfessions.tsx";
 import { useGetProfessionById } from "../../hooks/Professions/useGetProfessionsById.tsx";
 import { useUpdateProfession } from "../../hooks/Professions/useUpdateProfession.tsx";
-import { useDeleteProfession } from "../../hooks/Professions/useDeleteProfessions.tsx";
 
 interface AdminProfessionModalProps {
   professionId: string;
@@ -44,8 +45,6 @@ export default function ProfessionDetail({ professionId, endpoint, onSuccess }: 
     e.preventDefault();
 
     const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    if (!submitter)
-      return;
 
     const action = submitter.name;
     if (action == 'update')

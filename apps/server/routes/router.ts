@@ -1,14 +1,9 @@
 import type { Express, Request, Response } from 'express';
 
 import {
-  adminCreateAddresses,
   adminGetAddresses,
   adminGetAddressesById,
-  adminUpdateAddressesById,
-  createAddresses,
-  deleteAddressesById,
   getAddressesById,
-  updateAdresses
 } from '../controllers/addressControler.ts';
 import { adminDeleteUserById, createAdmin } from '../controllers/adminController.ts';
 import { loginUser, logout } from '../controllers/authController.ts';
@@ -22,6 +17,7 @@ import {
   proCreateProfessions,
   updateProfessions,
 } from '../controllers/professionController.ts';
+import { searchUsers } from '../controllers/searchController.ts';
 import {
   createCareSeeker,
   createProfessional,
@@ -46,6 +42,7 @@ const asyncHandler = (fn: (req: Request, res: Response) => Promise<unknown>) =>
 export default function registerRoutes(app: Express) {
   /* UTILS */
   app.get('/api/health', requireRole('ADMIN'), getHealth);
+  app.get('/search', asyncHandler(searchUsers));
 
   /* AUTH */
   app.post('/api/login', asyncHandler(loginUser));
@@ -66,14 +63,12 @@ export default function registerRoutes(app: Express) {
   /* PROFESSIONS */
   app.get('/api/professions', asyncHandler(getProfessions));
   app.get('/api/professions/approved', asyncHandler(getApprovedProfessions));
-  app.post('/api/professions', requireRole('PROFESSIONAL', 'ADMIN'), asyncHandler(proCreateProfessions));
+  app.post('/api/professions', asyncHandler(proCreateProfessions));
   app.get('/api/professions/:id', requireRole('PROFESSIONAL'), asyncHandler(getProfessionsById));
   app.put('/api/professions/:id', requireRole('PROFESSIONAL'), asyncHandler(updateProfessions));
 
   /* ADDRESS */
-  app.post('/api/address', requireAuth, asyncHandler(createAddresses));
   app.get('/api/address/:id', requireSelf(), asyncHandler(getAddressesById));
-  app.put('/api/address/:id', requireSelf(), asyncHandler(updateAdresses));
   app.delete('/api/address/:id', requireSelf(), asyncHandler(deleteProfessions));
 
   /* USERS */
@@ -83,7 +78,6 @@ export default function registerRoutes(app: Express) {
 
   /* PROFESSIONAL */
   app.post('/api/professional', asyncHandler(createProfessional));
-
   app.put('/api/professional/:id', requireSelf(), asyncHandler(updateProfessional))
 
   /* ADMIN */
@@ -108,9 +102,6 @@ export default function registerRoutes(app: Express) {
   app.delete('/api/admin/professions/:id', requireRole('ADMIN'), asyncHandler(deleteProfessions));
 
   /* ADMIN ADDRESS */
-  app.post('/api/admin', requireRole('ADMIN'), asyncHandler(adminCreateAddresses));
   app.get('/api/admin/address', requireRole('ADMIN'), asyncHandler(adminGetAddresses));
   app.get('/api/admin/address/:id', requireRole('ADMIN'), asyncHandler(adminGetAddressesById));
-  app.put('/api/admin/address/:id', requireRole('ADMIN'), asyncHandler(adminUpdateAddressesById));
-  app.delete('/api/admin/address/:id', requireRole('ADMIN'), asyncHandler(deleteAddressesById));
 }

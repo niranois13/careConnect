@@ -1,21 +1,17 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { z } from 'zod';
+import { adminAddressCreateSchema, addressResponseSchema } from "../../../../packages/schemas/src/addresses.schemas.ts";
 
-import {
-  approvedProfessionResponseSchema,
-  professionCreateSchema
-} from "../../../../../packages/schemas/src/profession.schemas.ts";
+type AddressPayload = z.infer<typeof adminAddressCreateSchema>
+type AddressResponse = z.infer<typeof addressResponseSchema>
 
-type ProfessionPayload = z.infer<typeof professionCreateSchema>
-type ProfessionResponse = z.infer<typeof approvedProfessionResponseSchema>
-
-async function createProfession(
-  payload: ProfessionPayload,
+async function createAddress(
+  payload: AddressPayload,
   endpoint: string,
-): Promise<ProfessionResponse> {
+): Promise<AddressResponse> {
   try {
-    const parsedPayload = professionCreateSchema.parse(payload);
+    const parsedPayload = adminAddressCreateSchema.parse(payload);
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -24,7 +20,7 @@ async function createProfession(
     });
 
     const json: unknown = await res.json();
-    const parsedResponse = approvedProfessionResponseSchema.safeParse(json);
+    const parsedResponse = addressResponseSchema.safeParse(json);
     if (!parsedResponse.success) {
       console.error("Zod validation failed:", parsedResponse.error);
       throw new Error;
@@ -39,15 +35,15 @@ async function createProfession(
   }
 }
 
-export function useCreateProfession(
-  endpoint: string = "/api/professions",
+export function useCreateAddress(
+  endpoint: string = "/api/admin/addresses",
   options?: { onSuccess?: () => void }
 ) {
-  return useMutation<ProfessionResponse, Error, ProfessionPayload>({
-    mutationFn: (payload: ProfessionPayload) =>
-      createProfession(payload, endpoint),
+  return useMutation<AddressResponse, Error, AddressPayload>({
+    mutationFn: (payload: AddressPayload) =>
+      createAddress(payload, endpoint),
     onSuccess: () => {
-      toast.success("Profession créée avec succès !");
+      toast.success("Adresse créée avec succès !");
       options?.onSuccess?.()
     },
     onError: (error: Error) => {

@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { z } from 'zod';
+
+import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 import { useGetProfessionalById } from "../../hooks/Professionals/useGetProfessionalsById.tsx";
 import { useUpdateProfessional } from "../../hooks/Professionals/useUpdateProfessional.tsx";
-import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
-import { z } from 'zod';
 import { useDeleteUser } from "../../hooks/Users/useDeleteUsers.tsx";
 
 interface AdminUserModalProps {
@@ -29,10 +30,30 @@ export default function ProfessionalProfile({ user, onSuccess }: AdminUserModalP
     isProfessionApproved: false,
     isMobile: false,
     interventionRadius: 0,
+    address: {
+      id: "",
+      userId: "",
+      createdAt: "",
+      updatedAt: "",
+      label: "",
+      street: "",
+      postalCode: "",
+      city: "",
+    }
   });
 
   useEffect(() => {
-    if (professional && professional.user && professional.profession) {
+    if (professional) {
+      const firstAddress = professional.user.address?.[0] ?? {
+        id: "",
+        createdAt: "",
+        updatedAt: "",
+        street: "",
+        postalCode: "",
+        city: "",
+        label: "Domicile",
+      };
+
       setFormData({
         firstName: professional.user.firstName,
         lastName: professional.user.lastName,
@@ -42,11 +63,21 @@ export default function ProfessionalProfile({ user, onSuccess }: AdminUserModalP
         siret: professional.siret ?? "",
         isSiretValid: professional.isSiretValid,
         professionId: professional.profession.id,
-        professionName: professional.profession.professionName ?? "",
+        professionName: professional.profession.professionName,
         customProfession: professional.profession.customProfession ?? "",
         isProfessionApproved: professional.profession.isProfessionApproved,
         isMobile: professional.isMobile,
         interventionRadius: professional.interventionRadius,
+        address: {
+          id: firstAddress.id,
+          userId: professional.user.id,
+          createdAt: firstAddress.createdAt ?? "",
+          updatedAt: firstAddress.updatedAt ?? "",
+          city: firstAddress.city,
+          label: firstAddress.label,
+          postalCode: firstAddress.postalCode ?? "",
+          street: firstAddress.street ?? "",
+        }
       });
     }
   }, [professional]);
@@ -69,8 +100,6 @@ export default function ProfessionalProfile({ user, onSuccess }: AdminUserModalP
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    if (!submitter)
-      return;
 
     const action = submitter.name;
     if (action == 'update')
@@ -167,6 +196,42 @@ export default function ProfessionalProfile({ user, onSuccess }: AdminUserModalP
                 className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
               />
             </div>
+
+
+            <div className='flex flex-wrap gap-2 mb-1 items-center'>
+              <label htmlFor="label" className="text-gray-900">Rue :</label>
+              <input
+                id='label'
+                name='label'
+                type='text'
+                value={formData.address.label}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+
+              <label htmlFor="street" className="text-gray-900">Rue :</label>
+              <input
+                id='street'
+                name='street'
+                type='text'
+                value={formData.address.street}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+            </div>
+
+            <div className='flex flex-wrap gap-2 mb-1 items-center'>
+              <label htmlFor="postalCode" className="text-gray-900">Code postal :</label>
+              <input
+                id='postalCode'
+                name='postalCode'
+                type='text'
+                value={formData.address.postalCode}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+            </div>
+
 
             <div className='flex flex-row flex-wrap items-center gap-4 mb-2'>
               <div className='flex flex-wrap gap-2 mb-1 items-center'>

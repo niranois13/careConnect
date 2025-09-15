@@ -1,8 +1,9 @@
 import { useState } from "react";
+
 import { useGetProfessions } from "../../hooks/Professions/useGetProfessions.tsx";
 import BaseModal from "../BaseModal/BaseModal.tsx";
-import ProfessionDetail from "./ProfessionDetail.tsx";
 import ProfessionCreate from "./ProfessionCreate.tsx";
+import ProfessionDetail from "./ProfessionDetail.tsx";
 
 export function ProfessionsList() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -59,21 +60,21 @@ export function ProfessionsList() {
         <div className="flex flex-wrap items-center gap-2">
           <button
             className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-purple-600 text-sm"
-            onClick={() => setModalOpen(true)}
+            onClick={() => { setModalOpen(true); }}
           >
             Ajouter une profession
           </button>
           <input
             type="text"
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={e => { setSearchTerm(e.target.value); }}
             placeholder="Rechercher..."
             className="border rounded-md px-2 py-1 text-sm flex-1 min-w-[150px]"
           />
 
           <select
             value={sortDirection}
-            onChange={e => setSortDirection(e.target.value as "asc" | "desc")}
+            onChange={e => { setSortDirection(e.target.value as "asc" | "desc"); }}
             className="border rounded-md px-2 py-1 text-sm"
           >
             <option value="desc">Descendant</option>
@@ -81,16 +82,16 @@ export function ProfessionsList() {
           </select>
 
           <button
-            onClick={refetch}
+            onClick={void refetch}
             className="bg-purple-600 text-white px-2 py-1 rounded-md hover:bg-purple-700 transition text-sm"
           >
             Rafraîchir
           </button>
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => { setExpanded(!expanded); }}
             className="bg-gray-200 px-2 py-1 rounded-md hover:bg-gray-300 transition text-sm"
           >
-            {expanded ? "Réduire" : `Voir tout (${filteredProfessions.length})`}
+            {expanded ? "Réduire" : `Voir tout (${filteredProfessions.length.toString()})`}
           </button>
         </div>
       </div>
@@ -115,7 +116,7 @@ export function ProfessionsList() {
                   <th
                     key={label}
                     className={`border px-2 py-1 ${key ? "cursor-pointer select-none" : ""}`}
-                    onClick={key ? () => handleSort(key as keyof typeof professions[0]) : undefined}
+                    onClick={key ? () => { handleSort(key as keyof typeof professions[0]); } : undefined}
                   >
                     {label} {sortColumn === key ? (sortDirection === "asc" ? "↑" : "↓") : ""}
                   </th>
@@ -134,7 +135,7 @@ export function ProfessionsList() {
                   <td className="border px-2 py-1">
                     <button
                       className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-purple-600 text-sm"
-                      onClick={() => setSelectedProfessionId(p.id)}
+                      onClick={() => { setSelectedProfessionId(p.id); }}
                     >
                       Voir / Éditer
                     </button>
@@ -148,24 +149,24 @@ export function ProfessionsList() {
 
       {/* Create new Profession Modal*/}
       {modalOpen && (
-        <BaseModal onClose={() => setModalOpen(false)}>
+        <BaseModal onClose={() => { setModalOpen(false); }}>
           <ProfessionCreate
             onSuccess={() => {
-              refetch()
-              setTimeout(() => setModalOpen(false), 500);
+              void refetch()
+              setTimeout(() => { setModalOpen(false); }, 500);
             }}
           />
         </BaseModal>
       )}
       {/* See/Update/Delete Profession Modal */}
       {selectedProfessionId && (
-        <BaseModal onClose={() => setSelectedProfessionId(null)}>
+        <BaseModal onClose={() => { setSelectedProfessionId(null); }}>
           <ProfessionDetail
             professionId={selectedProfessionId}
             endpoint={'/api/admin/professions'}
             onSuccess={() => {
-              refetch()
-              setTimeout(() => setSelectedProfessionId(null), 500);
+              void refetch()
+              setTimeout(() => { setSelectedProfessionId(null); }, 500);
             }}
           />
         </BaseModal>

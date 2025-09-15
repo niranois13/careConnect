@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
-
 import { z } from "zod";
+
 import {
   careSeekerCreateSchema,
   careSeekerResponseSchema
@@ -21,9 +21,10 @@ async function registerCareSeeker(data: RegisterData): Promise<CareSeekerRespons
       body: JSON.stringify(parsedData),
     });
 
-    const json = await res.json();
+    const json: unknown = await res.json();
     const parsedResponse = careSeekerResponseSchema.safeParse(json);
     if (!parsedResponse.success) {
+      console.error(parsedResponse.error.issues);
       throw new Error("Data validation error while fetching users");
     }
 

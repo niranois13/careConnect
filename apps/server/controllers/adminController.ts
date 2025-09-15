@@ -46,11 +46,26 @@ export async function adminDeleteUserById(req: Request, res: Response) {
     }
 
     const deletedUser = await prisma.user.delete({
-      where: { id: req.params.id }
+      where: { id: req.params.id },
+      select: {
+        email: true,
+        emailVerified: true,
+        lastName: true,
+        firstName: true,
+        phoneNumber: true,
+        role: true,
+        address: true
+      }
     })
 
-    console.log('deletedUser is...:', deletedUser);
-    const parsedUser = baseUserSchema.safeParse(deletedUser);
+    const parsedUser = baseUserSchema.safeParse({
+      ...deletedUser,
+      address: deletedUser.address.map(addr => ({
+        ...addr,
+        createdAt: addr.createdAt.toISOString(),
+        updatedAt: addr.updatedAt.toISOString(),
+      }))
+    });
     if (!parsedUser.success) {
       throw new Error('Validation error while deleting User')
     }

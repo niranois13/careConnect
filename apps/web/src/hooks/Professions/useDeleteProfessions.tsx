@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+
 import {
   professionResponseSchema
 } from "../../../../../packages/schemas/src/profession.schemas.ts";
@@ -19,7 +20,7 @@ export async function deleteProfession(professionId: string): Promise<DeleteProf
       throw new Error("Impossible de supprimer la profession");
     }
 
-    const json = await res.json();
+    const json: unknown = await res.json();
     const parsed = professionResponseSchema.safeParse(json);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);

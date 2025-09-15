@@ -1,5 +1,5 @@
-import { UserList } from "./UserList.tsx";
 import { ProfessionsList } from './ProfessionsList.tsx'
+import { UserList } from "./UserList.tsx";
 
 export default function AdminPanel() {
   return (

@@ -1,12 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { z } from 'zod';
+
+import { careSeekerResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
 import { useGetCareSeekerById } from "../../hooks/CareSeekers/useGetCareSeekersById.tsx";
 import { useUpdateCareSeeker } from "../../hooks/CareSeekers/useUpdateCareSeeker.tsx";
-import { userResponseSchema } from "../../../../../packages/schemas/src/users.schemas.ts";
-import { z } from 'zod';
 import { useDeleteUser } from "../../hooks/Users/useDeleteUsers.tsx";
 
 interface AdminUserModalProps {
-  user: z.infer<typeof userResponseSchema>;
+  user: z.infer<typeof careSeekerResponseSchema>;
   onSuccess?: () => void;
 }
 
@@ -16,31 +17,79 @@ export default function CareSeekerProfile({ user, onSuccess }: AdminUserModalPro
   const deleteCareSeeker = useDeleteUser(user.id, { onSuccess });
 
   const [formData, setFormData] = useState({
+    createdAt: "",
+    updatedAt: "",
+    role: "CARESEEKER" as const,
+    id: "",
     firstName: "",
     lastName: "",
     email: "",
     emailVerified: false,
     phoneNumber: "",
     isHelper: false,
+    address: {
+      id: "",
+      userId: "",
+      createdAt: "",
+      updatedAt: "",
+      label: "",
+      street: "",
+      postalCode: "",
+      city: "",
+    }
   });
 
   useEffect(() => {
-    if (careSeeker && careSeeker.user) {
+    if (careSeeker) {
+      const firstAddress = careSeeker.user.address?.[0] ?? {
+        id: "",
+        createdAt: "",
+        updatedAt: "",
+        street: "",
+        postalCode: "",
+        city: "",
+        label: "Domicile",
+      };
+
       setFormData({
+        role: "CARESEEKER" as const,
+        id: careSeeker.user.id,
+        createdAt: careSeeker.user.createdAt,
+        updatedAt: careSeeker.user.updatedAt,
         firstName: careSeeker.user.firstName,
         lastName: careSeeker.user.lastName,
         email: careSeeker.user.email,
         emailVerified: careSeeker.user.emailVerified,
         phoneNumber: careSeeker.user.phoneNumber ?? "",
         isHelper: careSeeker.isHelper,
+        address: {
+          id: firstAddress.id,
+          userId: careSeeker.user.id,
+          createdAt: firstAddress.createdAt ?? "",
+          updatedAt: firstAddress.updatedAt ?? "",
+          city: firstAddress.city,
+          label: firstAddress.label,
+          postalCode: firstAddress.postalCode ?? "",
+          street: firstAddress.street ?? "",
+        }
       });
     }
   }, [careSeeker]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    if (["label", "street", "postalCode", "city"].includes(name)) {
+      setFormData((prev) => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+  }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, checked } = e.target;
@@ -50,12 +99,15 @@ export default function CareSeekerProfile({ user, onSuccess }: AdminUserModalPro
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-    if (!submitter)
-      return;
+
+    const payload = {
+      ...formData,
+      address: [formData.address],
+    }
 
     const action = submitter.name;
     if (action == 'update')
-      updateCareSeeker.mutate(formData);
+      updateCareSeeker.mutate(payload);
     if (action == 'delete')
       deleteCareSeeker.mutate(user.id);
   };
@@ -111,6 +163,52 @@ export default function CareSeekerProfile({ user, onSuccess }: AdminUserModalPro
                   className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
                 />
               </div>
+            </div>
+
+            <div className='flex flex-wrap gap-2 mb-1 items-center'>
+              <label htmlFor="label" className="text-gray-900">Rue :</label>
+              <input
+                id='label'
+                name='label'
+                type='text'
+                value={formData.address.label}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+
+              <label htmlFor="street" className="text-gray-900">Rue :</label>
+              <input
+                id='street'
+                name='street'
+                type='text'
+                value={formData.address.street}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+            </div>
+
+            <div className='flex flex-wrap gap-2 mb-1 items-center'>
+              <label htmlFor="postalCode" className="text-gray-900">Code postal :</label>
+              <input
+                id='postalCode'
+                name='postalCode'
+                type='text'
+                value={formData.address.postalCode}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
+            </div>
+
+            <div className='flex flex-wrap gap-2 mb-1 items-center'>
+              <label htmlFor="city" className="text-gray-900">Ville :</label>
+              <input
+                id='city'
+                name='city'
+                type='text'
+                value={formData.address.city}
+                onChange={handleInputChange}
+                className='font-medium text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 pl-3 py-1'
+              />
             </div>
 
             <div className='flex flex-row flex-wrap items-center gap-4 mb-2'>

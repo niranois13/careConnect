@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z, ZodError } from "zod";
+
 import {
   userResponseSchema,
 } from "../../../../../packages/schemas/src/users.schemas.ts";
@@ -22,19 +23,24 @@ export function useGetUsers(sortOrder: "asc" | "desc" = "desc") {
       });
 
       if (!res.ok) {
-        throw new Error(`Erreur HTTP ${res.status}`);
+        throw new Error(`Error while fetching users`);
       }
 
-      const json = await res.json();
-      const parsedData = z.array(userResponseSchema).parse(json);
+      const json: unknown = await res.json();
+      const parsedData = z.array(userResponseSchema).safeParse(json);
+      if (!parsedData.success) {
+        console.error("Zod validation errors:", parsedData.error.format()); // version lisible par champ
+        console.error("Raw error details:", parsedData.error.errors); // version brute
+        throw new Error('Data validation error while fetching users')
+      }
 
-      parsedData.sort((a, b) =>
+      parsedData.data.sort((a, b) =>
         sortOrder === "desc"
-          ? b.createdAt.getTime() - a.createdAt.getTime()
-          : a.createdAt.getTime() - b.createdAt.getTime()
+          ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          : new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       );
 
-      setUsers(parsedData);
+      setUsers(parsedData.data);
       setError(null);
 
     } catch (error: unknown) {
@@ -54,7 +60,7 @@ export function useGetUsers(sortOrder: "asc" | "desc" = "desc") {
   }, [sortOrder]);
 
   useEffect(() => {
-    fetchUsers();
+    void fetchUsers();
   }, [fetchUsers]);
 
   return { users, isLoading, error, refetch: fetchUsers };

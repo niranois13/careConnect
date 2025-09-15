@@ -1,5 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { z, ZodError } from 'zod';
+
 import {
   professionalResponseSchema,
   userResponseSchema
@@ -24,11 +25,10 @@ export function useGetProfessionals(sortOrder: "asc" | "desc" = "desc") {
       });
 
       if (!res.ok) {
-        throw new Error(`Erreur HTTP ${res.status}`);
+        throw new Error('Server error while fetching users');
       }
 
-      const json = await res.json();
-      console.log('Users recevied:', json)
+      const json: unknown = await res.json();
       const parsedData = z.array(professionalResponseSchema).parse(json);
 
       parsedData.sort((a, b) =>
@@ -57,7 +57,7 @@ export function useGetProfessionals(sortOrder: "asc" | "desc" = "desc") {
   }, [sortOrder]);
 
   useEffect(() => {
-    fetchUsers();
+    void fetchUsers();
   }, [fetchUsers]);
 
   return { users, isLoading, error, refetch: fetchUsers };

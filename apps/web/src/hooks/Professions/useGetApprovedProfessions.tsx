@@ -1,5 +1,6 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { z, ZodError } from "zod";
+
 import { approvedProfessionResponseSchema } from "../../../../../packages/schemas/src/profession.schemas.ts";
 
 type ApprovedProfessionResponse = z.infer<typeof approvedProfessionResponseSchema>;
@@ -22,7 +23,7 @@ export function useGetApprovedProfessions() {
         if (!res.ok) {
           throw new Error('Impossible de récupérer les professions');
         }
-        const data = await res.json();
+        const data: unknown = await res.json();
         const parsedData = z.array(approvedProfessionResponseSchema).parse(data);
 
         parsedData.sort((a, b) => {
@@ -51,7 +52,7 @@ export function useGetApprovedProfessions() {
       }
     };
 
-    fetchProfessions();
+    void fetchProfessions();
   }, []);
 
   return { professions, isLoading, error };

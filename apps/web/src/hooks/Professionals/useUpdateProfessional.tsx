@@ -12,6 +12,7 @@ type UpdateProfessionalResponse = z.infer<typeof adminProfessionalRelationsRespo
 
 async function updateProfessional(userId: string, data: UpdateProfessionalData): Promise<UpdateProfessionalResponse> {
   try {
+    console.log('Professional to update:', data)
     const parsedData = professionalUpdateSchema.parse(data);
 
     const res = await fetch(`/api/admin/professional/${userId}`, {
@@ -25,7 +26,8 @@ async function updateProfessional(userId: string, data: UpdateProfessionalData):
       throw new Error('Erreur dans la mise à jour du professionel.');
     }
 
-    const json = await res.json();
+    const json: unknown = await res.json();
+    console.log('Updated professional:', json)
     const parsed = adminProfessionalRelationsResponseSchema.safeParse(json);
     if (!parsed.success)
       throw (parsed.error);

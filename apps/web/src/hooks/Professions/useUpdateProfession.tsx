@@ -28,7 +28,7 @@ export async function updateProfession(
       throw new Error('Erreur dans la mise à jour du professionel.');
     }
 
-    const json = await res.json();
+    const json: unknown = await res.json();
     const parsed = professionUpdateResponseSchema.safeParse(json);
     if (!parsed.success) {
       console.error("Zod validation failed:", parsed.error);

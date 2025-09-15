@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useGetUsers } from "../../hooks/Users/useGetUsers.tsx";
-import RegisterUser from "../../features/Registration/UserRegister.tsx";
-import BaseModal from "../BaseModal/BaseModal.tsx";
+
 import RegisterPro from "../../features/Registration/ProRegister.tsx";
+import RegisterUser from "../../features/Registration/UserRegister.tsx";
+import { useGetUsers } from "../../hooks/Users/useGetUsers.tsx";
+import BaseModal from "../BaseModal/BaseModal.tsx";
 import CareSeekerProfile from "./CareSeekerProfile.tsx";
 import ProfessionalProfile from "./ProfessionalProfile.tsx";
 
@@ -62,39 +63,39 @@ export function UserList() {
           <input
             type="text"
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={e => { setSearchTerm(e.target.value); }}
             placeholder="Rechercher..."
             className="border rounded-md px-2 py-1 text-sm flex-1 min-w-[150px]"
           />
 
           <button
             className='px-z py-1 rounded-md text-sm border bg-purple-600 text-white'
-            onClick={() => setCreateCareSeekerModalOpen(true)}
+            onClick={() => { setCreateCareSeekerModalOpen(true); }}
           >
             Ajouter un CareSeeker
           </button>
           <button
             className='px-z py-1 rounded-md text-sm border bg-purple-600 text-white'
-            onClick={() => setCreateProfessionalModalOpen(true)}
+            onClick={() => { setCreateProfessionalModalOpen(true); }}
           >
             Ajouter un Professionel
           </button>
 
           <button className={`px-2 py-1 rounded-md text-sm border ${filterRole === "ADMIN" ? "bg-purple-600 text-white" : "bg-white"}`}
-            onClick={() => setFilterRole(filterRole === "ADMIN" ? null : "ADMIN")}>Admin</button>
+            onClick={() => { setFilterRole(filterRole === "ADMIN" ? null : "ADMIN"); }}>Admin</button>
           <button className={`px-2 py-1 rounded-md text-sm border ${filterRole === "CARESEEKER" ? "bg-purple-600 text-white" : "bg-white"}`}
-            onClick={() => setFilterRole(filterRole === "CARESEEKER" ? null : "CARESEEKER")}>CareSeeker</button>
+            onClick={() => { setFilterRole(filterRole === "CARESEEKER" ? null : "CARESEEKER"); }}>CareSeeker</button>
           <button className={`px-2 py-1 rounded-md text-sm border ${filterRole === "PROFESSIONAL" ? "bg-purple-600 text-white" : "bg-white"}`}
-            onClick={() => setFilterRole(filterRole === "PROFESSIONAL" ? null : "PROFESSIONAL")}>Professional</button>
+            onClick={() => { setFilterRole(filterRole === "PROFESSIONAL" ? null : "PROFESSIONAL"); }}>Professional</button>
 
-          <select value={sortDirection} onChange={e => setSortDirection(e.target.value as "asc" | "desc")} className="border rounded-md px-2 py-1 text-sm">
+          <select value={sortDirection} onChange={e => { setSortDirection(e.target.value as "asc" | "desc"); }} className="border rounded-md px-2 py-1 text-sm">
             <option value="desc">Plus récents</option>
             <option value="asc">Plus anciens</option>
           </select>
 
-          <button onClick={refetch} className="bg-purple-600 text-white px-2 py-1 rounded-md hover:bg-purple-700 transition text-sm">Rafraîchir</button>
-          <button onClick={() => setExpanded(!expanded)} className="bg-gray-200 px-2 py-1 rounded-md hover:bg-gray-300 transition text-sm">
-            {expanded ? "Réduire" : `Voir tout (${filteredUsers.length})`}
+          <button onClick={void refetch} className="bg-purple-600 text-white px-2 py-1 rounded-md hover:bg-purple-700 transition text-sm">Rafraîchir</button>
+          <button onClick={() => { setExpanded(!expanded); }} className="bg-gray-200 px-2 py-1 rounded-md hover:bg-gray-300 transition text-sm">
+            {expanded ? "Réduire" : `Voir tout (${filteredUsers.length.toString()})`}
           </button>
         </div>
       </div>
@@ -121,7 +122,7 @@ export function UserList() {
                   <th
                     key={label}
                     className={`border px-2 py-1 ${key ? "cursor-pointer select-none" : ""}`}
-                    onClick={key ? () => handleSort(key as keyof typeof users[0]) : undefined}
+                    onClick={key ? () => { handleSort(key as keyof typeof users[0]); } : undefined}
                   >
                     {label} {sortColumn === key ? (sortDirection === "asc" ? "↑" : "↓") : ""}
                   </th>
@@ -140,7 +141,7 @@ export function UserList() {
                   <td className="border px-2 py-1">
                     <button
                       className="bg-purple-500 text-white px-2 py-1 rounded-md hover:bg-purple-600 text-sm"
-                      onClick={() => setSelectedUser(u)}
+                      onClick={() => { setSelectedUser(u); }}
                     >
                       Voir / Éditer
                     </button>
@@ -149,57 +150,64 @@ export function UserList() {
               ))}
             </tbody>
           </table>
-        </div>
-      )}
+        </div >
+      )
+      }
 
-      {createCareSeekerModalOpen && (
-        <BaseModal onClose={() => setCreateCareSeekerModalOpen(false)}>
-          <RegisterUser
-            onSuccess={() => {
-              refetch()
-              setTimeout(() => setCreateCareSeekerModalOpen(false), 500);
-            }}
-          />
-        </BaseModal>
-      )}
+      {
+        createCareSeekerModalOpen && (
+          <BaseModal onClose={() => { setCreateCareSeekerModalOpen(false); }}>
+            <RegisterUser
+              onSuccess={() => {
+                void refetch()
+                setTimeout(() => { setCreateCareSeekerModalOpen(false); }, 500);
+              }}
+            />
+          </BaseModal>
+        )
+      }
 
-      {createProfessionalModalOpen && (
-        <BaseModal onClose={() => setCreateProfessionalModalOpen(false)}>
-          <RegisterPro
-            onSuccess={() => {
-              refetch()
-              setTimeout(() => setCreateProfessionalModalOpen(false))
-            }}
-          />
-        </BaseModal>
-      )}
+      {
+        createProfessionalModalOpen && (
+          <BaseModal onClose={() => { setCreateProfessionalModalOpen(false); }}>
+            <RegisterPro
+              onSuccess={() => {
+                void refetch()
+                setTimeout(() => { setCreateProfessionalModalOpen(false); })
+              }}
+            />
+          </BaseModal>
+        )
+      }
 
       {/* Modal */}
-      {selectedUser && (
-        <BaseModal onClose={() => setSelectedUser(null)}>
-          {
-            selectedUser.role === "CARESEEKER" &&
-            <CareSeekerProfile
-              user={selectedUser}
-              onSuccess={() => {
-                refetch()
-                setSelectedUser(null)
-              }}
-            />
-          }
+      {
+        selectedUser && (
+          <BaseModal onClose={() => { setSelectedUser(null); }}>
+            {
+              selectedUser.role === "CARESEEKER" &&
+              <CareSeekerProfile
+                user={selectedUser}
+                onSuccess={() => {
+                  void refetch()
+                  setSelectedUser(null)
+                }}
+              />
+            }
 
-          {
-            selectedUser.role === "PROFESSIONAL" &&
-            <ProfessionalProfile
-              user={selectedUser}
-              onSuccess={() => {
-                refetch()
-                setSelectedUser(null)
-              }}
-            />
-          }
-        </BaseModal>
-      )}
-    </div>
+            {
+              selectedUser.role === "PROFESSIONAL" &&
+              <ProfessionalProfile
+                user={selectedUser}
+                onSuccess={() => {
+                  void refetch()
+                  setSelectedUser(null)
+                }}
+              />
+            }
+          </BaseModal>
+        )
+      }
+    </div >
   )
 }

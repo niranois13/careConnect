@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useRegisterCareSeeker } from '../../hooks/CareSeekers/useRegisterCareSeekers.tsx';
 
 import { careSeekerCreateSchema } from '../../../../../packages/schemas/src/users.schemas.ts';
+import { useRegisterCareSeeker } from '../../hooks/CareSeekers/useRegisterCareSeekers.tsx';
 import PasswordRules from './PasswordRules.tsx';
 
 type registerProps = {
@@ -11,7 +11,7 @@ type registerProps = {
 export default function RegisterUser({ onSuccess }: registerProps) {
   const registerCareSeeker = useRegisterCareSeeker({
     onSuccess,
-    onError: (error) => setFormError(error.message),
+    onError: (error) => { setFormError(error.message); },
   });
 
   const [email, setEmail] = useState('');
@@ -21,6 +21,10 @@ export default function RegisterUser({ onSuccess }: registerProps) {
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isHelper, setIsHelper] = useState(false);
+  const [label, setLabel] = useState('');
+  const [street, setStreet] = useState('');
+  const [postalCode, setPostalCode] = useState('');
+  const [city, setCity] = useState('');
   const role = 'CARESEEKER';
   const [formError, setFormError] = useState('');
 
@@ -48,9 +52,20 @@ export default function RegisterUser({ onSuccess }: registerProps) {
         lastName,
         phoneNumber: normalizedPhoneNumber,
         role,
-        isHelper
+        isHelper,
+        label,
+        street,
+        postalCode,
+        city,
+        address: [{
+          label,
+          street,
+          postalCode,
+          city,
+        }],
       });
       if (!parsed.success) {
+        console.error(parsed.error.issues[0])
         setFormError(parsed.error.issues[0].message);
         return;
       }
@@ -81,7 +96,7 @@ export default function RegisterUser({ onSuccess }: registerProps) {
             id="firstName"
             type="text"
             value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            onChange={(e) => { setFirstName(e.target.value); }}
             disabled={registerCareSeeker.isPending}
             required
             placeholder="Jean"
@@ -97,7 +112,7 @@ export default function RegisterUser({ onSuccess }: registerProps) {
             id="lastName"
             type="text"
             value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
+            onChange={(e) => { setLastName(e.target.value); }}
             disabled={registerCareSeeker.isPending}
             required
             placeholder="Martin"
@@ -115,7 +130,7 @@ export default function RegisterUser({ onSuccess }: registerProps) {
           id="isHelper"
           type="checkbox"
           checked={isHelper}
-          onChange={(e) => setIsHelper(e.target.checked)}
+          onChange={(e) => { setIsHelper(e.target.checked); }}
           disabled={registerCareSeeker.isPending}
         />
       </div>
@@ -130,7 +145,7 @@ export default function RegisterUser({ onSuccess }: registerProps) {
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); }}
             disabled={registerCareSeeker.isPending}
             required
             placeholder="example@mail.com"
@@ -146,11 +161,74 @@ export default function RegisterUser({ onSuccess }: registerProps) {
             id="tel"
             type="tel"
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            onChange={(e) => { setPhoneNumber(e.target.value); }}
             disabled={registerCareSeeker.isPending}
             pattern="^0\d{9}$"
             placeholder="0123456789"
             autoComplete="tel"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+      </div>
+
+      {/* Adresse */}
+      <div className="flex flex-row flex-wrap justify-center gap-x-2 gap-y-2 mb-5">
+        <div className="flex-1 min-w-[150px]">
+          <div className="flex-1 min-w-[150px]">
+            <label htmlFor="label" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              label :
+            </label>
+            <input
+              id="label"
+              type="text"
+              value={label}
+              onChange={(e) => { setLabel(e.target.value); }}
+              disabled={registerCareSeeker.isPending}
+              placeholder="Domicile"
+              className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            />
+          </div>
+          <label htmlFor="street" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Rue :
+          </label>
+          <input
+            id="street"
+            type="text"
+            value={street}
+            onChange={(e) => { setStreet(e.target.value); }}
+            disabled={registerCareSeeker.isPending}
+            placeholder="1 rue des lilas"
+            autoComplete="address"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="postalCode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Code Postal :
+          </label>
+          <input
+            id="postalCode"
+            type="text"
+            value={postalCode}
+            onChange={(e) => { setPostalCode(e.target.value); }}
+            disabled={registerCareSeeker.isPending}
+            placeholder="74200"
+            className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
+          />
+        </div>
+        <div className="flex-1 min-w-[150px]">
+          <label htmlFor="city" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+            Ville :
+          </label>
+          <input
+            id="city"
+            type="text"
+            value={city}
+            onChange={(e) => { setCity(e.target.value); }}
+            disabled={registerCareSeeker.isPending}
+            required
+            placeholder="Thonon-les-bains"
+            autoComplete="city"
             className="w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"
           />
         </div>
@@ -166,7 +244,7 @@ export default function RegisterUser({ onSuccess }: registerProps) {
             id="password"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => { setPassword(e.target.value); }}
             disabled={registerCareSeeker.isPending}
             required
             autoComplete="new-password"
@@ -181,7 +259,7 @@ export default function RegisterUser({ onSuccess }: registerProps) {
             id="confirmPassword"
             type="password"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) => { setConfirmPassword(e.target.value); }}
             disabled={registerCareSeeker.isPending}
             required
             autoComplete="new-password"
