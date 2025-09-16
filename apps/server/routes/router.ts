@@ -42,7 +42,7 @@ const asyncHandler = (fn: (req: Request, res: Response) => Promise<unknown>) =>
 export default function registerRoutes(app: Express) {
   /* UTILS */
   app.get('/api/health', requireRole('ADMIN'), getHealth);
-  app.get('/search', asyncHandler(searchUsers));
+  app.get('/api/search', asyncHandler(searchUsers));
 
   /* AUTH */
   app.post('/api/login', asyncHandler(loginUser));
@@ -79,6 +79,7 @@ export default function registerRoutes(app: Express) {
   /* PROFESSIONAL */
   app.post('/api/professional', asyncHandler(createProfessional));
   app.put('/api/professional/:id', requireSelf(), asyncHandler(updateProfessional))
+  app.get('/api/professional/:id', asyncHandler(getProfessionalById))
 
   /* ADMIN */
   app.post('/api/admin', asyncHandler(createAdmin));

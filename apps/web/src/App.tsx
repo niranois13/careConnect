@@ -1,3 +1,4 @@
+import { Routes, Route } from "react-router-dom";
 import { faCalendarDays, faShieldHalved, faUsers } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect } from 'react';
@@ -8,9 +9,11 @@ import { jwtPayloadSchema } from '../../../packages/schemas/src/users.schemas.ts
 import AdminPanel from './components/AdminPanel/AdminPanel.tsx';
 import LandingCard from './components/Cards/LandingCard.tsx';
 import CareSeekerPanel from './components/CareSeekerPanel/CareSeekerPanel.tsx';
+import ProfessionalPanel from './components/ProfessionalPanel/ProfessionalPanel.tsx';
+import ProfessionalProfilePage from '../src/components/Pages/ProfessionalProfilePage.tsx';
 import Footer from './components/Footer/Footer.tsx';
 import Header from './components/Header/Header.tsx';
-import HeroSection from './components/HeroSection/HeroSection.tsx'
+import HeroSection from './components/HeroSection/HeroSection.tsx';
 import SearchBar from './components/SearchBar/SearchBar.tsx';
 import { login } from './features/Auth/authSlice.ts';
 import { RootState } from './store/index.ts';
@@ -18,7 +21,7 @@ import { RootState } from './store/index.ts';
 function App() {
   const dispatch = useDispatch();
   const { user, isLoggedIn } = useSelector((state: RootState) => state.auth);
-  const userId: string = user.id
+  const userId: string = user?.id;
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -26,7 +29,7 @@ function App() {
         const res = await fetch("/api/me", { credentials: "include" });
         if (res.ok) {
           const user: unknown = await res.json();
-          const parsed = jwtPayloadSchema.parse(user)
+          const parsed = jwtPayloadSchema.parse(user);
           dispatch(login(parsed));
         }
       } catch (err) {
@@ -38,6 +41,7 @@ function App() {
 
   const isAdmin = isLoggedIn && user.role === 'ADMIN';
   const isCareSeeker = isLoggedIn && user.role === 'CARESEEKER';
+  const isProfessional = isLoggedIn && user.role === 'PROFESSIONAL';
 
   return (
     <>
@@ -45,14 +49,12 @@ function App() {
       <div className="flex flex-col min-h-screen">
         <Header />
         <div className="flex-1 flex flex-col">
-          {isAdmin ? (
-            <AdminPanel />
-          ) :
-            isCareSeeker ? (
-              <CareSeekerPanel userId={userId} />
-            ) : (
-              <>
-                <div className='flex-1 flex flex-col justify-around'>
+          <Routes>
+            {/* --- ROUTE PUBLIQUE --- */}
+            <Route
+              path="/"
+              element={
+                <div className="flex-1 flex flex-col justify-around">
                   <HeroSection />
                   <div className="flex justify-center mb-5">
                     <SearchBar
@@ -85,14 +87,33 @@ function App() {
                     </div>
                   </div>
                 </div>
-              </>
-            )}
+              }
+            />
+
+            {/* --- PAGE PUBLIQUE PROFIL PRO --- */}
+            <Route path="/professional/:id" element={<ProfessionalProfilePage />} />
+
+            {/* --- DASHBOARDS PRIVÉS --- */}
+            <Route
+              path="/panel"
+              element={
+                isAdmin ? (
+                  <AdminPanel />
+                ) : isCareSeeker ? (
+                  <CareSeekerPanel userId={userId} />
+                ) : isProfessional ? (
+                  <ProfessionalPanel userId={userId} />
+                ) : (
+                  <p>Veuillez vous connecter</p>
+                )
+              }
+            />
+          </Routes>
         </div>
         <Footer />
       </div>
     </>
   );
 }
-
 
 export default App;

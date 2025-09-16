@@ -118,6 +118,18 @@ export const professionalUpdateSchema = z.object({
   isProfessionApproved: z.boolean().default(true),
 });
 
+export const professionalSearchResultSchema = z.object({
+  id: z.string().uuid(),
+  firstName: z.string(),
+  lastName: z.string(),
+  role: z.literal("PROFESSIONAL"),
+  professionName: z.string().nullable(),
+  customProfession: z.string().nullable(),
+  city: z.string(),
+  isMobile: z.boolean().optional(),
+  interventionRadius: z.number().optional()
+});
+
 // ---------- ADMIN RELATION SCHEMAS ----------
 export const adminCareSeekerRelationsResponseSchema = z.object({
   isHelper: z.boolean(),

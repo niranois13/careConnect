@@ -9,7 +9,7 @@ type adminProfessional = z.infer<
   typeof adminProfessionalRelationsResponseSchema
 >;
 
-export function useGetProfessionalById(professionalId: string) {
+export function useGetProfessionalById(professionalId: string, endpoint: string = '/api/professional') {
   const [professional, setProfessional] = useState<adminProfessional | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -18,7 +18,7 @@ export function useGetProfessionalById(professionalId: string) {
     setIsLoading(true);
 
     try {
-      const res = await fetch(`/api/admin/professional/${professionalId}?role=PROFESSIONAL`, {
+      const res = await fetch(`${endpoint}/${professionalId}?role=PROFESSIONAL`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -46,7 +46,7 @@ export function useGetProfessionalById(professionalId: string) {
     } finally {
       setIsLoading(false);
     }
-  }, [professionalId]);
+  }, [professionalId, endpoint]);
 
   useEffect(() => {
     void fetchProfessional();

@@ -11,18 +11,18 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { useGetCareSeekerById } from "../../hooks/CareSeekers/useGetCareSeekersById.tsx"
+import { useGetProfessionalById } from "../../hooks/Professionals/useGetProfessionalsById.tsx"
 import PanelCardButtons from "../Cards/Panel/PanelButtons.tsx";
 import PanelCard from "../Cards/Panel/PanelCards.tsx";
 import PanelCardField from "../Cards/Panel/PanelCardsFields.tsx";
 
-interface CareSeekerPanelProps {
+interface ProfessionalPanelProps {
   userId: string
 }
 
-export default function CareSeekerPanel({ userId }: CareSeekerPanelProps) {
-  const endpoint: string = '/api/careseeker';
-  const { careSeeker, isLoading, error } = useGetCareSeekerById(userId, endpoint);
+export default function ProfessionalPanel({ userId }: ProfessionalPanelProps) {
+  const endpoint: string = '/api/professional';
+  const { professional, isLoading, error } = useGetProfessionalById(userId, endpoint);
 
   if (isLoading) {
     return <p>Chargement</p>
@@ -30,13 +30,13 @@ export default function CareSeekerPanel({ userId }: CareSeekerPanelProps) {
   if (error) {
     return <p>Erreur: {error.message}</p>
   }
-  if (!careSeeker?.user) {
+  if (!professional?.user) {
     return <p>User not found</p>
   }
 
   return (
     <>
-      <p className="w-full text-center text-purple-700 text-xl my-5">Bonjour <strong>{careSeeker.user.firstName}</strong>
+      <p className="w-full text-center text-purple-700 text-xl my-5">Bonjour <strong>{professional.user.firstName}</strong>
       </p>
 
       <div className="flex justify-center flex-wrap gap-x-10 gap-y-5">
@@ -48,21 +48,21 @@ export default function CareSeekerPanel({ userId }: CareSeekerPanelProps) {
           >
             <PanelCardField
               labelIcon={<FontAwesomeIcon icon={faUser} size="1x" className="text-purple-700" />}
-              mainText={careSeeker.user.firstName}
-              secondaryText={careSeeker.user.lastName}
+              mainText={professional.user.firstName}
+              secondaryText={professional.user.lastName}
             />
             <PanelCardField
               labelIcon={<FontAwesomeIcon icon={faAt} size="1x" className="text-purple-700" />}
-              mainText={careSeeker.user.email}
+              mainText={professional.user.email}
             />
             <PanelCardField
               labelIcon={<FontAwesomeIcon icon={faPhone} size="1x" className="text-purple-700" />}
-              mainText={careSeeker.user.phoneNumber?.toString() ?? "N/A"}
+              mainText={professional.user.phoneNumber?.toString() ?? "N/A"}
             />
             <PanelCardField
               labelIcon={<FontAwesomeIcon icon={faLocationDot} size="1x" className="text-purple-700" />}
-              mainText={(careSeeker.user.address[0].street ?? "") && (careSeeker.user.address[0].postalCode ?? "")}
-              secondaryText={careSeeker.user.address[0].city}
+              mainText={(professional.user.address[0].street ?? "") && (professional.user.address[0].postalCode ?? "")}
+              secondaryText={professional.user.address[0].city}
             />
             <PanelCardButtons
               buttons={[
