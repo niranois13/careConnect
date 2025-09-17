@@ -1,8 +1,3 @@
-Voici un **README.md** synthétisé et structuré à partir de ton contenu initial et du ROADMAP. J’ai regroupé les idées pour refléter l’ambition du projet tout en gardant clarté et hiérarchie :
-
----
-
-````md
 # 🧩 careConnect
 
 ![careConnect](https://i.imgur.com/fyMEF6H.png)
@@ -26,7 +21,7 @@ Voici un **README.md** synthétisé et structuré à partir de ton contenu initi
 - **Prisma ORM** – Elegant DB layer for PostgreSQL
 - **PostgreSQL** – Relational DB
 - **Zod** – Schema validation
-- **JWT & OAuth 2.0** – Authentication
+- **JWT** – Authentication
 - **cookie-parser**, **jsonwebtoken**
 
 ### Front-End _(in progress)_
@@ -41,18 +36,17 @@ Voici un **README.md** synthétisé et structuré à partir de ton contenu initi
 - **Docker** / **Docker Compose**
 - **pnpm** – Package manager
 - **dotenv** – Env vars management
-- **ESLint** + **Prettier** + `.editorconfig`
-- **Turborepo** (planned)
+- **ESLint** + **Prettier** + `.editorconfig` 
 - **Redis** (planned)
-- **Mocha/Chai** – Unit Testing
-- **Winston** – Logging
+- **Mocha/Chai** – Unit Testing (planned)
+- **Winston** – Logging (planned)
 
 ---
 
 ## 🚀 Getting Started
 
 ```
-git clone git@github.com:your-username/careConnect.git
+git clone git@github.com:niranois13/careConnect.git
 cd careConnect
 pnpm install
 cp .env.example .env
@@ -62,7 +56,7 @@ pnpm dev
 ```
 ````
 
-To test the API connection:
+To test the API and DB connection:
 
 ```
 curl http://localhost:3000/health
@@ -75,8 +69,9 @@ curl http://localhost:3000/health
 ```
 apps/
   └── server/         # Node.js API (Express + Prisma)
-  └── client/         # React front-end (WIP)
-prisma/               # Prisma schemas & migrations
+        └── prisma/   # Prisma schemas & migrations
+  └── web/            # React front-end
+packages/             # Zod & types schemas
 nginx/                # Nginx reverse proxy config
 .env                  # Environment config
 ROADMAP.md            # Feature planning & backlog
@@ -91,9 +86,9 @@ README.md             # You are here
 
 - Login via Email/Password
 - OAuth 2.0 (Google + others planned)
-- JWT-based sessions in cookies (`HttpOnly`, `Secure`, `SameSite`)
+- JWT-based sessions in cookies
 - User Roles: `CareSeeker`, `Professional`, `Admin`
-- Admin panel & endpoints
+- Admin, CareSeeker and Professional Panels
 
 ### 📅 Availability & Appointments
 
@@ -112,7 +107,6 @@ README.md             # You are here
 ### 🔎 Search Engine
 
 - Search by service type, locality, availability
-- Inspired by existing Python logic — reimplemented in TypeScript
 
 ### 💬 Messaging (Planned)
 
@@ -147,8 +141,8 @@ README.md             # You are here
 
 - `db` – PostgreSQL with PostGIS
 - `server` – Node.js API
-- `frontend` – React app _(planned)_
-- `nginx` – Static + proxy routing _(planned)_
+- `frontend` – React app
+- `nginx` – Static + proxy routing
 - `redis` – Session & token management _(planned)_
 
 To run:
