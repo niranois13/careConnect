@@ -54,7 +54,7 @@ cp .env.example .env
 pnpm prisma db push
 pnpm dev
 ```
-````
+
 
 To test the API and DB connection:
 
